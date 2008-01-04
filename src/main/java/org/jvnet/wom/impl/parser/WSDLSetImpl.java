@@ -45,7 +45,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WSDLSetImpl implements WSDLSet{
+public class WSDLSetImpl implements WSDLSet {
 
     private final Map<String, WSDLDefinitionsImpl> wsdlMap = new HashMap<String, WSDLDefinitionsImpl>();
 
@@ -62,7 +62,7 @@ public class WSDLSetImpl implements WSDLSet{
         return obj;
     }
 
-    void add(WSDLDefinitionsImpl wsdl){
+    void add(WSDLDefinitionsImpl wsdl) {
         wsdlMap.put(wsdl.getWSDLDocument().getTargetNamespace(), wsdl);
     }
 

@@ -39,8 +39,8 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents a WSDL extensibility element or attribute.
- *
- * <p>
+ * <p/>
+ * <p/>
  * This interface can be implemented by the programs that build
  * on top of the WOM, to hook additional information into
  * {@link WSDLDefinitions}.
@@ -51,8 +51,7 @@ public interface WSDLExtension {
     /**
      * Gets the qualified name of the WSDL extensibility element or attribute.
      *
-     * @return
-     *      must not be null.
+     * @return must not be null.
      */
     public QName getName();
 }

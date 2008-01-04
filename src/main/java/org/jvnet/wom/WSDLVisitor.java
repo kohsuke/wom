@@ -42,17 +42,30 @@ package org.jvnet.wom;
  */
 public interface WSDLVisitor {
     void definitions(WSDLDefinitions definitions);
+
     void types(WSDLTypes types);
+
     void messages(WSDLMessage message);
+
     void input(WSDLInput input);
+
     void output(WSDLOutput output);
+
     void part(WSDLPart part);
+
     void portType(WSDLPortType portType);
+
     void operation(WSDLOperation operation);
+
     void bindingOperation(WSDLBoundOperation boundOperation);
+
     void fault(WSDLFault fault);
+
     void binding(WSDLBoundPortType binding);
+
     void bindingFault(WSDLBoundFault fault);
+
     void service(WSDLService service);
+
     void port(WSDLPort port);
 }

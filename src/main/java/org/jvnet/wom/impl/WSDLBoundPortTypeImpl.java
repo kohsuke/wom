@@ -35,22 +35,24 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.*;
+import org.jvnet.wom.WSDLBoundOperation;
+import org.jvnet.wom.WSDLBoundPortType;
+import org.jvnet.wom.WSDLDefinitions;
+import org.jvnet.wom.WSDLVisitor;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- *
  * @author Vivek Pandey
  */
 public class WSDLBoundPortTypeImpl extends WSDLBoundPortType {
     private WSDLDefinitionsImpl owner;
     private WSDLPortTypeImpl abstractPortType;
     private Map<QName, WSDLBoundOperationImpl> operationMap = new HashMap<QName, WSDLBoundOperationImpl>();
-    
+
     protected WSDLBoundPortTypeImpl(Locator locator, QName name) {
         super(locator, name);
     }

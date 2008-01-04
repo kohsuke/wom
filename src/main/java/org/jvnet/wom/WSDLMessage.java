@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLMessage extends WSDLEntity{
+public abstract class WSDLMessage extends WSDLEntity {
     public WSDLMessage(Locator locator, QName name) {
         super(locator, name);
     }

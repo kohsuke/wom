@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLPort extends WSDLEntity{
+public abstract class WSDLPort extends WSDLEntity {
     protected WSDLPort(Locator locator, QName name) {
         super(locator, name);
     }
@@ -57,16 +57,14 @@ public abstract class WSDLPort extends WSDLEntity{
     /**
      * Gets endpoint address of this port.
      *
-     * @return
-     *      always non-null.
+     * @return always non-null.
      */
     public abstract String getAddress();
 
     /**
      * Gets the {@link WSDLService} that owns this port.
      *
-     * @return
-     *      always non-null.
+     * @return always non-null.
      */
     public abstract WSDLService getOwner();
 }

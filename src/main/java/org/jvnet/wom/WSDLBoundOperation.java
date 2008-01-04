@@ -45,7 +45,7 @@ import java.util.Map;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLBoundOperation extends WSDLEntity{
+public abstract class WSDLBoundOperation extends WSDLEntity {
     protected WSDLBoundOperation(Locator locator, QName name) {
         super(locator, name);
     }
@@ -81,12 +81,14 @@ public abstract class WSDLBoundOperation extends WSDLEntity{
 
     /**
      * Gets the payload QName of the request message.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * It's possible for an operation to define no body part, in which case
      * this method returns null.
      */
     public abstract QName getReqPayloadName();
 
-    public enum Mode{IN, OUT, INOUT}
+    public enum Mode {
+        IN, OUT, INOUT
+    }
 }

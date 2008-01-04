@@ -36,7 +36,6 @@
 package org.jvnet.wom.impl;
 
 import org.jvnet.wom.WSDLFault;
-import org.jvnet.wom.WSDLMessage;
 import org.jvnet.wom.WSDLVisitor;
 import org.xml.sax.Locator;
 
@@ -47,7 +46,7 @@ import javax.xml.namespace.QName;
  */
 public class WSDLFaultImpl extends WSDLFault {
     private WSDLMessageImpl message;
-    
+
     public WSDLFaultImpl(Locator locator, QName name) {
         super(locator, name);
     }

@@ -35,13 +35,21 @@
  */
 package org.jvnet.wom.impl.parser.handler;
 
-import org.jvnet.wom.impl.WSDLDefinitionsImpl;
+import org.jvnet.wom.impl.WSDLMessageImpl;
 import org.jvnet.wom.impl.parser.Messages;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
 
 public class Definitions extends AbstractHandler {
     private String uri;
@@ -50,8 +58,7 @@ public class Definitions extends AbstractHandler {
     private int state;
     private final WSDLContentHandlerEx runtime;
     private final String expectedNamespace;
-    
-    private WSDLDefinitionsImpl definitions;
+
 
     public Definitions(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
         super(source, parent, cookie);
@@ -65,20 +72,19 @@ public class Definitions extends AbstractHandler {
     }
 
     protected WSDLContentHandler getRuntime() {
-        return null;
+        return runtime;
     }
 
     protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
-
+        switch (cookie) {
+            case 50:
+                WSDLMessageImpl message = (WSDLMessageImpl) result;
+                runtime.currentWSDL.addMessage(message);
+                break;
+        }
     }
 
-    private static final String WSDL_NS = "http://schemas.xmlsoap.org/wsdl/";
-
-    private String fixNull(String value){
-        return (value == null)?"":value;
-    }
-
-    private void action1() throws SAXException {
+    private void readDefinitionQName() throws SAXException {
         Attributes test = runtime.getCurrentAttributes();
         String tns = fixNull(test.getValue("targetNamespace"));
         String name = fixNull(test.getValue("name"));
@@ -109,22 +115,35 @@ public class Definitions extends AbstractHandler {
             case 1://definitions
                 if (uri.equals(WSDL_NS) && localName.equals("definitions")) {
                     runtime.onEnterElementConsumed(uri, localName, qname, atts);
-                    action1();
-                } else if(uri.equals(WSDL_NS) && localName.equals("documentation")){
-                    //TODO
-                } else if(uri.equals(WSDL_NS) && localName.equals("types")){
-                    //TODO
-                } else if(uri.equals(WSDL_NS) && localName.equals("message")){
-                    
-                } else if(uri.equals(WSDL_NS) && localName.equals("portType")){
-                } else if(uri.equals(WSDL_NS) && localName.equals("binding")){
-                } else if(uri.equals(WSDL_NS) && localName.equals("service")){
-                }else {
-                    //TODO: add support for extensibility
-                    //unexpectedEnterElement(qname);
+                    readDefinitionQName();
+                    state = 2;
                 }
                 break;
-            case 2://doucments
+            case 2: //children of wsdl:definitions
+                if (uri.equals(WSDL_NS) && localName.equals("documentation")) {
+                    TransformerHandler handler = null;
+                    try {
+                        handler = ((SAXTransformerFactory) TransformerFactory.newInstance()).newTransformerHandler();
+                    } catch (TransformerConfigurationException e) {
+                        runtime.getErrorHandler().error(new SAXParseException(e.getMessage(), runtime.getLocator(), e));
+                        return;
+                    }
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    StreamResult result = new StreamResult(os);
+                    handler.setResult(new StreamResult());
+                    runtime.redirectSubtree(handler, uri, localName, qname);
+                    runtime.currentWSDL.setDocumentation(os.toString());
+                } else if (uri.equals(WSDL_NS) && localName.equals("types")) {
+                    //Let the ContentHandler for Schema handle it
+                    runtime.redirectSubtree(runtime.parser.getSchemaContentHandler(), uri, localName, qname);
+                } else if (uri.equals(WSDL_NS) && localName.equals("message")) {
+                    Message message = new Message(this, _source, runtime, 50, expectedNamespace);
+                    spawnChildFromEnterElement(message, uri, localName, qname, atts);
+                } else if (uri.equals(WSDL_NS) && localName.equals("portType")) {
+
+                } else if (uri.equals(WSDL_NS) && localName.equals("binding")) {
+                } else if (uri.equals(WSDL_NS) && localName.equals("service")) {
+                }
                 break;
             case 3://imports
                 break;

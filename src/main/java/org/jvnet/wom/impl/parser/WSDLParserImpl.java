@@ -35,7 +35,6 @@
  */
 package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.impl.parser.Messages;
 import org.jvnet.wom.parser.WSDLParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -72,6 +71,7 @@ public class WSDLParserImpl implements WSDLParser {
             reader = new XMLReaderEx(reader);
 
             reader.setContentHandler(handler);
+
             if (errorHandler != null)
                 reader.setErrorHandler(errorHandler);
             if (entityResolver != null)
@@ -84,7 +84,6 @@ public class WSDLParserImpl implements WSDLParser {
             throw spe;
         }
     }
-
 
     /**
      * XMLReader with improved error message for entity resolution failure.

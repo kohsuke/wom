@@ -35,27 +35,19 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLDefinitions;
-import org.jvnet.wom.WSDLPort;
 import org.jvnet.wom.WSDLService;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.util.QNameMap;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
 
 /**
- *
  * @author Vivek Pandey
  */
 public class WSDLServiceImpl extends WSDLService {
     private WSDLDefinitionsImpl parent;
-    private final Map<QName, WSDLPortImpl> ports = new HashMap<QName, WSDLPortImpl>();
-
-    private final List<WSDLPortImpl> portList = new ArrayList<WSDLPortImpl>();
+    private final QNameMap<WSDLPortImpl> ports = new QNameMap<WSDLPortImpl>();
 
     protected WSDLServiceImpl(Locator locator, QName name) {
         super(locator, name);
@@ -69,20 +61,15 @@ public class WSDLServiceImpl extends WSDLService {
         this.parent = parent;
     }
 
-    public WSDLPort get(QName portName) {
+    public WSDLPortImpl get(QName portName) {
         return ports.get(portName);
     }
 
-    public WSDLPort getFirstPort() {
-        return null;
-    }
-
-    public Iterable<? extends WSDLPort> getPorts() {
+    public Iterable<? extends WSDLPortImpl> getPorts() {
         return ports.values();
     }
 
-    public void add(WSDLPortImpl port){
-        portList.add(port);
+    public void add(WSDLPortImpl port) {
         ports.put(port.getName(), port);
     }
 

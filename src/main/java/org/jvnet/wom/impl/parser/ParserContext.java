@@ -35,26 +35,26 @@
  */
 package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.WSDLDefinitions;
 import org.jvnet.wom.WSDLSet;
 import org.jvnet.wom.parser.WOMParser;
 import org.jvnet.wom.parser.WSDLParser;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
 /**
  * Provides context information to be used by {@link WSDLContentHandlerEx}s.
- *
- * <p>
+ * <p/>
+ * <p/>
  * This class does the actual processing for {@link org.jvnet.wom.parser.WOMParser},
  * but to hide the details from the public API, this class in
  * a different package.
@@ -63,12 +63,17 @@ import java.util.Vector;
  */
 public class ParserContext {
 
-    /** SchemaSet to which a newly parsed schema is put in. */
+    /**
+     * SchemaSet to which a newly parsed schema is put in.
+     */
     public final WSDLSetImpl wsdlSet = new WSDLSetImpl();
 
     private final WOMParser owner;
 
     final WSDLParser parser;
+
+    /* ContentHandler to parse schema inside the wsdl:types element */
+    private ContentHandler schemaContentHandler = new DefaultHandler();
 
 
     private final Vector<Patch> patchers = new Vector<Patch>();
@@ -77,14 +82,14 @@ public class ParserContext {
     /**
      * Documents that are parsed already. Used to avoid cyclic inclusion/double
      * inclusion of schemas. Set of {@link WSDLDocumentImpl}s.
-     *
+     * <p/>
      * The actual data structure is map from {@link WSDLDocumentImpl} to itself,
      * so that we can access the {@link WSDLDocumentImpl} itself.
      */
     public final Map<WSDLDocumentImpl, WSDLDocumentImpl> parsedDocuments = new HashMap<WSDLDocumentImpl, WSDLDocumentImpl>();
 
 
-    public ParserContext( WOMParser owner, WSDLParser parser ) {
+    public ParserContext(WOMParser owner, WSDLParser parser) {
         this.owner = owner;
         this.parser = parser;
     }
@@ -96,11 +101,14 @@ public class ParserContext {
     /**
      * Parses a new XML Schema document.
      */
-    public void parse( InputSource source ) throws SAXException {
-        createWSDLContentHandler().parseEntity(source,null,null);
+    public void parse(InputSource source) throws SAXException {
+        createWSDLContentHandler().parseEntity(source, null, null);
     }
 
 
+    /**
+     * Returns {@link WSDLSet}, null if there was any error.
+     */
     public WSDLSet getResult() throws SAXException {
         // run all the patchers
         for (Patch patcher : patchers)
@@ -114,8 +122,8 @@ public class ParserContext {
         errorCheckers.clear();
 
 
-        if(hadError)    return null;
-        else            return wsdlSet;
+        if (hadError) return null;
+        else return wsdlSet;
     }
 
     public WSDLContentHandlerEx createWSDLContentHandler() {
@@ -123,35 +131,50 @@ public class ParserContext {
     }
 
 
-
-    /** Once an error is detected, this flag is set to true. */
+    /**
+     * Once an error is detected, this flag is set to true.
+     */
     private boolean hadError = false;
 
-    /** Turns on the error flag. */
-    void setErrorFlag() { hadError=true; }
+    /**
+     * Turns on the error flag.
+     */
+    void setErrorFlag() {
+        hadError = true;
+    }
 
     /**
      * PatchManager implementation, which is accessible only from
      * NGCCRuntimEx.
      */
     final PatcherManager patcherManager = new PatcherManager() {
-        public void addPatcher( Patch patch ) {
+        public void addPatcher(Patch patch) {
             patchers.add(patch);
         }
-        public void addErrorChecker( Patch patch ) {
+
+        public void addErrorChecker(Patch patch) {
             errorCheckers.add(patch);
         }
-        public void reportError( String msg, Locator src ) throws SAXException {
+
+        public void reportError(String msg, Locator src) throws SAXException {
             // set a flag to true to avoid returning a corrupted object.
             setErrorFlag();
 
-            SAXParseException e = new SAXParseException(msg,src);
-            if(errorHandler==null)
+            SAXParseException e = new SAXParseException(msg, src);
+            if (errorHandler == null)
                 throw e;
             else
                 errorHandler.error(e);
         }
     };
+
+    public ContentHandler getSchemaContentHandler() {
+        return schemaContentHandler;
+    }
+
+    public void setSchemaContentHandler(ContentHandler schemaContentHandler) {
+        this.schemaContentHandler = schemaContentHandler;
+    }
 
     /**
      * ErrorHandler proxy to turn on the hadError flag when an error
@@ -159,7 +182,7 @@ public class ParserContext {
      */
     final ErrorHandler errorHandler = new ErrorHandler() {
         private ErrorHandler getErrorHandler() {
-            if( owner.getErrorHandler()==null )
+            if (owner.getErrorHandler() == null)
                 return noopHandler;
             else
                 return owner.getErrorHandler();
@@ -186,8 +209,10 @@ public class ParserContext {
     final ErrorHandler noopHandler = new ErrorHandler() {
         public void warning(SAXParseException e) {
         }
+
         public void error(SAXParseException e) {
         }
+
         public void fatalError(SAXParseException e) {
             setErrorFlag();
         }

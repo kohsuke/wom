@@ -35,59 +35,146 @@
  */
 package org.jvnet.wom.parser;
 
+import org.jvnet.wom.WSDLSet;
+import org.jvnet.wom.impl.parser.ParserContext;
+import org.jvnet.wom.impl.parser.WSDLParserImpl;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
-import org.jvnet.wom.parser.WSDLDocument;
+import org.xml.sax.SAXException;
 
-import javax.xml.transform.Source;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 
 /**
+ * Parses a WSDL and provides a model - {@link WSDLSet}.
+ * <p/>
+ * TODO: support for WSDL 2.0
+ *
  * @author Vivek Pandey
  */
 public final class WOMParser {
 
     private EntityResolver entityResolver;
     private ErrorHandler errorHandler;
+    private final WSDLParser parser;
+    private final ParserContext context;
 
     /**
-     * Uses the default {@link WSDLParser}
+     * Creates a new {@link WOMParser} using SAX parser from {@link WSDLParser}
      */
     public WOMParser() {
+        this.parser = new WSDLParserImpl();
+        this.context = new ParserContext(this, this.parser);
     }
 
+
+    /**
+     * Creates a new {@link WOMParser}, the underlying WSDLParser will use the factory to create SAX parser.
+     *
+     * @param factory Must be non-null. The factory must be configured correctly, such as
+     *                <code>SAXParserFactory.setNamespaceAware(true) must be called</code> to create a namespace aware SAX parser.
+     */
+    public WOMParser(SAXParserFactory factory) {
+        this.parser = new WSDLParserImpl(factory);
+        this.context = new ParserContext(this, this.parser);
+    }
+
+    /**
+     * Creates a new WOMParser that will use the given WSDLParser to parse the WSDL.
+     *
+     * @param parser non null.
+     */
     public WOMParser(WSDLParser parser) {
-        throw new UnsupportedOperationException();
-    }
-
-    public WSDLDocument parse(InputSource wsdl){
-        //TODO
-        return null;
-    }
-
-    public WSDLDocument parse(File wsdl){
-        //TODO
-        return null;
-    }
-
-    public WSDLDocument parse(InputStream wsdl){
-        //TODO
-        return null;
+        this.parser = parser;
+        this.context = new ParserContext(this, this.parser);
     }
 
 
-    public WSDLDocument parse(Source wsdl){
-        //TODO
-        return null;
+    /**
+     * Parses a new XML Schema document.
+     * <p/>
+     * <p/>
+     * Note that if the {@link InputSource} does not have a system ID,
+     * WOM will fail to resolve them.
+     *
+     * @return Gives {@link WSDLSet}, null if there was any error.
+     */
+    public WSDLSet parse(InputSource wsdl) throws IOException, SAXException {
+        context.parse(wsdl);
+        return context.getResult();
+
     }
 
-    public WSDLDocument parse(URL wsdl){
-        //TODO
-        return null;
+    /**
+     * Parses a WSDL document from the given {@link File}.
+     *
+     * @param wsdl non-null
+     * @return Gives {@link WSDLSet}, null if there was any error.
+     */
+    public WSDLSet parse(File wsdl) throws IOException, SAXException {
+        return parse(wsdl.toURL());
     }
+
+    /**
+     * Parses a WSDL document from the given {@link InputStream}.
+     * <p/>
+     * <p/>
+     * When using this method, WOM does not know the system ID of
+     * this document, therefore, when this stream contains relative
+     * references to other schemas, WOM will fail to resolve them.
+     * To specify an system ID with a stream, use {@link InputSource}
+     *
+     * @return Gives {@link WSDLSet}, null if there was any error.
+     */
+    public WSDLSet parse(InputStream wsdl) throws SAXException {
+        context.parse(new InputSource(wsdl));
+        return context.getResult();
+    }
+
+
+    /**
+     * Parses a WSDL document from the given {@link URL}.
+     *
+     * @param wsdl non-null
+     * @return Gives {@link WSDLSet}, null if there was any error.
+     */
+    public WSDLSet parse(URL wsdl) throws SAXException {
+        return parse(wsdl.toExternalForm());
+    }
+
+    /**
+     * Parses a WSDL document from the given systemId
+     *
+     * @param systemId non-null
+     * @return Gives {@link WSDLSet}, null if there was any error.
+     */
+    public WSDLSet parse(String systemId) throws SAXException {
+        context.parse(new InputSource(systemId));
+        return context.getResult();
+    }
+
+    /**
+     * Parses a WSDL document from the given {@link Reader}.
+     * <p/>
+     * <p/>
+     * When using this method, WOM does not know the system ID of
+     * this document, therefore, when this reader contains relative
+     * references to other schemas, WOM will fail to resolve them.
+     * To specify an system ID with a reader, use {@link InputSource}
+     *
+     * @return Gives {@link WSDLSet}, null if there was any error.
+     */
+    public WSDLSet parse(Reader reader) throws SAXException {
+        context.parse(new InputSource(reader));
+        return context.getResult();
+    }
+
 
     public EntityResolver getEntityResolver() {
         return entityResolver;
@@ -95,5 +182,30 @@ public final class WOMParser {
 
     public ErrorHandler getErrorHandler() {
         return errorHandler;
+    }
+
+    /**
+     * Set {@link EntityResolver} to resolve &lt;wsdl:import
+     */
+    public void setEntityResolver(EntityResolver entityResolver) {
+        this.entityResolver = entityResolver;
+    }
+
+    /**
+     * {@link ErrorHandler} to receive any error/warning that happens during parsing.
+     */
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
+    /**
+     * WOM will fire events for the schema under &lt;wsdl:types section to this ContentHandler. The idea is that
+     * the schema inside a WSDL can be parsed and a schema object model can be created and used by for the purpose of
+     * data binding.
+     *
+     * @param handler always non-null
+     */
+    public void setSchemaContentHandler(ContentHandler handler) {
+        context.setSchemaContentHandler(handler);
     }
 }

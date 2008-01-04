@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLInput extends WSDLEntity{
+public abstract class WSDLInput extends WSDLEntity {
     protected WSDLInput(Locator locator, QName name) {
         super(locator, name);
     }

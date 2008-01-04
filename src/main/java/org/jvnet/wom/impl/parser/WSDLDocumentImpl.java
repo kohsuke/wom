@@ -35,12 +35,11 @@
  */
 package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.parser.WSDLDocument;
-import org.jvnet.wom.WSDLDefinitions;
 import org.jvnet.wom.impl.WSDLDefinitionsImpl;
+import org.jvnet.wom.parser.WSDLDocument;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 public class WSDLDocumentImpl implements WSDLDocument {
     private final WSDLDefinitionsImpl wsdl;

@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLPortType extends WSDLEntity{
+public abstract class WSDLPortType extends WSDLEntity {
     protected WSDLPortType(Locator locator, QName name) {
         super(locator, name);
     }

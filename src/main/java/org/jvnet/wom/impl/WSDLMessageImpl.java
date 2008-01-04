@@ -36,7 +36,6 @@
 package org.jvnet.wom.impl;
 
 import org.jvnet.wom.WSDLMessage;
-import org.jvnet.wom.WSDLPart;
 import org.jvnet.wom.WSDLVisitor;
 import org.xml.sax.Locator;
 

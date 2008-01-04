@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLOperation extends WSDLEntity{
+public abstract class WSDLOperation extends WSDLEntity {
     protected WSDLOperation(Locator locator, QName name) {
         super(locator, name);
     }
@@ -59,11 +59,9 @@ public abstract class WSDLOperation extends WSDLEntity{
     /**
      * Gets the wsdl:output of this operation.
      *
-     * @return
-     *      null if this is an one-way operation.
+     * @return null if this is an one-way operation.
      */
     public abstract WSDLOutput getOutput();
-
 
 
     /**
@@ -78,24 +76,24 @@ public abstract class WSDLOperation extends WSDLEntity{
 
     /**
      * Gives {@link WSDLFault} for the given soap fault detail value.
-     *
+     * <p/>
      * <pre>
-     *
+     * <p/>
      * Given a wsdl fault:
-     *
+     * <p/>
      * &lt;wsdl:message nae="faultMessage">
      *  &lt;wsdl:part name="fault" element="<b>ns:myException</b>/>
      * &lt;/wsdl:message>
-     *
+     * <p/>
      * &lt;wsdl:portType>
      *  &lt;wsdl:operation ...>
      *      &lt;wsdl:fault name="aFault" message="faultMessage"/>
      *  &lt;/wsdl:operation>
      * &lt;wsdl:portType>
-     *
-     *
+     * <p/>
+     * <p/>
      * For example given a soap 11 soap message:
-     *
+     * <p/>
      * &lt;soapenv:Fault>
      *      ...
      *      &lt;soapenv:detail>
@@ -103,12 +101,12 @@ public abstract class WSDLOperation extends WSDLEntity{
      *              ...
      *          &lt;/ns:myException>
      *      &lt;/soapenv:detail>
-     *
+     * <p/>
      * QName faultQName = new QName(ns, "myException");
      * WSDLFault wsdlFault  = getFault(faultQName);
-     *
+     * <p/>
      * The above call will return a WSDLFault that abstracts wsdl:portType/wsdl:operation/wsdl:fault.
-     *
+     * <p/>
      * </pre>
      *
      * @param faultDetailName tag name of the element inside soaenv:Fault/detail/, must be non-null.
@@ -118,6 +116,7 @@ public abstract class WSDLOperation extends WSDLEntity{
 
     /**
      * Gives enclosing wsdl:portType
+     *
      * @return always non-null
      */
     public abstract WSDLPortType getPortType();

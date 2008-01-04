@@ -84,11 +84,11 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
         return currentAtts;
     }
 
-    private void reset(){
+    private void reset() {
         attStack.clear();
         currentAtts = null;
         currentHandler = null;
-        indent=0;
+        indent = 0;
         locator = null;
         namespaces.clear();
         needIndent = true;
@@ -109,7 +109,9 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
 
     }
 
-    /** Impossible token. This value can never be a valid XML name. */
+    /**
+     * Impossible token. This value can never be a valid XML name.
+     */
     static final String IMPOSSIBLE = "\u0000";
 
     public void endDocument() throws SAXException {
@@ -127,14 +129,14 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
         // unless it sees a next event.)
 
         // pass around an "impossible" token.
-        currentHandler.leaveElement(IMPOSSIBLE,IMPOSSIBLE,IMPOSSIBLE);
+        currentHandler.leaveElement(IMPOSSIBLE, IMPOSSIBLE, IMPOSSIBLE);
 
         reset();
     }
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        if(redirect!=null)
-            redirect.startPrefixMapping(prefix,uri);
+        if (redirect != null)
+            redirect.startPrefixMapping(prefix, uri);
         else {
             namespaces.add(prefix);
             namespaces.add(uri);
@@ -142,11 +144,11 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        if(redirect!=null)
+        if (redirect != null)
             redirect.endPrefixMapping(prefix);
         else {
-            namespaces.remove(namespaces.size()-1);
-            namespaces.remove(namespaces.size()-1);
+            namespaces.remove(namespaces.size() - 1);
+            namespaces.remove(namespaces.size() - 1);
         }
     }
 
@@ -164,28 +166,28 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
     /**
      * Called by the generated handler code when an enter element
      * event is consumed.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * Pushes a new attribute set.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * Note that attributes are NOT pushed at the startElement method,
      * because the processing of the enterElement event can trigger
      * other attribute events and etc.
-     * <p>
+     * <p/>
      * This method will be called from one of handler when it truely
      * consumes the enterElement event.
      */
     public void onEnterElementConsumed(
-        String uri, String localName, String qname,Attributes atts) throws SAXException {
-        attStack.push(currentAtts=new AttributesImpl(atts));
+            String uri, String localName, String qname, Attributes atts) throws SAXException {
+        attStack.push(currentAtts = new AttributesImpl(atts));
         nsEffectiveStack.push(nsEffectivePtr);
         nsEffectivePtr = namespaces.size();
     }
 
     public void onLeaveElementConsumed(String uri, String localName, String qname) throws SAXException {
         attStack.pop();
-        if(attStack.isEmpty())
+        if (attStack.isEmpty())
             currentAtts = null;
         else
             currentAtts = attStack.peek();
@@ -193,16 +195,16 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
     }
 
     public void endElement(String uri, String localname, String qname) throws SAXException {
-        if(redirect!=null) {
-            redirect.endElement(uri,localname,qname);
+        if (redirect != null) {
+            redirect.endElement(uri, localname, qname);
             redirectionDepth--;
 
-            if(redirectionDepth!=0)
+            if (redirectionDepth != 0)
                 return;
 
             // finished redirection.
-            for( int i=0; i<namespaces.size(); i+=2 )
-                redirect.endPrefixMapping((String)namespaces.get(i));
+            for (int i = 0; i < namespaces.size(); i += 2)
+                redirect.endPrefixMapping((String) namespaces.get(i));
             redirect.endDocument();
 
             redirect = null;
@@ -211,43 +213,43 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
     }
 
     public void characters(char ch[], int start, int length) throws SAXException {
-        if(redirect!=null)
-            redirect.characters(ch,start,length);
+        if (redirect != null)
+            redirect.characters(ch, start, length);
         else
-            text.append(ch,start,length);
+            text.append(ch, start, length);
     }
 
     public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
-        if(redirect!=null)
-            redirect.ignorableWhitespace(ch,start,length);
+        if (redirect != null)
+            redirect.ignorableWhitespace(ch, start, length);
         else
-            text.append(ch,start,length);
+            text.append(ch, start, length);
     }
 
     public int getAttributeIndex(String uri, String localname) {
         return currentAtts.getIndex(uri, localname);
     }
+
     public void consumeAttribute(int index) throws SAXException {
-        final String uri    = currentAtts.getURI(index);
-        final String local  = currentAtts.getLocalName(index);
-        final String qname  = currentAtts.getQName(index);
-        final String value  = currentAtts.getValue(index);
+        final String uri = currentAtts.getURI(index);
+        final String local = currentAtts.getLocalName(index);
+        final String qname = currentAtts.getQName(index);
+        final String value = currentAtts.getValue(index);
         currentAtts.removeAttribute(index);
 
-        currentHandler.enterAttribute(uri,local,qname);
+        currentHandler.enterAttribute(uri, local, qname);
         currentHandler.text(value);
-        currentHandler.leaveAttribute(uri,local,qname);
+        currentHandler.leaveAttribute(uri, local, qname);
     }
-
 
 
     public void processingInstruction(String target, String data) throws SAXException {
-        if(redirect!=null)
-            redirect.processingInstruction(target,data);
+        if (redirect != null)
+            redirect.processingInstruction(target, data);
     }
 
     public void skippedEntity(String name) throws SAXException {
-        if(redirect!=null)
+        if (redirect != null)
             redirect.skippedEntity(name);
     }
 
@@ -260,23 +262,23 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
     }
 
     public void sendEnterElement(int receiverThreadId, String uri, String localName, String qname, Attributes atts) throws SAXException {
-
+        currentHandler.enterElement(uri, localName, qname, atts);
     }
 
     public void sendLeaveElement(int receiverThreadId, String uri, String localName, String qname) throws SAXException {
-
+        currentHandler.leaveElement(uri, localName, qname);
     }
 
     public void sendText(int receiverThreadId, String value) throws SAXException {
-
+        currentHandler.text(value);
     }
 
     public void sendEnterAttribute(int receiverThreadId, String uri, String localName, String qname) throws SAXException {
-
+        currentHandler.enterAttribute(uri, localName, qname);
     }
 
     public void sendLeaveAttribute(int receiverThreadId, String uri, String localName, String qname) throws SAXException {
-
+        currentHandler.leaveAttribute(uri, localName, qname);
     }
 
     private void processPendingText(boolean ignorable) throws SAXException {
@@ -321,7 +323,7 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
      * to the specified ContentHandler.
      * <p/>
      * <p/>
-     * Currently active NGCCHandler will only receive the leaveElement
+     * Currently active ContentHandler will only receive the leaveElement
      * event of the newly started element.
      *
      * @param uri,local,qname Parameters passed to the enter element event. Used to
@@ -349,7 +351,7 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
 
     //
 //
-// validation context implementation
+    // validation context implementation
     //
     //
     /**

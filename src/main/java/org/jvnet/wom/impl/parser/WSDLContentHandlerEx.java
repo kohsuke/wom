@@ -35,11 +35,11 @@
  */
 package org.jvnet.wom.impl.parser;
 
+import org.jvnet.wom.impl.WSDLDefinitionsImpl;
 import org.jvnet.wom.impl.parser.handler.AbstractHandler;
 import org.jvnet.wom.impl.parser.handler.Definitions;
 import org.jvnet.wom.impl.parser.handler.WSDLContentHandler;
 import org.jvnet.wom.impl.util.Uri;
-import org.jvnet.wom.impl.WSDLDefinitionsImpl;
 import org.jvnet.wom.parser.WSDLEventReceiver;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
@@ -56,7 +56,9 @@ import java.util.Stack;
 
 public class WSDLContentHandlerEx extends WSDLContentHandler {
 
-    /** The schema currently being parsed. */
+    /**
+     * The schema currently being parsed.
+     */
     public WSDLDefinitionsImpl currentWSDL;
 
     /**
@@ -86,84 +88,86 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
 
     public ParserContext parser;
 
-    /** The current NGCCHandler. Always equals to handlerStack.peek() */
+    /**
+     * The current NGCCHandler. Always equals to handlerStack.peek()
+     */
     private WSDLEventReceiver currentHandler;
 
     public WSDLContentHandlerEx(ParserContext parser) {
-        this(parser,  null);
+        this(parser, null);
     }
 
-    private WSDLContentHandlerEx(ParserContext parser, WSDLContentHandlerEx referer ) {
+    private WSDLContentHandlerEx(ParserContext parser, WSDLContentHandlerEx referer) {
         this.referer = referer;
         this.parser = parser;
     }
 
-    
 
     /* registers a patcher that will run after all the parsing has finished. */
-    public void addPatcher( Patch patcher ) {
+    public void addPatcher(Patch patcher) {
         parser.patcherManager.addPatcher(patcher);
     }
-    public void addErrorChecker( Patch patcher ) {
+
+    public void addErrorChecker(Patch patcher) {
         parser.patcherManager.addErrorChecker(patcher);
     }
-    public void reportError( String msg, Locator loc ) throws SAXException {
-        parser.patcherManager.reportError(msg,loc);
+
+    public void reportError(String msg, Locator loc) throws SAXException {
+        parser.patcherManager.reportError(msg, loc);
     }
-    public void reportError( String msg ) throws SAXException {
-        reportError(msg,getLocator());
+
+    public void reportError(String msg) throws SAXException {
+        reportError(msg, getLocator());
     }
 
 
     /**
      * Resolves relative URI found in the document.
      *
-     * @param namespaceURI
-     *      passed to the entity resolver.
-     * @param relativeUri
-     *      value of the schemaLocation attribute. Can be null.
-     *
-     * @return
-     *      non-null if {@link org.xml.sax.EntityResolver} returned an {@link InputSource},
-     *      or if the relativeUri parameter seems to be pointing to something.
-     *      Otherwise it returns null, in which case import/include should be abandoned.
+     * @param namespaceURI passed to the entity resolver.
+     * @param relativeUri  value of the schemaLocation attribute. Can be null.
+     * @return non-null if {@link org.xml.sax.EntityResolver} returned an {@link InputSource},
+     *         or if the relativeUri parameter seems to be pointing to something.
+     *         Otherwise it returns null, in which case import/include should be abandoned.
      */
-    private InputSource resolveRelativeURL( String namespaceURI, String relativeUri ) throws SAXException {
+    private InputSource resolveRelativeURL(String namespaceURI, String relativeUri) throws SAXException {
         try {
             String baseUri = getLocator().getSystemId();
-            if(baseUri==null)
+            if (baseUri == null)
                 // if the base URI is not available, the document system ID is
                 // better than nothing.
-                baseUri=documentSystemId;
+                baseUri = documentSystemId;
 
             String systemId = null;
-            if(relativeUri!=null)
-                systemId = Uri.resolve(baseUri,relativeUri);
+            if (relativeUri != null)
+                systemId = Uri.resolve(baseUri, relativeUri);
 
             EntityResolver er = parser.getEntityResolver();
-            if(er!=null) {
-                InputSource is = er.resolveEntity(namespaceURI,systemId);
-                if(is!=null)
+            if (er != null) {
+                InputSource is = er.resolveEntity(namespaceURI, systemId);
+                if (is != null)
                     return is;
             }
 
-            if(systemId!=null)
+            if (systemId != null)
                 return new InputSource(systemId);
             else
                 return null;
         } catch (IOException e) {
-            SAXParseException se = new SAXParseException(e.getMessage(),getLocator(),e);
+            SAXParseException se = new SAXParseException(e.getMessage(), getLocator(), e);
             parser.errorHandler.error(se);
             return null;
         }
     }
 
-    /** Imports the specified schema. */
-    public void importSchema( String ns, String schemaLocation ) throws SAXException {
+    /**
+     * Imports the specified WSDL.
+     */
+    public void importWSDL(String ns, String wsdlLocation) throws SAXException {
         WSDLContentHandlerEx newRuntime = new WSDLContentHandlerEx(parser, this);
-        InputSource source = resolveRelativeURL(ns,schemaLocation);
-        if(source!=null)
-            newRuntime.parseEntity( source, ns, getLocator() );
+        InputSource source = resolveRelativeURL(ns, wsdlLocation);
+        if (source != null)
+            newRuntime.parseEntity(source, ns, getLocator());
         // if source == null,
         // we can't locate this document. Let's just hope that
         // we already have the wsdl components for this wsdl
@@ -171,103 +175,100 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
     }
 
 
-
     /**
      * Called when a new document is being parsed and checks
      * if the document has already been parsed before.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * Used to avoid recursive inclusion. Note that the same
      * document will be parsed multiple times if they are for different
      * target namespaces.
-     *
+     * <p/>
      * <h2>Document Graph Model</h2>
-     * <p>
+     * <p/>
      * The challenge we are facing here is that you have a graph of
      * documents that reference each other. Each document has an unique
      * URI to identify themselves, and references are done by using those.
      * The graph may contain cycles.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * Our goal here is to parse all the documents in the graph, without
      * parsing the same document twice. This method implements this check.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * One complication is the chameleon schema; a document can be parsed
      * multiple times if they are under different target namespaces.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * Also, note that when you resolve relative URIs in the @schemaLocation,
      * their base URI is *NOT* the URI of the document.
      *
      * @return true if the document has already been processed and thus
-     *      needs to be skipped.
+     *         needs to be skipped.
      */
     public boolean hasAlreadyBeenRead() {
-        if( documentSystemId!=null ) {
-            if( documentSystemId.startsWith("file:///") )
+        if (documentSystemId != null) {
+            if (documentSystemId.startsWith("file:///"))
                 // change file:///abc to file:/abc
                 // JDK File.toURL method produces the latter, but according to RFC
                 // I don't think that's a valid URL. Since two different ways of
                 // producing URLs could produce those two different forms,
                 // we need to canonicalize one to the other.
-                documentSystemId = "file:/"+documentSystemId.substring(8);
+                documentSystemId = "file:/" + documentSystemId.substring(8);
         } else {
             // if the system Id is not provided, we can't test the identity,
             // so we have no choice but to read it.
             // the newly created SchemaDocumentImpl will be unique one
         }
 
-        assert document ==null;
-        document = new WSDLDocumentImpl( currentWSDL, documentSystemId );
+        assert document == null;
+        document = new WSDLDocumentImpl(currentWSDL, documentSystemId);
 
         WSDLDocumentImpl existing = parser.parsedDocuments.get(document);
-        if(existing==null) {
-            parser.parsedDocuments.put(document,document);
+        if (existing == null) {
+            parser.parsedDocuments.put(document, document);
         } else {
             document = existing;
         }
 
-        assert document !=null;
+        assert document != null;
 
-        if(referer!=null) {
-            assert referer.document !=null : "referer "+referer.documentSystemId+" has docIdentity==null";
+        if (referer != null) {
+            assert referer.document != null : "referer " + referer.documentSystemId + " has docIdentity==null";
             referer.document.references.add(this.document);
             this.document.referers.add(referer.document);
         }
 
-        return existing!=null;
+        return existing != null;
     }
 
     /**
      * Parses the specified entity.
      *
-     * @param importLocation
-     *      The source location of the import/include statement.
-     *      Used for reporting errors.
+     * @param importLocation The source location of the import/include statement.
+     *                       Used for reporting errors.
      */
-    public void parseEntity( InputSource source, String expectedNamespace, Locator importLocation )
+    public void parseEntity(InputSource source, String expectedNamespace, Locator importLocation)
             throws SAXException {
 
         documentSystemId = source.getSystemId();
 //        System.out.println("parsing "+baseUri);
 
 
-
         try {
-            Definitions s = new Definitions(this,expectedNamespace);
+            Definitions s = new Definitions(this, expectedNamespace);
             setRootHandler(s);
 
             try {
-                parser.parser.parse(source,this,
-                    parser.getEntityResolver(), getErrorHandler());
-            } catch( IOException e ) {
+                parser.parser.parse(source, this,
+                        parser.getEntityResolver(), getErrorHandler());
+            } catch (IOException e) {
                 SAXParseException se = new SAXParseException(
-                    e.toString(),importLocation,e);
+                        e.toString(), importLocation, e);
                 parser.errorHandler.fatalError(se);
                 throw se;
             }
-        } catch( SAXException e ) {
+        } catch (SAXException e) {
             parser.setErrorFlag();
             throw e;
         }
@@ -276,21 +277,16 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
     /**
      * Sets the root handler, which will be used to parse the
      * root element.
-     * <p>
+     * <p/>
      * This method can be called right after the object is created
      * or the reset method is called. You can't replace the root
      * handler while parsing is in progress.
-     * <p>
-     * Usually a generated class that corresponds to the &lt;start>
-     * pattern will be used as the root handler, but any NGCCHandler
-     * can be a root handler.
      *
-     * @exception IllegalStateException
-     *      If this method is called but it doesn't satisfy the
-     *      pre-condition stated above.
+     * @throws IllegalStateException If this method is called but it doesn't satisfy the
+     *                               pre-condition stated above.
      */
-    public void setRootHandler( AbstractHandler rootHandler ) {
-        if(currentHandler!=null)
+    public void setRootHandler(AbstractHandler rootHandler) {
+        if (currentHandler != null)
             throw new IllegalStateException();
         currentHandler = rootHandler;
     }
@@ -300,10 +296,12 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
      * This method works correctly only when called by the annotation handler.
      */
     public String getAnnotationContextElementName() {
-        return elementNames.get( elementNames.size()-2 );
+        return elementNames.get(elementNames.size() - 2);
     }
 
-    /** Creates a copy of the current locator object. */
+    /**
+     * Creates a copy of the current locator object.
+     */
     public Locator copyLocator() {
         return new LocatorImpl(getLocator());
     }
@@ -313,7 +311,7 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
     }
 
     public void onEnterElementConsumed(String uri, String localName, String qname, Attributes atts)
-        throws SAXException {
+            throws SAXException {
         super.onEnterElementConsumed(uri, localName, qname, atts);
         elementNames.push(localName);
     }
@@ -324,17 +322,13 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
     }
 
 
-
-    public void startPrefixMapping( String prefix, String uri ) throws SAXException {
-        super.startPrefixMapping(prefix,uri);
+    public void startPrefixMapping(String prefix, String uri) throws SAXException {
+        super.startPrefixMapping(prefix, uri);
     }
-    public void endPrefixMapping( String prefix ) throws SAXException {
+
+    public void endPrefixMapping(String prefix) throws SAXException {
         super.endPrefixMapping(prefix);
     }
-
-
-
-
 
 //
 //
@@ -344,19 +338,19 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
 
 
     public boolean parseBoolean(String v) {
-        if(v==null) return false;
-        v=v.trim();
+        if (v == null) return false;
+        v = v.trim();
         return v.equals("true") || v.equals("1");
     }
 
 
     protected void unexpectedX(String token) throws SAXException {
         SAXParseException e = new SAXParseException(MessageFormat.format(
-            "Unexpected {0} appears at line {1} column {2}",
+                "Unexpected {0} appears at line {1} column {2}",
                 token,
                 getLocator().getLineNumber(),
                 getLocator().getColumnNumber()),
-            getLocator());
+                getLocator());
 
         parser.errorHandler.fatalError(e);
         throw e;    // we will abort anyway

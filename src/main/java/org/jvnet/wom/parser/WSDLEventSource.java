@@ -43,6 +43,7 @@ public interface WSDLEventSource {
 
     /**
      * Replaces old handler with the new one
+     *
      * @param _old Old {@link WSDLEventReceiver}
      * @param _new New {@link WSDLEventReceiver}
      * @return thread id of the new receiver
@@ -50,8 +51,12 @@ public interface WSDLEventSource {
     int replace(WSDLEventReceiver _old, WSDLEventReceiver _new);
 
     void sendEnterElement(int receiverThreadId, String uri, String localName, String qname, Attributes atts) throws SAXException;
+
     void sendLeaveElement(int receiverThreadId, String uri, String localName, String qname) throws SAXException;
+
     void sendText(int receiverThreadId, String value) throws SAXException;
+
     void sendEnterAttribute(int receiverThreadId, String uri, String localName, String qname) throws SAXException;
+
     void sendLeaveAttribute(int receiverThreadId, String uri, String localName, String qname) throws SAXException;
 }

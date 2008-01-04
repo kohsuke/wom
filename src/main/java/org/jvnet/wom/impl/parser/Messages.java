@@ -35,8 +35,8 @@
  */
 package org.jvnet.wom.impl.parser;
 
-import java.util.ResourceBundle;
 import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 /**
  * @author Vivek Pandey
@@ -54,6 +54,6 @@ public class Messages {
 
     public static final String ERR_MISSING_WSDLLOCATION = "MissingWSDLocation"; // arg:0
 
-    public static final String ERR_UNEXPECTED_IMPORT ="UnexpectedTargetnamespace.Import";
+    public static final String ERR_UNEXPECTED_IMPORT = "UnexpectedTargetnamespace.Import";
 
 }

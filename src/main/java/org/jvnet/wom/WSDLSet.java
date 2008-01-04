@@ -35,10 +35,10 @@
  */
 package org.jvnet.wom;
 
-import java.util.Set;
 import java.util.Collection;
 
 public interface WSDLSet {
     WSDLDefinitions getWSDL(String targetNamespace);
+
     Collection<? extends WSDLDefinitions> getWSDLs();
 }

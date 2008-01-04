@@ -59,12 +59,12 @@ public abstract class WSDLPart extends WSDLEntity {
      *
      * @return n where n >= 0
      */
-    public abstract  int getIndex();
+    public abstract int getIndex();
 
     /**
      * Gives the XML Schema descriptor referenced using either wsdl:part@element or wsdl:part@type.
      */
-    public abstract  WSDLPartDescriptor getDescriptor();
+    public abstract WSDLPartDescriptor getDescriptor();
 
     /**
      * Abstracts wsdl:part descriptor that is defined using element or type attribute.

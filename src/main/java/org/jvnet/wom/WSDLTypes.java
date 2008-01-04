@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLTypes extends WSDLEntity{
+public abstract class WSDLTypes extends WSDLEntity {
 
     public WSDLTypes(Locator locator, QName name) {
         super(locator, name);

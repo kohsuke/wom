@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLOutput extends WSDLEntity{
+public abstract class WSDLOutput extends WSDLEntity {
     protected WSDLOutput(Locator locator, QName name) {
         super(locator, name);
     }

@@ -50,10 +50,9 @@ import java.util.Set;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLEntity implements WSDLExtensible {    
+public abstract class WSDLEntity implements WSDLExtensible {
     private WSDLDefinitionsImpl model;
     private WSDLDocumentImpl ownerDoc;
-    private String comment="";
 
     private final Set<WSDLExtension> extensions = new HashSet<WSDLExtension>();
     private final Locator locator;
@@ -70,7 +69,7 @@ public abstract class WSDLEntity implements WSDLExtensible {
 
     /**
      * Gets the source location information in the parsed WSDL.
-     *
+     * <p/>
      * This is useful when producing error messages.
      */
     public Locator getLocation() {
@@ -79,6 +78,7 @@ public abstract class WSDLEntity implements WSDLExtensible {
 
     /**
      * Gives {@link WSDLDefinitions} owning this WSDL entity.
+     *
      * @return
      */
     public WSDLDefinitions getOwnerWSDLModel() {
@@ -95,11 +95,12 @@ public abstract class WSDLEntity implements WSDLExtensible {
     }
 
     /**
-     * Gives the Comment on a WSDL component.
-     * @return "" if there is no comment
+     * Gives the Comment on a WSDL component. This is the content of &lt;wsdl:document&gt;
+     *
+     * @return "" if there is no documentation
      */
-    public String getComment() {
-        return comment;
+    public String getDocumentation() {
+        return "";
     }
 
     /**
@@ -113,15 +114,15 @@ public abstract class WSDLEntity implements WSDLExtensible {
     }
 
     public <T extends WSDLExtension> T getExtension(Class<T> type) {
-        for(WSDLExtension ex : extensions){
-            if(type.isInstance(ex))
+        for (WSDLExtension ex : extensions) {
+            if (type.isInstance(ex))
                 return type.cast(ex);
         }
         return null;
     }
 
     public void addExtension(WSDLExtension extension) {
-        if(extension == null)
+        if (extension == null)
             throw new IllegalArgumentException();
         extensions.add(extension);
     }
@@ -132,9 +133,5 @@ public abstract class WSDLEntity implements WSDLExtensible {
 
     protected void setOwnerDoc(WSDLDocumentImpl ownerDoc) {
         this.ownerDoc = ownerDoc;
-    }
-
-    protected void setComment(String comment) {
-        this.comment = comment;
     }
 }

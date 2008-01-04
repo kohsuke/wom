@@ -47,25 +47,23 @@ public interface WSDLExtensible {
      * Gets all the {@link WSDLExtension}s
      * added through {@link #addExtension(WSDLExtension)}.
      *
-     * @return
-     *      never null.
+     * @return never null.
      */
     Iterable<WSDLExtension> getExtensions();
 
     /**
      * Gets the extension that is assignable to the given type.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * This is just a convenient version that does
-     *
+     * <p/>
      * <pre>
      * Iterator itr = getExtensions(type);
      * if(itr.hasNext())  return itr.next();
      * else               return null;
      * </pre>
      *
-     * @return
-     *      null if the extension was not found.
+     * @return null if the extension was not found.
      */
     <T extends WSDLExtension> T getExtension(Class<T> type);
 
@@ -73,8 +71,7 @@ public interface WSDLExtensible {
      * Adds a new {@link WSDLExtension}
      * to this object.
      *
-     * @param extension
-     *      must not be null.
+     * @param extension must not be null.
      */
     void addExtension(WSDLExtension extension);
 }

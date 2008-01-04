@@ -38,14 +38,13 @@ package org.jvnet.wom;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.Map;
 
 /**
- * Provides a model of a wsdl:definitions element. This will represent  
+ * Provides a model of a wsdl:definitions element. This will represent
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLDefinitions extends WSDLEntity{
+public abstract class WSDLDefinitions extends WSDLEntity {
     protected WSDLDefinitions(Locator locator, QName name) {
         super(locator, name);
     }
@@ -90,23 +89,23 @@ public abstract class WSDLDefinitions extends WSDLEntity{
     public abstract WSDLService getService(QName name);
 
     /**
-     * Gives a {@link java.util.Map} of wsdl:portType {@link QName} and {@link WSDLPortType}
+     * Gives a Iterator of all {@link WSDLPortType}
      *
      * @return an empty Map if the wsdl document has no wsdl:portType. Always non-null.
      */
-    public abstract Map<QName, ? extends WSDLPortType> getPortTypes();
+    public abstract Iterable<? extends WSDLPortType> getPortTypes();
 
     /**
-     * Gives a {@link Map} of wsdl:binding {@link QName} and {@link WSDLBoundPortType}
+     * Gives a Iterator of all {@link WSDLBoundPortType}
      *
      * @return an empty Map if the wsdl document has no wsdl:binding. Always non-null.
      */
-    public abstract Map<QName, WSDLBoundPortType> getBindings();
+    public abstract Iterable<? extends WSDLBoundPortType> getBindings();
 
     /**
-     * Gives a {@link Map} of wsdl:service qualified name and {@link WSDLService}
+     * Gives a Iterator of all {@link WSDLService}
      *
      * @return an empty Map if the wsdl document has no wsdl:service. Always non-null.
      */
-    public abstract Map<QName, ? extends WSDLService> getServices();
+    public abstract Iterable<? extends WSDLService> getServices();
 }

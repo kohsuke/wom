@@ -48,7 +48,7 @@ import javax.xml.namespace.QName;
 public class WSDLInputImpl extends WSDLInput {
     private WSDLMessageImpl message;
 
-    private String action="";
+    private String action = "";
 
     public WSDLInputImpl(Locator locator, QName name) {
         super(locator, name);

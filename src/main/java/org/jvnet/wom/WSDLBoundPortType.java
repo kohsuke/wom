@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLBoundPortType extends WSDLEntity{
+public abstract class WSDLBoundPortType extends WSDLEntity {
     protected WSDLBoundPortType(Locator locator, QName name) {
         super(locator, name);
     }

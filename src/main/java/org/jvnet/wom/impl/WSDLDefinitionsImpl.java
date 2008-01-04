@@ -41,23 +41,27 @@ import org.jvnet.wom.WSDLPortType;
 import org.jvnet.wom.WSDLService;
 import org.jvnet.wom.WSDLVisitor;
 import org.jvnet.wom.impl.parser.WSDLSetImpl;
+import org.jvnet.wom.impl.util.QNameMap;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-public class WSDLDefinitionsImpl extends WSDLDefinitions{
+public class WSDLDefinitionsImpl extends WSDLDefinitions {
 
     private final WSDLSetImpl parent;
-    private Set<WSDLPortTypeImpl> portType = new HashSet<WSDLPortTypeImpl>();
+
+    private String documentation = "";
+    private final QNameMap<WSDLMessageImpl> messages = new QNameMap<WSDLMessageImpl>();
+    private final QNameMap<WSDLPortTypeImpl> portTypes = new QNameMap<WSDLPortTypeImpl>();
+    private final QNameMap<WSDLBoundPortTypeImpl> bindings = new QNameMap<WSDLBoundPortTypeImpl>();
+    private final QNameMap<WSDLServiceImpl> services = new QNameMap<WSDLServiceImpl>();
+
 
     public WSDLDefinitionsImpl(WSDLSetImpl parent, Locator locator, QName name) {
-        super(locator,  name);
+        super(locator, name);
         this.parent = parent;
     }
-    
+
     public String getTargetNamespace() {
         return getName().getNamespaceURI();
     }
@@ -66,28 +70,52 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions{
         return null;
     }
 
+    public void addPortType(WSDLPortTypeImpl portType) {
+        portTypes.put(portType.getName(), portType);
+    }
+
     public WSDLBoundPortType getBinding(QName name) {
-        return null;
+        return bindings.get(name);
+    }
+
+    public void addBoundPortType(WSDLBoundPortTypeImpl binding) {
+        bindings.put(binding.getName(), binding);
     }
 
     public WSDLBoundPortType getBinding(QName serviceName, QName portName) {
-        return null;
+        WSDLServiceImpl service = services.get(serviceName);
+        if (service == null)
+            return null;
+        WSDLPortImpl port = service.get(portName);
+        return port.getBinding();
     }
 
     public WSDLService getService(QName name) {
-        return null;
+        return services.get(name);
     }
 
-    public Map<QName, ? extends WSDLPortType> getPortTypes() {
-        return null;
+    public Iterable<WSDLPortTypeImpl> getPortTypes() {
+        return portTypes.values();
     }
 
-    public Map<QName, WSDLBoundPortType> getBindings() {
-        return null;
+    public Iterable<WSDLBoundPortTypeImpl> getBindings() {
+        return bindings.values();
     }
 
-    public Map<QName, ? extends WSDLService> getServices() {
-        return null;
+    public Iterable<WSDLServiceImpl> getServices() {
+        return services.values();
+    }
+
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
+    }
+
+    public void addMessage(WSDLMessageImpl message) {
+        messages.put(message.getName(), message);
     }
 
     public void visit(WSDLVisitor visitor) {

@@ -78,9 +78,9 @@ public class WSDLOperationImpl extends WSDLOperation {
     }
 
     public WSDLFault getFault(QName faultDetailName) {
-        for(WSDLFaultImpl f : faults){
-            for(WSDLPart part : f.getMessage().parts()){
-                if(part.getDescriptor().name().equals(faultDetailName))
+        for (WSDLFaultImpl f : faults) {
+            for (WSDLPart part : f.getMessage().parts()) {
+                if (part.getDescriptor().name().equals(faultDetailName))
                     return f;
             }
         }

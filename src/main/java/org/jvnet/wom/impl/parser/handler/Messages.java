@@ -1,8 +1,8 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
+ *
  * Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
- * 
+ *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
  * and Distribution License("CDDL") (collectively, the "License").  You
@@ -10,7 +10,7 @@
  * a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
  * or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
  * language governing permissions and limitations under the License.
- * 
+ *
  * When distributing the software, include this License Header Notice in each
  * file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
  * Sun designates this particular file as subject to the "Classpath" exception
@@ -19,9 +19,9 @@
  * Header, with the fields enclosed by brackets [] replaced by your own
  * identifying information: "Portions Copyrighted [year]
  * [name of copyright owner]"
- * 
+ *
  * Contributor(s):
- * 
+ *
  * If you wish your version of this file to be governed by only the CDDL or
  * only the GPL Version 2, indicate your decision by adding "[Contributor]
  * elects to include this software in this distribution under the [CDDL or GPL
@@ -33,69 +33,20 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
+package org.jvnet.wom.impl.parser.handler;
 
-import org.jvnet.wom.WSDLBoundFault;
-import org.jvnet.wom.WSDLBoundOperation;
-import org.jvnet.wom.WSDLVisitor;
-import org.xml.sax.Locator;
-
-import javax.xml.namespace.QName;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLBoundOperationImpl extends WSDLBoundOperation {
-    private String soapAction;
-    private WSDLOperationImpl abstractOperation;
-    private Map<String, WSDLPartImpl> inputParts = new HashMap<String, WSDLPartImpl>();
-    private Map<String, WSDLPartImpl> outputParts = new HashMap<String, WSDLPartImpl>();
-    private Set<WSDLBoundFaultImpl> faults = new HashSet<WSDLBoundFaultImpl>();
+public class Messages {
 
-    protected WSDLBoundOperationImpl(Locator locator, QName name) {
-        super(locator, name);
+    public static String format(String property, Object... args) {
+        String text = ResourceBundle.getBundle(Messages.class.getName()).getString(property);
+        return MessageFormat.format(text, args);
     }
 
-    public String getSOAPAction() {
-        return soapAction;
-    }
-
-
-    public void setSoapAction(String soapAction) {
-        this.soapAction = soapAction;
-    }
-
-    public WSDLOperationImpl getOperation() {
-        return abstractOperation;
-    }
-
-
-    public void setAbstractOperation(WSDLOperationImpl op) {
-        this.abstractOperation = op;
-    }
-
-    public final Map<String, WSDLPartImpl> getInParts() {
-        return inputParts;
-    }
-
-    public final Map<String, WSDLPartImpl> getOutParts() {
-        return outputParts;
-    }
-
-    public final Iterable<? extends WSDLBoundFault> getFaults() {
-        return faults;
-    }
-
-    //TODO
-    public QName getReqPayloadName() {
-        return null;
-    }
-
-    public void visit(WSDLVisitor visitor) {
-        visitor.bindingOperation(this);
-    }
+    public static final String MISSING_NAME = "wsdl.MissingName"; //arg0, arg1
 }

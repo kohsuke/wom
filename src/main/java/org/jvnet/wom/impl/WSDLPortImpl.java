@@ -35,8 +35,8 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLPort;
 import org.jvnet.wom.WSDLBoundPortType;
+import org.jvnet.wom.WSDLPort;
 import org.jvnet.wom.WSDLService;
 import org.jvnet.wom.WSDLVisitor;
 import org.xml.sax.Locator;

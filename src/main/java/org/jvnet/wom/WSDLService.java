@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLService extends WSDLEntity{
+public abstract class WSDLService extends WSDLEntity {
     protected WSDLService(Locator locator, QName name) {
         super(locator, name);
     }
@@ -56,11 +56,6 @@ public abstract class WSDLService extends WSDLEntity{
      * @return null if a {@link WSDLPort} is not found
      */
     public abstract WSDLPort get(QName portName);
-
-    /**
-     * Gets the first {@link WSDLPort} if any, or otherwise null.
-     */
-    public abstract WSDLPort getFirstPort();
 
     /**
      * Gives all the {@link WSDLPort} in a wsdl:service {@link WSDLService}

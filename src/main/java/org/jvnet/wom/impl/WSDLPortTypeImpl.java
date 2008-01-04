@@ -41,10 +41,8 @@ import org.jvnet.wom.WSDLVisitor;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Vivek Pandey
@@ -52,7 +50,7 @@ import java.util.HashMap;
 public class WSDLPortTypeImpl extends WSDLPortType {
     private Map<QName, WSDLOperationImpl> operations = new HashMap<QName, WSDLOperationImpl>();
     private WSDLDefinitionsImpl owner;
-    
+
     public WSDLPortTypeImpl(Locator locator, QName name) {
         super(locator, name);
     }
