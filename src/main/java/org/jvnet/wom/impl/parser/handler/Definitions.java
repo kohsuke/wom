@@ -121,18 +121,8 @@ public class Definitions extends AbstractHandler {
                 break;
             case 2: //children of wsdl:definitions
                 if (uri.equals(WSDL_NS) && localName.equals("documentation")) {
-                    TransformerHandler handler = null;
-                    try {
-                        handler = ((SAXTransformerFactory) TransformerFactory.newInstance()).newTransformerHandler();
-                    } catch (TransformerConfigurationException e) {
-                        runtime.getErrorHandler().error(new SAXParseException(e.getMessage(), runtime.getLocator(), e));
-                        return;
-                    }
-                    ByteArrayOutputStream os = new ByteArrayOutputStream();
-                    StreamResult result = new StreamResult(os);
-                    handler.setResult(new StreamResult());
-                    runtime.redirectSubtree(handler, uri, localName, qname);
-                    runtime.currentWSDL.setDocumentation(os.toString());
+                    String doc = processDocumentation(uri, localName, qname);
+                    runtime.currentWSDL.setDocumentation(doc);
                 } else if (uri.equals(WSDL_NS) && localName.equals("types")) {
                     //Let the ContentHandler for Schema handle it
                     runtime.redirectSubtree(runtime.parser.getSchemaContentHandler(), uri, localName, qname);

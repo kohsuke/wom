@@ -100,6 +100,22 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
         attStack.push(new AttributesImpl());
     }
 
+     /**
+     * Sets the root handler, which will be used to parse the
+     * root element.
+     * <p/>
+     * This method can be called right after the object is created
+     * or the reset method is called. You can't replace the root
+     * handler while parsing is in progress.
+     *
+     * @throws IllegalStateException If this method is called but it doesn't satisfy the
+     *                               pre-condition stated above.
+     */
+    public void setRootHandler(AbstractHandler rootHandler) {
+        if (currentHandler != null)
+            throw new IllegalStateException();
+        currentHandler = rootHandler;
+    }
 
     public void setDocumentLocator(Locator locator) {
         this.locator = locator;

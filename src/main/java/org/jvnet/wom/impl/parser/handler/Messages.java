@@ -42,11 +42,16 @@ import java.util.ResourceBundle;
  * @author Vivek Pandey
  */
 public class Messages {
+    public static final String MISSING_ELEMENT_OR_TYPE = "wsdl.missingElementOrType";
+    public static final String INVALID_DESCRIPTOR_NAME = "wsdl.invalidDescriptorName";
 
     public static String format(String property, Object... args) {
         String text = ResourceBundle.getBundle(Messages.class.getName()).getString(property);
         return MessageFormat.format(text, args);
     }
 
-    public static final String MISSING_NAME = "wsdl.MissingName"; //arg0, arg1
+    public static final String MISSING_NAME = "wsdl.missingName"; //arg0, arg1
+    public static final String UNKNOWN_ATTRIBUTE = "wsdl.unkwonAttribute";//arg0
+    public static final String UNKNOWN_ELEMENT = "wsdl.unkwonElement";//arg0
+    public static final String UNKNOWN_REQUIRED_EXTENSIBILITY_ELEMENT = "wsdl.unkownRequiredElement";//arg0
 }

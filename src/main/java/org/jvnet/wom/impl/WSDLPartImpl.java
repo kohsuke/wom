@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 public class WSDLPartImpl extends WSDLPart {
     private final WSDLPartDescriptor descriptor;
     private int index;
+    private String doc;
 
     public WSDLPartImpl(Locator locator, QName name, WSDLPartDescriptor descriptor) {
         super(locator, name);
@@ -67,5 +68,13 @@ public class WSDLPartImpl extends WSDLPart {
 
     public WSDLPartDescriptor getDescriptor() {
         return descriptor;
+    }
+
+    public String getDocumentation() {
+        return doc;
+    }
+
+    public void setDocumentation(String doc){
+        this.doc = doc;
     }
 }

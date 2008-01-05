@@ -48,6 +48,7 @@ import java.util.Set;
  */
 public class WSDLMessageImpl extends WSDLMessage {
     private final Set<WSDLPartImpl> parts = new HashSet<WSDLPartImpl>();
+    private String doc = "";
 
     public WSDLMessageImpl(Locator locator, QName name) {
         super(locator, name);
@@ -57,7 +58,19 @@ public class WSDLMessageImpl extends WSDLMessage {
         return parts;
     }
 
+    public void addPart(WSDLPartImpl part){
+        parts.add(part);
+    }
+    
     public void visit(WSDLVisitor visitor) {
         visitor.messages(this);
+    }
+
+    public String getDocumentation() {
+        return doc;
+    }
+
+    public void setDocumentation(String doc){
+        this.doc = doc;
     }
 }

@@ -39,6 +39,16 @@ import org.jvnet.wom.parser.WSDLEventReceiver;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.ErrorHandler;
+
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.stream.StreamResult;
+import java.util.Arrays;
+import java.io.ByteArrayOutputStream;
 
 public abstract class AbstractHandler implements WSDLEventReceiver {
     protected static final String WSDL_NS = "http://schemas.xmlsoap.org/wsdl/";
@@ -186,6 +196,29 @@ public abstract class AbstractHandler implements WSDLEventReceiver {
         _parent.onChildCompleted(result, cookie, true);
         _source.sendText(id, text);
     }
+
+    protected void validateAttribute(ErrorHandler handler, Attributes attributes, int... understoodAtts) throws SAXException {
+        for(int i = 0; i < understoodAtts.length; i++){
+            if(understoodAtts[i] == 1)
+                continue;
+            handler.warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ATTRIBUTE, attributes.getQName(i)), getRuntime().getLocator()));
+        }
+    }
+
+    protected String processDocumentation(String uri, String localName, String qname) throws SAXException{
+        TransformerHandler handler;
+        try{
+            handler = ((SAXTransformerFactory) TransformerFactory.newInstance()).newTransformerHandler();
+        } catch (TransformerConfigurationException e) {
+            throw new SAXParseException(e.getMessage(), getRuntime().getLocator(), e);
+        }
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        StreamResult result = new StreamResult(os);
+        handler.setResult(new StreamResult());
+        getRuntime().redirectSubtree(handler, uri, localName, qname);
+        return os.toString();
+    }
+
 
 //
 //
