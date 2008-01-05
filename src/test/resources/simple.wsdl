@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+        name="Simple"
+    targetNamespace="http://example.com/wsdl"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://example.com/wsdl"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:types="http://example.com/types">
+
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://example.com/types"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            attributeFormDefault="qualified"
+            elementFormDefault="qualified"
+            xmlns:types="http://example.com/types">
+
+            <xsd:element name="echo" type="types:echoType"/>
+            <xsd:complexType name="echoType">
+                <xsd:sequence>
+                    <xsd:element name="reqInfo" type="xsd:anyURI"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:element name="echoResponse" type="types:echoResponseType"/>
+            <xsd:complexType name="echoResponseType">
+                <xsd:sequence>
+                    <xsd:element name="respInfo" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+
+    <message name="echoRequest">
+        <part name="reqBody" element="types:echo"/>
+    </message>
+
+    <message name="echoResponse">
+        <part name="respBody" element="types:echoResponse"/>
+    </message>
+
+    <wsdl:portType name="HelloWorld">
+        <wsdl:documentation>This is a simple HelloWorld service.</wsdl:documentation>
+        <wsdl:operation name="echo">
+        <wsdl:documentation>This operation simply echoes back whatever it receives</wsdl:documentation>
+            <wsdl:input message="tns:echoRequest"/>
+            <wsdl:output message="tns:echoResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+
+    <wsdl:binding name="HelloWorldBinding" type="tns:HelloWorld">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+        <!-- non-wrapper -->
+        <wsdl:operation name="echo">
+            <soap:operation/>
+            <wsdl:input>
+                <soap:body message="tns:echoRequest" parts="reqBody" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body message="tns:echoResponse" parts="respBody" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <service name="HelloService">
+        <wsdl:documentation>This is a simple HelloWorld service.</wsdl:documentation>
+        <port name="HelloWorldPort" binding="tns:HelloWorldBinding">
+            <wsdl:documentation>A SOAP 1.1 port</wsdl:documentation>
+            <soap:address location="http://localhost/HelloService"/>
+        </port>
+    </service>
+</wsdl:definitions>
