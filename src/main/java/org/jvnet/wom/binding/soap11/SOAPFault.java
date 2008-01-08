@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * @author Vivek Pandey
  */
-public class SOAPFault implements WSDLExtension {
+public final class SOAPFault implements WSDLExtension {
     private final List<String> encodingStyle;
     private final String namespace;
     private final SOAPBody.Use use;
@@ -54,7 +54,7 @@ public class SOAPFault implements WSDLExtension {
     public SOAPFault(List<String> encodingStyle, String namespace, SOAPBody.Use use, String name) {
         this.encodingStyle = Collections.unmodifiableList(encodingStyle);
         this.namespace = namespace;
-        this.use = (use==null)? SOAPBody.Use.literal:null;
+        this.use = (use == null) ? SOAPBody.Use.literal : null;
         this.name = name;
     }
 
@@ -70,14 +70,13 @@ public class SOAPFault implements WSDLExtension {
         return use;
     }
 
-    public String getFaultName(){
+    public String getFaultName() {
         return name;
     }
 
     public QName getName() {
         return new QName(SOAPBinding.SOAP_NS, "fault");
     }
-
 
 
 }

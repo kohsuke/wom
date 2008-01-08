@@ -75,8 +75,8 @@ public class Definitions extends AbstractHandler {
 
     private void readDefinitionQName() throws SAXException {
         Attributes test = runtime.getCurrentAttributes();
-        String tns = fixNull(test.getValue("targetNamespace"));
-        String name = fixNull(test.getValue("name"));
+        String tns = XmlUtil.fixNull(test.getValue("targetNamespace"));
+        String name = XmlUtil.fixNull(test.getValue("name"));
 
         // importing
         runtime.currentWSDL = runtime.parser.wsdlSet.createWSDLDefinitions(name, tns, runtime.copyLocator());

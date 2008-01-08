@@ -241,10 +241,6 @@ public abstract class AbstractHandler implements WSDLEventReceiver {
         getRuntime().unexpectedX("/@" + qname);
     }
 
-    protected String fixNull(String value) {
-        return (value == null) ? "" : value;
-    }
-
 }
 
 

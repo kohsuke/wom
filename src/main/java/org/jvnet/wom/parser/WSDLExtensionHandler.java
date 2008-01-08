@@ -1,8 +1,8 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- *
+ * 
  * Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
- *
+ * 
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
  * and Distribution License("CDDL") (collectively, the "License").  You
@@ -10,7 +10,7 @@
  * a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
  * or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
  * language governing permissions and limitations under the License.
- *
+ * 
  * When distributing the software, include this License Header Notice in each
  * file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
  * Sun designates this particular file as subject to the "Classpath" exception
@@ -19,9 +19,9 @@
  * Header, with the fields enclosed by brackets [] replaced by your own
  * identifying information: "Portions Copyrighted [year]
  * [name of copyright owner]"
- *
+ * 
  * Contributor(s):
- *
+ * 
  * If you wish your version of this file to be governed by only the CDDL or
  * only the GPL Version 2, indicate your decision by adding "[Contributor]
  * elects to include this software in this distribution under the [CDDL or GPL
@@ -33,27 +33,27 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl.parser.handler;
+package org.jvnet.wom.parser;
 
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
+import org.xml.sax.ContentHandler;
+
+import javax.xml.namespace.QName;
 
 /**
+ * Abstrtaction to allow processing and populating WSDL extensibility elements in to the model. Only one
+ * WSDLExtensionHandler per WSDL extensibility element or attribute are allowed.
+ *
  * @author Vivek Pandey
  */
-public final class Messages {
-    public static final String MISSING_ELEMENT_OR_TYPE = "wsdl.missingElementOrType";
-    public static final String INVALID_DESCRIPTOR_NAME = "wsdl.invalidDescriptorName";
-    public static final String INVALID_MESSAGE_DESCRIPTOR = "wsdl.invalidMessageDescriptor";
-    public static final String INVALID_PORTTYPE_DESCRIPTOR = "wsdl.invalidPortTypeDescriptor";
+public interface WSDLExtensionHandler {
+    /**
+     * Returns true of the extensibilityElement is supported, false otherwise.
+     */
+    public boolean isSupported(QName extensibilityElement);
 
-    public static String format(String property, Object... args) {
-        String text = ResourceBundle.getBundle(Messages.class.getName()).getString(property);
-        return MessageFormat.format(text, args);
-    }
+    /**
+     * Gives the {@link ContentHandler} which will receive SAX events for the extensibility element
+     */
+    public ContentHandler getContentHandler();
 
-    public static final String MISSING_NAME = "wsdl.missingName"; //arg0, arg1
-    public static final String UNKNOWN_ATTRIBUTE = "wsdl.unknownAttribute";//arg0
-    public static final String UNKNOWN_ELEMENT = "wsdl.unknownElement";//arg0
-    public static final String UNKNOWN_REQUIRED_EXTENSIBILITY_ELEMENT = "wsdl.unknownRequiredElement";//arg0
 }

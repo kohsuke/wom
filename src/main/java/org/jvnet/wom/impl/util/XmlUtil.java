@@ -53,4 +53,8 @@ public final class XmlUtil {
         return s.substring(0, i);
     }
 
+    public static String fixNull(String value) {
+        return (value == null) ? "" : value;
+    }
+
 }

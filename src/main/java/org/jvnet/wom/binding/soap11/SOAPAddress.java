@@ -43,7 +43,7 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public class SOAPAddress implements WSDLExtension {
+public final class SOAPAddress implements WSDLExtension {
     private final String location;
 
     public SOAPAddress(String location) {

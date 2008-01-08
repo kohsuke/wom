@@ -103,7 +103,7 @@ public class Output extends AbstractHandler {
 
     private void processAttributes(Attributes test) throws SAXException {
         int[] validattrs = new int[test.getLength()];
-        String name = fixNull(test.getValue("name"));
+        String name = XmlUtil.fixNull(test.getValue("name"));
 
         int index = test.getIndex("name");
         if (index >= 0)

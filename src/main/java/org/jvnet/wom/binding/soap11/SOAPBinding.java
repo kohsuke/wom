@@ -43,7 +43,8 @@ import javax.xml.namespace.QName;
  * @author Vivek Pandey
  */
 public final class SOAPBinding implements WSDLExtension {
-    public static final String SOAP_NS="http://schemas.xmlsoap.org/wsdl/soap/";
+    public static final String SOAP_NS = "http://schemas.xmlsoap.org/wsdl/soap/";
+    public static final QName SOAPBinding_NAME = new QName(SOAP_NS, "binding");
     private final String transport;
     private final Style style;
 
@@ -53,7 +54,7 @@ public final class SOAPBinding implements WSDLExtension {
     }
 
     public QName getName() {
-        return new QName(SOAP_NS, "binding");
+        return SOAPBinding_NAME;
     }
 
     public Style getStyle() {
@@ -64,5 +65,7 @@ public final class SOAPBinding implements WSDLExtension {
         return transport;
     }
 
-    public enum Style{Document, Rpc}
+    public enum Style {
+        Document, Rpc
+    }
 }

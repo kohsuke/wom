@@ -120,7 +120,7 @@ public class PortType extends AbstractHandler {
 
     private void processAttributes(Attributes test) throws SAXException {
         int[] validattrs = new int[test.getLength()];
-        String name = fixNull(test.getValue("name"));
+        String name = XmlUtil.fixNull(test.getValue("name"));
         if (name.equals("")) {
             runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:portType", name), runtime.getLocator()));
         }

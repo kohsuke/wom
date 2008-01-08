@@ -86,6 +86,9 @@ public class BoundPortType extends AbstractHandler {
         } else if (WSDL_NS.equals(uri) && localName.equals("operation")) {
             BoundOperation boundOperation = new BoundOperation(this, _source, runtime, 71, expectedNamespace);
             spawnChildFromEnterElement(boundOperation, uri, localName, qname, atts);
+        } else {
+            //give extensions a chance
+
         }
 
     }
@@ -110,7 +113,7 @@ public class BoundPortType extends AbstractHandler {
 
     private void processAttributes(Attributes test) throws SAXException {
         int[] validattrs = new int[test.getLength()];
-        String name = fixNull(test.getValue("name"));
+        String name = XmlUtil.fixNull(test.getValue("name"));
         if (name.equals("")) {
             runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:binding", name), runtime.getLocator()));
         }

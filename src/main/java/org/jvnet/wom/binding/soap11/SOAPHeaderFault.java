@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * @author Vivek Pandey
  */
-public class SOAPHeaderFault extends HeaderAttributes{
+public final class SOAPHeaderFault extends HeaderAttributes {
     SOAPHeaderFault(QName message, String part, SOAPBody.Use use, List<String> encodingStyle, String namespace) {
         super(message, part, use, encodingStyle, namespace);
     }

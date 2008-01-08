@@ -118,7 +118,7 @@ public class Part extends AbstractHandler {
     private void processAttributes(Attributes test) throws SAXException {
         int[] validattrs = new int[test.getLength()];
         //name
-        String name = fixNull(test.getValue("name"));
+        String name = XmlUtil.fixNull(test.getValue("name"));
         int index = test.getIndex("name");
         validattrs[index] = 1;
 

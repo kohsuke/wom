@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * @author Vivek Pandey
  */
-public class SOAPHeader extends HeaderAttributes implements WSDLExtension {
+public final class SOAPHeader extends HeaderAttributes implements WSDLExtension {
     private final List<SOAPHeaderFault> headerFaults = new ArrayList<SOAPHeaderFault>();
 
     SOAPHeader(QName message, String part, SOAPBody.Use use, List<String> encodingStyle, String namespace) {
@@ -56,11 +56,11 @@ public class SOAPHeader extends HeaderAttributes implements WSDLExtension {
         return new QName(SOAPBinding.SOAP_NS, "header");
     }
 
-    public void addHeaderFault(SOAPHeaderFault headerFault){
+    public void addHeaderFault(SOAPHeaderFault headerFault) {
         headerFaults.add(headerFault);
     }
 
-    public Iterable<SOAPHeaderFault> getHeaderFaults(){
+    public Iterable<SOAPHeaderFault> getHeaderFaults() {
         return headerFaults;
     }
 
@@ -82,5 +82,5 @@ public class SOAPHeader extends HeaderAttributes implements WSDLExtension {
 
     public String getNamespace() {
         return namespace;
-    }    
+    }
 }

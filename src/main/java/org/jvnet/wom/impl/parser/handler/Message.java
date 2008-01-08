@@ -38,6 +38,7 @@ package org.jvnet.wom.impl.parser.handler;
 import org.jvnet.wom.impl.WSDLMessageImpl;
 import org.jvnet.wom.impl.WSDLPartImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -108,7 +109,7 @@ public class Message extends AbstractHandler {
 
     private void processAttributes(Attributes test) throws SAXException {
         int[] validattrs = new int[test.getLength()];
-        String name = fixNull(test.getValue("name"));
+        String name = XmlUtil.fixNull(test.getValue("name"));
         if (name.equals("")) {
             runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:message", name), runtime.getLocator()));
         }
