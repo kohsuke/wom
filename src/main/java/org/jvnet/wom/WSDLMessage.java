@@ -53,4 +53,9 @@ public abstract class WSDLMessage extends WSDLEntity {
      * Gets all the parts.
      */
     public abstract Iterable<? extends WSDLPart> parts();
+
+    /**
+     * Get a part of specific name
+     */
+    public abstract WSDLPart getPart(String partName);
 }

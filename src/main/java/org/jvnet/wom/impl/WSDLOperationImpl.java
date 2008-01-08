@@ -35,6 +35,7 @@
  */
 package org.jvnet.wom.impl;
 
+import org.jvnet.wom.WSDLEntity;
 import org.jvnet.wom.WSDLFault;
 import org.jvnet.wom.WSDLInput;
 import org.jvnet.wom.WSDLOperation;
@@ -45,7 +46,10 @@ import org.jvnet.wom.WSDLVisitor;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -56,6 +60,9 @@ public class WSDLOperationImpl extends WSDLOperation {
     private WSDLInputImpl input;
     private WSDLOutputImpl output;
     private WSDLPortType parent;
+    private String doc;
+    private List<String> paramOrder = new ArrayList<String>();
+    private List<String> unmodParamOrder;
 
     public WSDLOperationImpl(Locator locator, QName name) {
         super(locator, name);
@@ -87,8 +94,23 @@ public class WSDLOperationImpl extends WSDLOperation {
         return null;
     }
 
+    public void addFault(WSDLFaultImpl fault) {
+        faults.add(fault);
+    }
+
     public WSDLPortType getPortType() {
         return parent;
+    }
+
+    public List<String> getParameterOrder() {
+        return unmodParamOrder;
+    }
+
+    public void setParameterOrder(String[] paramOrder) {
+        assert this.paramOrder.isEmpty();
+        for (String param : paramOrder) {
+            this.paramOrder.add(param);
+        }
     }
 
     public void setInput(WSDLInputImpl input) {
@@ -105,5 +127,18 @@ public class WSDLOperationImpl extends WSDLOperation {
 
     public void visit(WSDLVisitor visitor) {
         visitor.operation(this);
+    }
+
+    public void setDocumentation(String doc) {
+        this.doc = doc;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return doc;
+    }
+
+    public void finalize(WSDLEntity parent) {
+        unmodParamOrder = Collections.unmodifiableList(paramOrder);
     }
 }

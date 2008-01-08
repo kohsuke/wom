@@ -41,20 +41,9 @@ import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-
 public class Definitions extends AbstractHandler {
-    private String uri;
-    private String localName;
-    private String qname;
     private int state;
     private final WSDLContentHandlerEx runtime;
     private final String expectedNamespace;
@@ -107,9 +96,6 @@ public class Definitions extends AbstractHandler {
 
 
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-        this.uri = uri;
-        this.localName = localName;
-        this.qname = qname;
 
         switch (state) {
             case 1://definitions
@@ -130,22 +116,13 @@ public class Definitions extends AbstractHandler {
                     Message message = new Message(this, _source, runtime, 50, expectedNamespace);
                     spawnChildFromEnterElement(message, uri, localName, qname, atts);
                 } else if (uri.equals(WSDL_NS) && localName.equals("portType")) {
-
+                    PortType portType = new PortType(this, _source, runtime, 60, expectedNamespace);
+                    spawnChildFromEnterElement(portType, uri, localName, qname, atts);
                 } else if (uri.equals(WSDL_NS) && localName.equals("binding")) {
                 } else if (uri.equals(WSDL_NS) && localName.equals("service")) {
                 }
                 break;
             case 3://imports
-                break;
-            case 4://types
-                break;
-            case 5://message
-                break;
-            case 6://portType
-                break;
-            case 7://binding
-                break;
-            case 8://service
                 break;
             default: //unknown, it might be extensibility element
                 //TODO: log a message

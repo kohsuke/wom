@@ -35,21 +35,20 @@
  */
 package org.jvnet.wom.impl.parser.handler;
 
-import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXParseException;
-import org.jvnet.wom.parser.WSDLEventSource;
-import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
-import org.jvnet.wom.impl.WSDLPartImpl;
-import org.jvnet.wom.impl.WSDLMessageImpl;
 import org.jvnet.wom.WSDLPart;
+import org.jvnet.wom.impl.WSDLPartImpl;
+import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.parser.WSDLEventSource;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public class Part extends AbstractHandler{
+public class Part extends AbstractHandler {
     private WSDLContentHandlerEx runtime;
     private String expectedNS;
     private WSDLPartImpl part;
@@ -76,16 +75,17 @@ public class Part extends AbstractHandler{
     }
 
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-        switch(state){
+        switch (state) {
             case 1:
                 if (uri.equals(WSDL_NS) && localName.equals("part")) {
                     runtime.onEnterElementConsumed(uri, localName, qname, atts);
                     Attributes test = runtime.getCurrentAttributes();
                     processAttributes(test);
-                }else if(uri.equals(WSDL_NS) && localName.equals("documentation")){
+                } else if (uri.equals(WSDL_NS) && localName.equals("documentation")) {
+                    runtime.onEnterElementConsumed(uri, localName, qname, atts);
                     String doc = processDocumentation(uri, localName, qname);
                     part.setDocumentation(doc);
-                }else{
+                } else {
                     //TODO: give unkown elements to extension handlers
                     runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ELEMENT, new QName(uri, localName)), runtime.getLocator()));
                 }
@@ -107,10 +107,10 @@ public class Part extends AbstractHandler{
         return s.substring(i + 1);
     }
 
-    private QName getDescriptorName(String qualifiedName){
+    private QName getDescriptorName(String qualifiedName) {
         String uri = runtime.resolveNamespacePrefix(getPrefix(qualifiedName));
         String localname = getLocalPart(qualifiedName);
-        if(localname == null || localname.trim().equals(""))
+        if (localname == null || localname.trim().equals(""))
             return null;
         return new QName(uri, localname);
     }
@@ -120,7 +120,7 @@ public class Part extends AbstractHandler{
         //name
         String name = fixNull(test.getValue("name"));
         int index = test.getIndex("name");
-        validattrs[index]=1;
+        validattrs[index] = 1;
 
         if (name.equals("")) {
             runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:part", name), runtime.getLocator()));
@@ -132,29 +132,29 @@ public class Part extends AbstractHandler{
         //element
         index = test.getIndex("element");
 
-        if(index >= 0){
+        if (index >= 0) {
             validattrs[index] = 1;
             String qname = test.getValue(index);
-            descName = getDescriptorName(test.getValue(qname));
-            if(descName == null){
+            descName = getDescriptorName(qname);
+            if (descName == null) {
                 runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.INVALID_DESCRIPTOR_NAME, name, "element", qname), runtime.getLocator()));
             }
             k = WSDLPart.WSDLPartDescriptor.Kind.ELEMENT;
-        }else{
+        } else {
             //type
             index = test.getIndex("type");
-            if(index >=0){
+            if (index >= 0) {
                 validattrs[index] = 1;
                 String qname = test.getValue(index);
                 descName = getDescriptorName(qname);
-                if(descName == null){
+                if (descName == null) {
                     runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.INVALID_DESCRIPTOR_NAME, name, "type", qname), runtime.getLocator()));
                 }
                 k = WSDLPart.WSDLPartDescriptor.Kind.TYPE;
             }
         }
 
-        if(index == -1){
+        if (index == -1) {
             throw new SAXParseException(Messages.format(Messages.MISSING_ELEMENT_OR_TYPE, name), runtime.getLocator());
         }
 
@@ -164,7 +164,7 @@ public class Part extends AbstractHandler{
     }
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
-        switch (state){
+        switch (state) {
             case 1:
                 if (uri.equals(WSDL_NS) && localName.equals("part")) {
                     revertToParentFromLeaveElement(part, _cookie, uri, localName, qname);

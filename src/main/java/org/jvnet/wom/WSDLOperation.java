@@ -38,6 +38,7 @@ package org.jvnet.wom;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.List;
 
 /**
  * Provides abstraction of wsdl:portType/wsdl:operation.
@@ -120,4 +121,9 @@ public abstract class WSDLOperation extends WSDLEntity {
      * @return always non-null
      */
     public abstract WSDLPortType getPortType();
+
+    /**
+     * Gives parameterOrder attribute defined on wsdl:operation. The returned List is read only.
+     */
+    public abstract List<String> getParameterOrder();
 }

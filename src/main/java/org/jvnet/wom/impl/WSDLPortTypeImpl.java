@@ -38,18 +38,17 @@ package org.jvnet.wom.impl;
 import org.jvnet.wom.WSDLOperation;
 import org.jvnet.wom.WSDLPortType;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.util.QNameMap;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Vivek Pandey
  */
 public class WSDLPortTypeImpl extends WSDLPortType {
-    private Map<QName, WSDLOperationImpl> operations = new HashMap<QName, WSDLOperationImpl>();
-    private WSDLDefinitionsImpl owner;
+    private QNameMap<WSDLOperationImpl> operations = new QNameMap<WSDLOperationImpl>();
+    private String doc;
 
     public WSDLPortTypeImpl(Locator locator, QName name) {
         super(locator, name);
@@ -59,11 +58,27 @@ public class WSDLPortTypeImpl extends WSDLPortType {
         return null;
     }
 
+    public void addOperation(WSDLOperationImpl op) {
+        operations.put(op.getName(), op);
+    }
+
     public Iterable<WSDLOperationImpl> getOperations() {
         return operations.values();
     }
 
     public void visit(WSDLVisitor visitor) {
         visitor.portType(this);
+    }
+
+    public void setDocumentation(String doc) {
+        this.doc = doc;
+    }
+
+    public String getDocumentation() {
+        return doc;
+    }
+
+    public void setOwner(WSDLDefinitionsImpl defs) {
+        setModel(defs);
     }
 }

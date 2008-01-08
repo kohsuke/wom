@@ -100,7 +100,7 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
         attStack.push(new AttributesImpl());
     }
 
-     /**
+    /**
      * Sets the root handler, which will be used to parse the
      * root element.
      * <p/>
@@ -225,6 +225,8 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
 
             redirect = null;
             // then process this element normally
+        } else {
+            currentHandler.leaveElement(uri, localname, qname);
         }
     }
 
@@ -366,7 +368,7 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
     }
 
     //
-//
+    //
     // validation context implementation
     //
     //

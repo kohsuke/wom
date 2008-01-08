@@ -36,17 +36,17 @@
 package parsing;
 
 import junit.framework.TestCase;
-
-import java.io.InputStream;
-
-import org.jvnet.wom.parser.WOMParser;
-import org.jvnet.wom.WSDLSet;
 import org.jvnet.wom.WSDLDefinitions;
+import org.jvnet.wom.WSDLMessage;
+import org.jvnet.wom.WSDLPart;
+import org.jvnet.wom.WSDLSet;
+import org.jvnet.wom.parser.WOMParser;
 import org.xml.sax.SAXException;
 
 import javax.xml.namespace.QName;
+import java.io.InputStream;
 
-public class WSDLParsingTest extends TestCase{
+public class WSDLParsingTest extends TestCase {
 
     public void testWSDL() throws SAXException {
         InputStream is = getClass().getResourceAsStream("../simple.wsdl");
@@ -54,7 +54,28 @@ public class WSDLParsingTest extends TestCase{
         WSDLSet wsdls = parser.parse(is);
         assertTrue(wsdls.getWSDLs().iterator().hasNext());
         WSDLDefinitions def = wsdls.getWSDLs().iterator().next();
-        assertFalse(wsdls.getWSDLs().iterator().hasNext());
-        assertEquals(def.getName(), new QName("http://example.com/wsdl", "Simple"));                
+        assertEquals(def.getName(), new QName("http://example.com/wsdl", "Simple"));
+
+        //test wsdl:messages
+        WSDLMessage message1 = def.getMessage(new QName("http://example.com/wsdl", "echoRequest"));
+        assertNotNull(message1);
+        WSDLPart part1 = message1.getPart("reqBody");
+        assertNotNull(part1);
+        assertEquals(part1.getDescriptor().type(), WSDLPart.WSDLPartDescriptor.Kind.ELEMENT);
+        assertEquals(part1.getDescriptor().name(), new QName("http://example.com/types", "echo"));
+        assertEquals(part1.getIndex(), 0);
+
+
+        WSDLMessage message2 = def.getMessage(new QName("http://example.com/wsdl", "echoResponse"));
+        assertNotNull(message2);
+        WSDLPart part2 = message2.getPart("respBody");
+        assertNotNull(part2);
+        assertEquals(part2.getDescriptor().type(), WSDLPart.WSDLPartDescriptor.Kind.ELEMENT);
+        assertEquals(part2.getDescriptor().name(), new QName("http://example.com/types", "echoResponse"));
+        assertEquals(part1.getIndex(), 0);
+
+        assertNotNull(def.getMessage(new QName("http://example.com/wsdl", "echoResponse")));
+
+
     }
 }

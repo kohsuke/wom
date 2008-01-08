@@ -36,7 +36,6 @@
 package org.jvnet.wom.impl;
 
 import org.jvnet.wom.WSDLInput;
-import org.jvnet.wom.WSDLMessage;
 import org.jvnet.wom.WSDLVisitor;
 import org.xml.sax.Locator;
 
@@ -47,8 +46,10 @@ import javax.xml.namespace.QName;
  */
 public class WSDLInputImpl extends WSDLInput {
     private WSDLMessageImpl message;
+    private QName messageName;
 
     private String action = "";
+    private String doc;
 
     public WSDLInputImpl(Locator locator, QName name) {
         super(locator, name);
@@ -58,12 +59,29 @@ public class WSDLInputImpl extends WSDLInput {
         visitor.input(this);
     }
 
-    public WSDLMessage getMessage() {
+    public WSDLMessageImpl getMessage() {
         return message;
+    }
+
+    public void setMessage(QName name) {
+        messageName = name;
     }
 
     public String getAction() {
         return action;
     }
 
+    public void finalize(WSDLDefinitionsImpl root) {
+        if (messageName != null)
+            message = root.getMessage(messageName);
+    }
+
+    public void setDocumentation(String doc) {
+        this.doc = doc;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return doc;
+    }
 }

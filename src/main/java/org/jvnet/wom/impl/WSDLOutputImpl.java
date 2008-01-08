@@ -46,10 +46,12 @@ import javax.xml.namespace.QName;
  */
 public class WSDLOutputImpl extends WSDLOutput {
     private WSDLMessageImpl message;
+    private QName messageName;
 
     private String action = "";
+    private String doc;
 
-    protected WSDLOutputImpl(Locator locator, QName name) {
+    public WSDLOutputImpl(Locator locator, QName name) {
         super(locator, name);
     }
 
@@ -61,9 +63,8 @@ public class WSDLOutputImpl extends WSDLOutput {
         return message;
     }
 
-
-    public void setMessage(WSDLMessageImpl message) {
-        this.message = message;
+    public void setMessage(QName message) {
+        this.messageName = message;
     }
 
     public void setAction(String action) {
@@ -72,5 +73,19 @@ public class WSDLOutputImpl extends WSDLOutput {
 
     public String getAction() {
         return action;
+    }
+
+    public void finalize(WSDLDefinitionsImpl root) {
+        if (messageName != null)
+            message = root.getMessage(messageName);
+    }
+
+    public void setDocumentation(String doc) {
+        this.doc = doc;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return doc;
     }
 }

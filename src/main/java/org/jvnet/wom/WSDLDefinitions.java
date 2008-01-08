@@ -88,24 +88,42 @@ public abstract class WSDLDefinitions extends WSDLEntity {
      */
     public abstract WSDLService getService(QName name);
 
+
+    /**
+     * Gets {@link WSDLMessage} that models <code>wsdl:message</code>
+     *
+     * @param name non-null quaified name of wsdl:message, where the localName is the value of <code>wsdl:message@name</code> and
+     *             the namespaceURI is the value of wsdl:definitions@targetNamespace
+     * @return A {@link WSDLMessage} or null if no wsdl:service found.
+     */
+    public abstract WSDLMessage getMessage(QName name);
+
+
+    /**
+     * Gives a Iterator of all {@link WSDLMessage}
+     *
+     * @return empty iterator if the wsdl document has no wsdl:message. Always non-null.
+     */
+    public abstract Iterable<? extends WSDLMessage> getMessages();
+
     /**
      * Gives a Iterator of all {@link WSDLPortType}
      *
-     * @return an empty Map if the wsdl document has no wsdl:portType. Always non-null.
+     * @return empty iterator if the wsdl document has no wsdl:portType. Always non-null.
      */
     public abstract Iterable<? extends WSDLPortType> getPortTypes();
 
     /**
      * Gives a Iterator of all {@link WSDLBoundPortType}
      *
-     * @return an empty Map if the wsdl document has no wsdl:binding. Always non-null.
+     * @return empty iterator if the wsdl document has no wsdl:binding. Always non-null.
      */
     public abstract Iterable<? extends WSDLBoundPortType> getBindings();
 
     /**
      * Gives a Iterator of all {@link WSDLService}
      *
-     * @return an empty Map if the wsdl document has no wsdl:service. Always non-null.
+     * @return empty iterator if the wsdl document has no wsdl:service. Always non-null.
      */
     public abstract Iterable<? extends WSDLService> getServices();
 }

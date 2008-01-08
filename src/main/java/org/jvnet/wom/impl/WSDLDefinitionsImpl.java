@@ -37,6 +37,7 @@ package org.jvnet.wom.impl;
 
 import org.jvnet.wom.WSDLBoundPortType;
 import org.jvnet.wom.WSDLDefinitions;
+import org.jvnet.wom.WSDLMessage;
 import org.jvnet.wom.WSDLPortType;
 import org.jvnet.wom.WSDLService;
 import org.jvnet.wom.WSDLVisitor;
@@ -92,6 +93,14 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
 
     public WSDLService getService(QName name) {
         return services.get(name);
+    }
+
+    public WSDLMessageImpl getMessage(QName name) {
+        return messages.get(name);
+    }
+
+    public Iterable<? extends WSDLMessage> getMessages() {
+        return messages.values();
     }
 
     public Iterable<WSDLPortTypeImpl> getPortTypes() {

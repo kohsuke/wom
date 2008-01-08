@@ -46,6 +46,8 @@ import javax.xml.namespace.QName;
  */
 public class WSDLFaultImpl extends WSDLFault {
     private WSDLMessageImpl message;
+    private QName messageName;
+    private String doc;
 
     public WSDLFaultImpl(Locator locator, QName name) {
         super(locator, name);
@@ -55,11 +57,25 @@ public class WSDLFaultImpl extends WSDLFault {
         return message;
     }
 
-    public void setMessage(WSDLMessageImpl message) {
-        this.message = message;
+    public void setMessage(QName name) {
+        this.messageName = name;
     }
 
     public void visit(WSDLVisitor visitor) {
         visitor.fault(this);
+    }
+
+    public void finalize(WSDLDefinitionsImpl root) {
+        if (messageName != null)
+            message = root.getMessage(messageName);
+    }
+
+    public void setDocumentation(String doc) {
+        this.doc = doc;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return doc;
     }
 }

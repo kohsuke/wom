@@ -35,8 +35,8 @@
  */
 package org.jvnet.wom.impl.parser.handler;
 
-import org.jvnet.wom.impl.WSDLMessageImpl;
-import org.jvnet.wom.impl.WSDLPartImpl;
+import org.jvnet.wom.impl.WSDLOperationImpl;
+import org.jvnet.wom.impl.WSDLPortTypeImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
@@ -48,24 +48,23 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public class Message extends AbstractHandler {
+public class PortType extends AbstractHandler {
+    private WSDLPortTypeImpl portType;
     private WSDLContentHandlerEx runtime;
     private String expectedNS;
-    private WSDLMessageImpl message;
     private int state;
-    private int partIndex = 0;
 
+    protected PortType(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
+        super(source, parent, parentCookie);
+    }
 
-    public Message(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
+    public PortType(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
         super(source, parent, cookie);
         this.runtime = runtime;
         this.expectedNS = expectedNamespace;
         state = 1;
     }
 
-    protected Message(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
-        super(source, parent, parentCookie);
-    }
 
     protected WSDLContentHandler getRuntime() {
         return runtime;
@@ -73,60 +72,37 @@ public class Message extends AbstractHandler {
 
     protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
         switch (cookie) {
-            case 51:
-                WSDLPartImpl part = (WSDLPartImpl) result;
-                part.setIndex(partIndex++);
-                message.addPart(part);
+            case 61:
+                portType.addOperation((WSDLOperationImpl) result);
                 break;
         }
-
     }
-
 
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
         switch (state) {
             case 1:
-                if (uri.equals(WSDL_NS) && localName.equals("message")) {
+                if (WSDL_NS.equals(uri) && localName.equals("portType")) {
                     runtime.onEnterElementConsumed(uri, localName, qname, atts);
                     Attributes test = runtime.getCurrentAttributes();
                     processAttributes(test);
-                } else if (uri.equals(WSDL_NS) && localName.equals("part")) {
-                    Part part = new Part(this, _source, runtime, 51, expectedNS);
-                    spawnChildFromEnterElement(part, uri, localName, qname, atts);
-                } else if (uri.equals(WSDL_NS) && localName.equals("documentation")) {
+                } else if (WSDL_NS.equals(uri) && localName.equals("documentation")) {
                     String doc = processDocumentation(uri, localName, qname);
                     runtime.onEnterElementConsumed(uri, localName, qname, atts);
-                    message.setDocumentation(doc);
-                } else {
-                    //TODO: give unkown elements to extension handlers
-                    runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ELEMENT, new QName(uri, localName)), runtime.getLocator()));
+                    portType.setDocumentation(doc);
+                } else if (WSDL_NS.equals(uri) && localName.equals("operation")) {
+                    Operation operation = new Operation(this, _source, runtime, 61, expectedNS);
+                    spawnChildFromEnterElement(operation, uri, localName, qname, atts);
                 }
                 break;
-
         }
     }
-
-    private void processAttributes(Attributes test) throws SAXException {
-        int[] validattrs = new int[test.getLength()];
-        String name = fixNull(test.getValue("name"));
-        if (name.equals("")) {
-            runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:message", name), runtime.getLocator()));
-        }
-        int index = test.getIndex("name");
-        if (index >= 0)
-            validattrs[index] = 1;
-        message = new WSDLMessageImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name));
-        validateAttribute(runtime.getErrorHandler(), test, validattrs);
-    }
-
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
         switch (state) {
             case 1:
-                if (uri.equals(WSDL_NS) && localName.equals("message")) {
-                    revertToParentFromLeaveElement(message, _cookie, uri, localName, qname);
+                if (WSDL_NS.equals(uri) && localName.equals("portType")) {
+                    revertToParentFromLeaveElement(portType, _cookie, uri, localName, qname);
                 }
-                break;
         }
     }
 
@@ -141,4 +117,21 @@ public class Message extends AbstractHandler {
     public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
 
     }
+
+    private void processAttributes(Attributes test) throws SAXException {
+        int[] validattrs = new int[test.getLength()];
+        String name = fixNull(test.getValue("name"));
+        if (name.equals("")) {
+            runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:portType", name), runtime.getLocator()));
+        }
+        int index = test.getIndex("name");
+        if (index >= 0)
+            validattrs[index] = 1;
+
+        portType = new WSDLPortTypeImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name));
+        portType.setOwner(runtime.currentWSDL);
+
+        validateAttribute(runtime.getErrorHandler(), test, validattrs);
+    }
+
 }

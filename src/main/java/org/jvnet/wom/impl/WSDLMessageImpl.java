@@ -36,18 +36,24 @@
 package org.jvnet.wom.impl;
 
 import org.jvnet.wom.WSDLMessage;
+import org.jvnet.wom.WSDLPart;
 import org.jvnet.wom.WSDLVisitor;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vivek Pandey
  */
 public class WSDLMessageImpl extends WSDLMessage {
-    private final Set<WSDLPartImpl> parts = new HashSet<WSDLPartImpl>();
+    private final List<WSDLPartImpl> parts = new ArrayList<WSDLPartImpl>();
+    private final Map<String, WSDLPartImpl> partsMap = new HashMap<String, WSDLPartImpl>();
+
+
     private String doc = "";
 
     public WSDLMessageImpl(Locator locator, QName name) {
@@ -58,10 +64,15 @@ public class WSDLMessageImpl extends WSDLMessage {
         return parts;
     }
 
-    public void addPart(WSDLPartImpl part){
-        parts.add(part);
+    public WSDLPart getPart(String partName) {
+        return partsMap.get(partName);
     }
-    
+
+    public void addPart(WSDLPartImpl part) {
+        parts.add(part);
+        partsMap.put(part.getName().getLocalPart(), part);
+    }
+
     public void visit(WSDLVisitor visitor) {
         visitor.messages(this);
     }
@@ -70,7 +81,7 @@ public class WSDLMessageImpl extends WSDLMessage {
         return doc;
     }
 
-    public void setDocumentation(String doc){
+    public void setDocumentation(String doc) {
         this.doc = doc;
     }
 }
