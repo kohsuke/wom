@@ -51,7 +51,8 @@ public class WSDLFaultImpl extends WSDLFault {
     private String doc;
 
     public WSDLFaultImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public WSDLMessage getMessage() {

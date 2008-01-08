@@ -65,7 +65,8 @@ public class WSDLOperationImpl extends WSDLOperation {
     private List<String> unmodParamOrder;
 
     public WSDLOperationImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public WSDLInput getInput() {

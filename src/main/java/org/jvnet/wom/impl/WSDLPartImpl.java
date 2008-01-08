@@ -51,8 +51,9 @@ public class WSDLPartImpl extends WSDLPart {
     private String doc;
 
     public WSDLPartImpl(Locator locator, QName name, WSDLPartDescriptor descriptor, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
         this.descriptor = descriptor;
+        setOwnerWSDLDocument(document);
     }
 
     public void visit(WSDLVisitor visitor) {

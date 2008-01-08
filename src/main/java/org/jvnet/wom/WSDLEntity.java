@@ -50,16 +50,15 @@ import java.util.Set;
  * @author Vivek Pandey
  */
 public abstract class WSDLEntity implements WSDLExtensible {
-    private final WSDLDocumentImpl ownerDoc;
+    private WSDLDocumentImpl ownerDoc;
 
     private final Set<WSDLExtension> extensions = new HashSet<WSDLExtension>();
     private final Locator locator;
     private final QName name;
 
-    protected WSDLEntity(Locator locator, QName name, WSDLDocumentImpl ownerDoc) {
+    protected WSDLEntity(Locator locator, QName name) {
         this.locator = locator;
         this.name = name;
-        this.ownerDoc = ownerDoc;
     }
 
     public QName getName() {
@@ -124,6 +123,10 @@ public abstract class WSDLEntity implements WSDLExtensible {
         if (extension == null)
             throw new IllegalArgumentException();
         extensions.add(extension);
+    }
+
+    protected void setOwnerWSDLDocument(WSDLDocumentImpl wsdlDocument) {
+        this.ownerDoc = wsdlDocument;
     }
 
 }

@@ -54,7 +54,8 @@ public class WSDLBoundPortTypeImpl extends WSDLBoundPortType {
     private String doc;
 
     public WSDLBoundPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public WSDLBoundOperation get(QName operationName) {

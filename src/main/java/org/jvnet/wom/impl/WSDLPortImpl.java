@@ -53,7 +53,8 @@ public class WSDLPortImpl extends WSDLPort {
     private WSDLServiceImpl owner;
 
     protected WSDLPortImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public WSDLBoundPortType getBinding() {

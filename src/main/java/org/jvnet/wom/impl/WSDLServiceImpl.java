@@ -51,7 +51,8 @@ public class WSDLServiceImpl extends WSDLService {
     private final QNameMap<WSDLPortImpl> ports = new QNameMap<WSDLPortImpl>();
 
     protected WSDLServiceImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public WSDLDefinitionsImpl getOwner() {

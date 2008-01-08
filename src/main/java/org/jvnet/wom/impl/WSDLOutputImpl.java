@@ -53,7 +53,8 @@ public class WSDLOutputImpl extends WSDLOutput {
     private String doc;
 
     public WSDLOutputImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public void visit(WSDLVisitor visitor) {

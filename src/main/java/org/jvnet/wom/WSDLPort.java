@@ -35,7 +35,6 @@
  */
 package org.jvnet.wom;
 
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -46,8 +45,8 @@ import javax.xml.namespace.QName;
  * @author Vivek Pandey
  */
 public abstract class WSDLPort extends WSDLEntity {
-    protected WSDLPort(Locator locator, QName name, WSDLDocumentImpl ownerWSDLDoc) {
-        super(locator, name, ownerWSDLDoc);
+    protected WSDLPort(Locator locator, QName name) {
+        super(locator, name);
     }
 
     /**

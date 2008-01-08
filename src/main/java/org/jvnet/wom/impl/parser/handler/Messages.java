@@ -53,7 +53,7 @@ public class Messages {
     }
 
     public static final String MISSING_NAME = "wsdl.missingName"; //arg0, arg1
-    public static final String UNKNOWN_ATTRIBUTE = "wsdl.unkwonAttribute";//arg0
+    public static final String UNKNOWN_ATTRIBUTE = "wsdl.unknownAttribute";//arg0
     public static final String UNKNOWN_ELEMENT = "wsdl.unknownElement";//arg0
-    public static final String UNKNOWN_REQUIRED_EXTENSIBILITY_ELEMENT = "wsdl.unkownRequiredElement";//arg0
+    public static final String UNKNOWN_REQUIRED_EXTENSIBILITY_ELEMENT = "wsdl.unknownRequiredElement";//arg0
 }

@@ -58,7 +58,8 @@ public class WSDLBoundOperationImpl extends WSDLBoundOperation {
     private Set<WSDLBoundFaultImpl> faults = new HashSet<WSDLBoundFaultImpl>();
 
     protected WSDLBoundOperationImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public String getSOAPAction() {

@@ -53,7 +53,8 @@ public class WSDLInputImpl extends WSDLInput {
     private String doc;
 
     public WSDLInputImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public void visit(WSDLVisitor visitor) {

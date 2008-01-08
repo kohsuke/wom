@@ -119,7 +119,7 @@ public class BoundPortType extends AbstractHandler {
             validattrs[index] = 1;
         boundPortType = new WSDLBoundPortTypeImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
 
-        index = test.getIndex("message");
+        index = test.getIndex("type");
 
         if (index >= 0) {
             validattrs[index] = 1;

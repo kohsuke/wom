@@ -52,7 +52,8 @@ public class WSDLPortTypeImpl extends WSDLPortType {
     private String doc;
 
     public WSDLPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public WSDLOperation get(QName operationName) {

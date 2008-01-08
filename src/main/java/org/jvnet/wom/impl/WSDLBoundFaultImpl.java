@@ -50,7 +50,8 @@ public class WSDLBoundFaultImpl extends WSDLBoundFault {
     private WSDLFaultImpl abstractFault;
 
     protected WSDLBoundFaultImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public WSDLFault getFault() {

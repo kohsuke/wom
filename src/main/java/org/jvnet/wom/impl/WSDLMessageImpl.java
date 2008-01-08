@@ -58,7 +58,8 @@ public class WSDLMessageImpl extends WSDLMessage {
     private String doc = "";
 
     public WSDLMessageImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+        super(locator, name);
+        setOwnerWSDLDocument(document);
     }
 
     public Iterable<WSDLPartImpl> parts() {
