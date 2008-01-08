@@ -33,49 +33,54 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLPortType;
-import org.jvnet.wom.WSDLVisitor;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.jvnet.wom.impl.util.QNameMap;
-import org.xml.sax.Locator;
+package org.jvnet.wom.binding.soap11;
+
+import org.jvnet.wom.WSDLExtension;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLPortTypeImpl extends WSDLPortType {
-    private QNameMap<WSDLOperationImpl> operations = new QNameMap<WSDLOperationImpl>();
-    private String doc;
+public class SOAPHeader extends HeaderAttributes implements WSDLExtension {
+    private final List<SOAPHeaderFault> headerFaults = new ArrayList<SOAPHeaderFault>();
 
-    public WSDLPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name);
-        setOwnerWSDLDocument(document);
+    SOAPHeader(QName message, String part, SOAPBody.Use use, List<String> encodingStyle, String namespace) {
+        super(message, part, use, encodingStyle, namespace);
     }
 
-    public WSDLOperationImpl get(QName operationName) {
-        return operations.get(operationName);
+    public QName getName() {
+        return new QName(SOAPBinding.SOAP_NS, "header");
     }
 
-    public void addOperation(WSDLOperationImpl op) {
-        operations.put(op.getName(), op);
+    public void addHeaderFault(SOAPHeaderFault headerFault){
+        headerFaults.add(headerFault);
     }
 
-    public Iterable<WSDLOperationImpl> getOperations() {
-        return operations.values();
+    public Iterable<SOAPHeaderFault> getHeaderFaults(){
+        return headerFaults;
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.portType(this);
+    public QName getMessage() {
+        return message;
     }
 
-    public void setDocumentation(String doc) {
-        this.doc = doc;
+    public String getPart() {
+        return part;
     }
 
-    public String getDocumentation() {
-        return doc;
+    public SOAPBody.Use getUse() {
+        return use;
     }
+
+    public List<String> getEncodingStyle() {
+        return encodingStyle;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }    
 }

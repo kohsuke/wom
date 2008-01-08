@@ -40,6 +40,9 @@ import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
@@ -68,7 +71,21 @@ public class BoundOperation extends AbstractHandler {
     }
 
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-
+        if (WSDL_NS.equals(uri) && localName.equals("operation")) {
+            runtime.onEnterElementConsumed(uri, localName, qname, atts);
+            Attributes test = runtime.getCurrentAttributes();
+            processAttributes(test);
+        } else if (WSDL_NS.equals(uri) && localName.equals("documentation")) {
+            String doc = processDocumentation(uri, localName, qname);
+            runtime.onEnterElementConsumed(uri, localName, qname, atts);
+            boundOperation.setDocumentation(doc);
+        } else if (WSDL_NS.equals(uri) && localName.equals("input")) {
+            BoundInput boundInput = new BoundInput(this, _source, runtime, 711, expectedNamespace);
+            spawnChildFromEnterElement(boundInput, uri, localName, qname, atts);
+        } else if (WSDL_NS.equals(uri) && localName.equals("output")) {
+            BoundOutput boundOutput = new BoundOutput(this, _source, runtime, 712, expectedNamespace);
+            spawnChildFromEnterElement(boundOutput, uri, localName, qname, atts);
+        }
     }
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
@@ -86,4 +103,19 @@ public class BoundOperation extends AbstractHandler {
     public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
 
     }
+
+    private void processAttributes(Attributes test) throws SAXException {
+        int[] validattrs = new int[test.getLength()];
+        String name = fixNull(test.getValue("name"));
+        if (name.equals("")) {
+            runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:operation", name), runtime.getLocator()));
+        }
+        int index = test.getIndex("name");
+        if (index >= 0)
+            validattrs[index] = 1;
+        boundOperation = new WSDLBoundOperationImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
+
+        validateAttribute(runtime.getErrorHandler(), test, validattrs);
+    }
+
 }

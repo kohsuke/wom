@@ -33,49 +33,34 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLPortType;
-import org.jvnet.wom.WSDLVisitor;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.jvnet.wom.impl.util.QNameMap;
-import org.xml.sax.Locator;
+package org.jvnet.wom.binding.soap11;
+
+import org.jvnet.wom.WSDLExtension;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLPortTypeImpl extends WSDLPortType {
-    private QNameMap<WSDLOperationImpl> operations = new QNameMap<WSDLOperationImpl>();
-    private String doc;
+public final class SOAPOperation implements WSDLExtension {
+    private final String soapAction;
+    private final SOAPBinding.Style style;
 
-    public WSDLPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name);
-        setOwnerWSDLDocument(document);
+    public SOAPOperation(String soapAction, SOAPBinding.Style style) {
+        this.soapAction = (soapAction == null)?"":soapAction;
+        this.style = style;
     }
 
-    public WSDLOperationImpl get(QName operationName) {
-        return operations.get(operationName);
+    public String getSoapAction() {
+        return soapAction;
     }
 
-    public void addOperation(WSDLOperationImpl op) {
-        operations.put(op.getName(), op);
+    public SOAPBinding.Style getStyle() {
+        return style;
     }
 
-    public Iterable<WSDLOperationImpl> getOperations() {
-        return operations.values();
-    }
-
-    public void visit(WSDLVisitor visitor) {
-        visitor.portType(this);
-    }
-
-    public void setDocumentation(String doc) {
-        this.doc = doc;
-    }
-
-    public String getDocumentation() {
-        return doc;
+    public QName getName() {
+        return new QName(SOAPBinding.SOAP_NS, "operation");
     }
 }

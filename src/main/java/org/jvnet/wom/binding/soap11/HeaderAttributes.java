@@ -33,49 +33,28 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLPortType;
-import org.jvnet.wom.WSDLVisitor;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.jvnet.wom.impl.util.QNameMap;
-import org.xml.sax.Locator;
+package org.jvnet.wom.binding.soap11;
 
 import javax.xml.namespace.QName;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLPortTypeImpl extends WSDLPortType {
-    private QNameMap<WSDLOperationImpl> operations = new QNameMap<WSDLOperationImpl>();
-    private String doc;
+class HeaderAttributes {
+    final QName message;
+    final String part;
+    final SOAPBody.Use use;
+    final List<String> encodingStyle;
+    final String namespace;
 
-    public WSDLPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name);
-        setOwnerWSDLDocument(document);
-    }
-
-    public WSDLOperationImpl get(QName operationName) {
-        return operations.get(operationName);
-    }
-
-    public void addOperation(WSDLOperationImpl op) {
-        operations.put(op.getName(), op);
-    }
-
-    public Iterable<WSDLOperationImpl> getOperations() {
-        return operations.values();
-    }
-
-    public void visit(WSDLVisitor visitor) {
-        visitor.portType(this);
-    }
-
-    public void setDocumentation(String doc) {
-        this.doc = doc;
-    }
-
-    public String getDocumentation() {
-        return doc;
+    HeaderAttributes(QName message, String part, SOAPBody.Use use, List<String> encodingStyle, String namespace) {
+        this.message = message;
+        this.part = part;
+        this.use = (use == null)? SOAPBody.Use.literal:use;
+        this.encodingStyle = Collections.unmodifiableList(encodingStyle);
+        this.namespace = namespace;
     }
 }

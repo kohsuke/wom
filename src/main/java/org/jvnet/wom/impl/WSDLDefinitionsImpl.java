@@ -35,12 +35,7 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLBoundPortType;
-import org.jvnet.wom.WSDLDefinitions;
-import org.jvnet.wom.WSDLMessage;
-import org.jvnet.wom.WSDLPortType;
-import org.jvnet.wom.WSDLService;
-import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.*;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.jvnet.wom.impl.parser.WSDLSetImpl;
 import org.jvnet.wom.impl.util.QNameMap;
@@ -68,8 +63,8 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
         return getName().getNamespaceURI();
     }
 
-    public WSDLPortType getPortType(QName name) {
-        return null;
+    public WSDLPortTypeImpl getPortType(QName name) {
+        return portTypes.get(name);
     }
 
     public void addPortType(WSDLPortTypeImpl portType) {

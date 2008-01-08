@@ -33,49 +33,74 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLPortType;
-import org.jvnet.wom.WSDLVisitor;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.jvnet.wom.impl.util.QNameMap;
-import org.xml.sax.Locator;
+package org.jvnet.wom.binding.soap11;
+
+import org.jvnet.wom.WSDLExtension;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLPortTypeImpl extends WSDLPortType {
-    private QNameMap<WSDLOperationImpl> operations = new QNameMap<WSDLOperationImpl>();
-    private String doc;
+public final class SOAPBody implements WSDLExtension {
+    private final List<String> encodingStyle;
+    private final String namespace;
+    private final Use use;
+    private final List<String> parts;
 
-    public WSDLPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name);
-        setOwnerWSDLDocument(document);
+    public SOAPBody(String[] parts, List<String> encodingStyle, String namespace, Use use) {
+        //The soap:body parts attribute could be an empty string, which means no part is
+        // bound to body. Otherwise if present would represent space delimited parts (NMTOKENS)
+        if(parts != null){
+            List<String> tmpList = new ArrayList<String>();
+            for(String part:parts){
+                tmpList.add(part);
+            }
+            this.parts = Collections.unmodifiableList(tmpList);
+        }else{
+            this.parts = null;
+        }
+
+        this.encodingStyle = encodingStyle;
+        this.namespace = namespace;
+        this.use = (use==null)?Use.literal:null;
     }
 
-    public WSDLOperationImpl get(QName operationName) {
-        return operations.get(operationName);
+    /**
+     * Maybe null. It is supposed to be non-null only for the encoded case. 
+     */
+    public List<String> getEncodingStyle() {
+        return encodingStyle;
     }
 
-    public void addOperation(WSDLOperationImpl op) {
-        operations.put(op.getName(), op);
+    /**
+     *  null when {@link SOAPBinding.Style} is Document, otherwise will be non-null.
+     */
+    public String getNamespace() {
+        return namespace;
     }
 
-    public Iterable<WSDLOperationImpl> getOperations() {
-        return operations.values();
+    /**
+     * If not specified on &lt;soap:body> the default value is literal.
+     */
+    public Use getUse() {
+        return use;
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.portType(this);
+    public QName getName() {
+        return new QName(SOAPBinding.SOAP_NS, "body");
     }
 
-    public void setDocumentation(String doc) {
-        this.doc = doc;
+    /**
+     * null if parts attribute is not defined on &lt;soap:body> element, otherwise non-null. 
+     */
+    public List<String> getParts() {
+        return parts;
     }
 
-    public String getDocumentation() {
-        return doc;
-    }
+    public enum Use{literal,encoded}
 }

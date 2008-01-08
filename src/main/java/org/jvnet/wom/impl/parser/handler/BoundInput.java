@@ -33,49 +33,56 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLPortType;
-import org.jvnet.wom.WSDLVisitor;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.jvnet.wom.impl.util.QNameMap;
-import org.xml.sax.Locator;
+package org.jvnet.wom.impl.parser.handler;
 
-import javax.xml.namespace.QName;
+import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.parser.WSDLEventSource;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLPortTypeImpl extends WSDLPortType {
-    private QNameMap<WSDLOperationImpl> operations = new QNameMap<WSDLOperationImpl>();
-    private String doc;
+public class BoundInput extends AbstractHandler{
+    private WSDLContentHandlerEx runtime;
+    private String expectedNamespace;
 
-    public WSDLPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name);
-        setOwnerWSDLDocument(document);
+    public BoundInput(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
+        super(source, parent, cookie);
+        this.runtime = runtime;
+        this.expectedNamespace = expectedNamespace;
     }
 
-    public WSDLOperationImpl get(QName operationName) {
-        return operations.get(operationName);
+    protected BoundInput(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
+        super(source, parent, parentCookie);
     }
 
-    public void addOperation(WSDLOperationImpl op) {
-        operations.put(op.getName(), op);
+    protected WSDLContentHandler getRuntime() {
+        return runtime;
     }
 
-    public Iterable<WSDLOperationImpl> getOperations() {
-        return operations.values();
+    protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
+
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.portType(this);
+    public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
+
     }
 
-    public void setDocumentation(String doc) {
-        this.doc = doc;
+    public void leaveElement(String uri, String localName, String qname) throws SAXException {
+
     }
 
-    public String getDocumentation() {
-        return doc;
+    public void text(String value) throws SAXException {
+
+    }
+
+    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
+
+    }
+
+    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
+
     }
 }

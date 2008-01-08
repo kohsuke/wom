@@ -35,9 +35,7 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLBoundFault;
-import org.jvnet.wom.WSDLBoundOperation;
-import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.*;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
@@ -52,12 +50,14 @@ import java.util.Set;
  */
 public class WSDLBoundOperationImpl extends WSDLBoundOperation {
     private String soapAction;
-    private WSDLOperationImpl abstractOperation;
     private Map<String, WSDLPartImpl> inputParts = new HashMap<String, WSDLPartImpl>();
     private Map<String, WSDLPartImpl> outputParts = new HashMap<String, WSDLPartImpl>();
     private Set<WSDLBoundFaultImpl> faults = new HashSet<WSDLBoundFaultImpl>();
+    private String doc;
+    private WSDLBoundPortTypeImpl owner;
+    private QName operationName;
 
-    protected WSDLBoundOperationImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+    public WSDLBoundOperationImpl(Locator locator, QName name, WSDLDocumentImpl document) {
         super(locator, name);
         setOwnerWSDLDocument(document);
     }
@@ -71,13 +71,24 @@ public class WSDLBoundOperationImpl extends WSDLBoundOperation {
         this.soapAction = soapAction;
     }
 
-    public WSDLOperationImpl getOperation() {
-        return abstractOperation;
+    public void setOwner(WSDLBoundPortTypeImpl owner) {
+        this.owner = owner;
     }
 
+    public WSDLOperation getOperation() {
+        return owner.getPortType().get(operationName);
+    }
 
-    public void setAbstractOperation(WSDLOperationImpl op) {
-        this.abstractOperation = op;
+    public WSDLBoundInput getInput() {
+        return null;
+    }
+
+    public WSDLBoundOutput getOutput() {
+        return null;
+    }
+
+    public void setOperation(QName name) {
+        this.operationName = name;
     }
 
     public final Map<String, WSDLPartImpl> getInParts() {
@@ -99,5 +110,14 @@ public class WSDLBoundOperationImpl extends WSDLBoundOperation {
 
     public void visit(WSDLVisitor visitor) {
         visitor.bindingOperation(this);
+    }
+
+    public void setDocumentation(String doc) {
+        this.doc = doc;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return doc;
     }
 }

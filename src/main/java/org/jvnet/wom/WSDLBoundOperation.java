@@ -38,7 +38,6 @@ package org.jvnet.wom;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.Map;
 
 /**
  * Abstracts wsdl:binding/wsdl:operation. It can be used to determine the parts and their binding.
@@ -64,31 +63,32 @@ public abstract class WSDLBoundOperation extends WSDLEntity {
      */
     public abstract WSDLOperation getOperation();
 
-    /**
-     * Gets all inbound {@link WSDLPart} by its {@link WSDLPart#getName() name}.
-     */
-    public abstract Map<String, ? extends WSDLPart> getInParts();
+//    /**
+//     * Gets all inbound {@link WSDLPart} by its {@link WSDLPart#getName() name}.
+//     */
+//    public abstract Map<String, ? extends WSDLPart> getInParts();
+//
+//    /**
+//     * Gets all outbound {@link WSDLPart} by its {@link WSDLPart#getName() name}.
+//     */
+//    public abstract Map<String, ? extends WSDLPart> getOutParts();
 
     /**
-     * Gets all outbound {@link WSDLPart} by its {@link WSDLPart#getName() name}.
+     * Gets the wsdl:input of this operation
+     *
+     * @return non-null {@link WSDLBoundInput}
      */
-    public abstract Map<String, ? extends WSDLPart> getOutParts();
+    public abstract WSDLBoundInput getInput();
+
+    /**
+     * Gets the wsdl:output of this operation.
+     *
+     * @return null if this is an one-way operation.
+     */
+    public abstract WSDLBoundOutput getOutput();
 
     /**
      * Gets all the {@link WSDLFault} bound to this operation.
      */
-    public abstract Iterable<? extends WSDLBoundFault> getFaults();
-
-    /**
-     * Gets the payload QName of the request message.
-     * <p/>
-     * <p/>
-     * It's possible for an operation to define no body part, in which case
-     * this method returns null.
-     */
-    public abstract QName getReqPayloadName();
-
-    public enum Mode {
-        IN, OUT, INOUT
-    }
+    public abstract Iterable<? extends WSDLBoundFault> getFaults();    
 }

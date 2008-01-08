@@ -33,98 +33,22 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
 
-import org.jvnet.wom.*;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
+package org.jvnet.wom;
+
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.*;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLOperationImpl extends WSDLOperation {
-    private Set<WSDLFaultImpl> faults = new HashSet<WSDLFaultImpl>();
-    private WSDLInputImpl input;
-    private WSDLOutputImpl output;
-    private WSDLPortType parent;
-    private String doc;
-    private List<String> paramOrder = new ArrayList<String>();
-    
-    public WSDLOperationImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+public class WSDLBoundInput extends WSDLEntity{
+    public WSDLBoundInput(Locator locator, QName name) {
         super(locator, name);
-        setOwnerWSDLDocument(document);
-    }
-
-    public WSDLInput getInput() {
-        return input;
-    }
-
-    public WSDLOutput getOutput() {
-        return output;
-    }
-
-    public boolean isOneWay() {
-        return (output == null);
-    }
-
-    public final Iterable<WSDLFaultImpl> getFaults() {
-        return faults;
-    }
-
-    public WSDLFault getFault(QName faultDetailName) {
-        for (WSDLFaultImpl f : faults) {
-            for (WSDLPart part : f.getMessage().parts()) {
-                if (part.getDescriptor().name().equals(faultDetailName))
-                    return f;
-            }
-        }
-        return null;
-    }
-
-    public void addFault(WSDLFaultImpl fault) {
-        faults.add(fault);
-    }
-
-    public WSDLPortType getPortType() {
-        return parent;
-    }
-
-    public List<String> getParameterOrder() {
-        return Collections.unmodifiableList(paramOrder);
-    }
-
-    public void setParameterOrder(String[] paramOrder) {
-        assert this.paramOrder.isEmpty();
-        for (String param : paramOrder) {
-            this.paramOrder.add(param);
-        }
-    }
-
-    public void setInput(WSDLInputImpl input) {
-        this.input = input;
-    }
-
-    public void setOutput(WSDLOutputImpl output) {
-        this.output = output;
-    }
-
-    public void setParent(WSDLPortType parent) {
-        this.parent = parent;
     }
 
     public void visit(WSDLVisitor visitor) {
-        visitor.operation(this);
-    }
 
-    public void setDocumentation(String doc) {
-        this.doc = doc;
-    }
-
-    @Override
-    public String getDocumentation() {
-        return doc;
     }
 }

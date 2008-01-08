@@ -33,49 +33,51 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLPortType;
-import org.jvnet.wom.WSDLVisitor;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.jvnet.wom.impl.util.QNameMap;
-import org.xml.sax.Locator;
+package org.jvnet.wom.binding.soap11;
+
+import org.jvnet.wom.WSDLExtension;
 
 import javax.xml.namespace.QName;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLPortTypeImpl extends WSDLPortType {
-    private QNameMap<WSDLOperationImpl> operations = new QNameMap<WSDLOperationImpl>();
-    private String doc;
+public class SOAPFault implements WSDLExtension {
+    private final List<String> encodingStyle;
+    private final String namespace;
+    private final SOAPBody.Use use;
+    private final String name;
 
-    public WSDLPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name);
-        setOwnerWSDLDocument(document);
+    public SOAPFault(List<String> encodingStyle, String namespace, SOAPBody.Use use, String name) {
+        this.encodingStyle = Collections.unmodifiableList(encodingStyle);
+        this.namespace = namespace;
+        this.use = (use==null)? SOAPBody.Use.literal:null;
+        this.name = name;
     }
 
-    public WSDLOperationImpl get(QName operationName) {
-        return operations.get(operationName);
+    public List<String> getEncodingStyle() {
+        return encodingStyle;
     }
 
-    public void addOperation(WSDLOperationImpl op) {
-        operations.put(op.getName(), op);
+    public String getNamespace() {
+        return namespace;
     }
 
-    public Iterable<WSDLOperationImpl> getOperations() {
-        return operations.values();
+    public SOAPBody.Use getUse() {
+        return use;
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.portType(this);
+    public String getFaultName(){
+        return name;
     }
 
-    public void setDocumentation(String doc) {
-        this.doc = doc;
+    public QName getName() {
+        return new QName(SOAPBinding.SOAP_NS, "fault");
     }
 
-    public String getDocumentation() {
-        return doc;
-    }
+
+
 }
