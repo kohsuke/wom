@@ -41,6 +41,7 @@ import org.jvnet.wom.WSDLMessage;
 import org.jvnet.wom.WSDLPortType;
 import org.jvnet.wom.WSDLService;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.jvnet.wom.impl.parser.WSDLSetImpl;
 import org.jvnet.wom.impl.util.QNameMap;
 import org.xml.sax.Locator;
@@ -125,6 +126,10 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
 
     public void addMessage(WSDLMessageImpl message) {
         messages.put(message.getName(), message);
+    }
+
+    public void setOwnerDocument(WSDLDocumentImpl owner) {
+        setOwnerWSDLDocument(owner);
     }
 
     public void visit(WSDLVisitor visitor) {

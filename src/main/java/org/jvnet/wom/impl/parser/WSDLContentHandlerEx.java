@@ -220,6 +220,9 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
         WSDLDocumentImpl existing = parser.parsedDocuments.get(document);
         if (existing == null) {
             parser.parsedDocuments.put(document, document);
+
+            //set the reference to owning document in the current WSDL
+            currentWSDL.setOwnerDocument(document);
         } else {
             document = existing;
         }
