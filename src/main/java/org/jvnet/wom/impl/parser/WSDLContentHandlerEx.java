@@ -36,11 +36,9 @@
 package org.jvnet.wom.impl.parser;
 
 import org.jvnet.wom.impl.WSDLDefinitionsImpl;
-import org.jvnet.wom.impl.parser.handler.AbstractHandler;
 import org.jvnet.wom.impl.parser.handler.Definitions;
 import org.jvnet.wom.impl.parser.handler.WSDLContentHandler;
 import org.jvnet.wom.impl.util.Uri;
-import org.jvnet.wom.parser.WSDLEventReceiver;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -268,7 +266,7 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
             throw e;
         }
     }
-   
+
 
     /**
      * Gets the element name that contains the annotation element.

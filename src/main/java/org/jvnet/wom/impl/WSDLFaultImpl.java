@@ -36,7 +36,9 @@
 package org.jvnet.wom.impl;
 
 import org.jvnet.wom.WSDLFault;
+import org.jvnet.wom.WSDLMessage;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -45,16 +47,15 @@ import javax.xml.namespace.QName;
  * @author Vivek Pandey
  */
 public class WSDLFaultImpl extends WSDLFault {
-    private WSDLMessageImpl message;
     private QName messageName;
     private String doc;
 
-    public WSDLFaultImpl(Locator locator, QName name) {
-        super(locator, name);
+    public WSDLFaultImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+        super(locator, name, document);
     }
 
-    public WSDLMessageImpl getMessage() {
-        return message;
+    public WSDLMessage getMessage() {
+        return getOwnerWSDLModel().getMessage(messageName);
     }
 
     public void setMessage(QName name) {
@@ -63,11 +64,6 @@ public class WSDLFaultImpl extends WSDLFault {
 
     public void visit(WSDLVisitor visitor) {
         visitor.fault(this);
-    }
-
-    public void finalize(WSDLDefinitionsImpl root) {
-        if (messageName != null)
-            message = root.getMessage(messageName);
     }
 
     public void setDocumentation(String doc) {

@@ -45,6 +45,7 @@ public class Messages {
     public static final String MISSING_ELEMENT_OR_TYPE = "wsdl.missingElementOrType";
     public static final String INVALID_DESCRIPTOR_NAME = "wsdl.invalidDescriptorName";
     public static final String INVALID_MESSAGE_DESCRIPTOR = "wsdl.invalidMessageDescriptor";
+    public static final String INVALID_PORTTYPE_DESCRIPTOR = "wsdl.invalidPortTypeDescriptor";
 
     public static String format(String property, Object... args) {
         String text = ResourceBundle.getBundle(Messages.class.getName()).getString(property);

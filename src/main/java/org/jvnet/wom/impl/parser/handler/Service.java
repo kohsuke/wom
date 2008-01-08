@@ -33,60 +33,58 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
+package org.jvnet.wom.impl.parser.handler;
 
-import org.jvnet.wom.WSDLBoundOperation;
-import org.jvnet.wom.WSDLBoundPortType;
-import org.jvnet.wom.WSDLPortType;
-import org.jvnet.wom.WSDLVisitor;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.jvnet.wom.impl.util.QNameMap;
-import org.xml.sax.Locator;
-
-import javax.xml.namespace.QName;
+import org.jvnet.wom.impl.WSDLServiceImpl;
+import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.parser.WSDLEventSource;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLBoundPortTypeImpl extends WSDLBoundPortType {
-    private QNameMap<WSDLBoundOperationImpl> operationMap = new QNameMap<WSDLBoundOperationImpl>();
-    private QName portTypeName;
-    private String doc;
+public class Service extends AbstractHandler {
+    private WSDLServiceImpl service;
 
-    public WSDLBoundPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name, document);
+    private WSDLContentHandlerEx runtime;
+    private String expectedNamespace;
+
+    public Service(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
+        super(source, parent, cookie);
+        this.runtime = runtime;
+        this.expectedNamespace = expectedNamespace;
     }
 
-    public WSDLBoundOperation get(QName operationName) {
-        return operationMap.get(operationName);
+    protected Service(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
+        super(source, parent, parentCookie);
     }
 
-    public void addBoundOperation(WSDLBoundOperationImpl op) {
-        operationMap.put(op.getName(), op);
+    protected WSDLContentHandler getRuntime() {
+        return runtime;
     }
 
-    public WSDLPortType getPortType() {
-        return getOwnerWSDLModel().getPortType(portTypeName);
+    protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
+
     }
 
-    public void setPortType(QName portType) {
-        this.portTypeName = portType;
+    public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
+
     }
 
-    public Iterable<WSDLBoundOperationImpl> getBindingOperations() {
-        return operationMap.values();
+    public void leaveElement(String uri, String localName, String qname) throws SAXException {
+
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.binding(this);
+    public void text(String value) throws SAXException {
+
     }
 
-    public void setDocumentation(String doc) {
-        this.doc = doc;
+    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
+
     }
 
-    @Override
-    public String getDocumentation() {
-        return doc;
+    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
+
     }
 }

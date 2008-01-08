@@ -131,7 +131,7 @@ public class Operation extends AbstractHandler {
         int index = test.getIndex("name");
         if (index >= 0)
             validattrs[index] = 1;
-        operation = new WSDLOperationImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name));
+        operation = new WSDLOperationImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
 
         index = test.getIndex("parameterOrder");
         if (index >= 0) {

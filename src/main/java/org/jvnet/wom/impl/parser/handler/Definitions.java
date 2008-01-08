@@ -119,10 +119,14 @@ public class Definitions extends AbstractHandler {
                     PortType portType = new PortType(this, _source, runtime, 60, expectedNamespace);
                     spawnChildFromEnterElement(portType, uri, localName, qname, atts);
                 } else if (uri.equals(WSDL_NS) && localName.equals("binding")) {
+                    BoundPortType boundPortType = new BoundPortType(this, _source, runtime, 70, expectedNamespace);
+                    spawnChildFromEnterElement(boundPortType, uri, localName, qname, atts);
                 } else if (uri.equals(WSDL_NS) && localName.equals("service")) {
+                    Service service = new Service(this, _source, runtime, 80, expectedNamespace);
+                    spawnChildFromEnterElement(service, uri, localName, qname, atts);
+                } else if (uri.equals(WSDL_NS) && localName.equals("import")) {
+                    //TODO
                 }
-                break;
-            case 3://imports
                 break;
             default: //unknown, it might be extensibility element
                 //TODO: log a message

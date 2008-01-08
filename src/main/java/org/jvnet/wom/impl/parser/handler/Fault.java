@@ -111,7 +111,7 @@ public class Fault extends AbstractHandler {
         if (name.equals("")) {
             runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:fault", name), runtime.getLocator()));
         }
-        fault = new WSDLFaultImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name));
+        fault = new WSDLFaultImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
 
         index = test.getIndex("message");
 

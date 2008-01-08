@@ -35,7 +35,6 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLEntity;
 import org.jvnet.wom.WSDLFault;
 import org.jvnet.wom.WSDLInput;
 import org.jvnet.wom.WSDLOperation;
@@ -43,6 +42,7 @@ import org.jvnet.wom.WSDLOutput;
 import org.jvnet.wom.WSDLPart;
 import org.jvnet.wom.WSDLPortType;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -64,8 +64,8 @@ public class WSDLOperationImpl extends WSDLOperation {
     private List<String> paramOrder = new ArrayList<String>();
     private List<String> unmodParamOrder;
 
-    public WSDLOperationImpl(Locator locator, QName name) {
-        super(locator, name);
+    public WSDLOperationImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+        super(locator, name, document);
     }
 
     public WSDLInput getInput() {
@@ -103,7 +103,7 @@ public class WSDLOperationImpl extends WSDLOperation {
     }
 
     public List<String> getParameterOrder() {
-        return unmodParamOrder;
+        return unmodParamOrder = Collections.unmodifiableList(paramOrder);
     }
 
     public void setParameterOrder(String[] paramOrder) {
@@ -136,9 +136,5 @@ public class WSDLOperationImpl extends WSDLOperation {
     @Override
     public String getDocumentation() {
         return doc;
-    }
-
-    public void finalize(WSDLEntity parent) {
-        unmodParamOrder = Collections.unmodifiableList(paramOrder);
     }
 }

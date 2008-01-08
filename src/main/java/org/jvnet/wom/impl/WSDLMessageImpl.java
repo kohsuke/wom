@@ -38,6 +38,7 @@ package org.jvnet.wom.impl;
 import org.jvnet.wom.WSDLMessage;
 import org.jvnet.wom.WSDLPart;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -56,8 +57,8 @@ public class WSDLMessageImpl extends WSDLMessage {
 
     private String doc = "";
 
-    public WSDLMessageImpl(Locator locator, QName name) {
-        super(locator, name);
+    public WSDLMessageImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+        super(locator, name, document);
     }
 
     public Iterable<WSDLPartImpl> parts() {
@@ -84,4 +85,5 @@ public class WSDLMessageImpl extends WSDLMessage {
     public void setDocumentation(String doc) {
         this.doc = doc;
     }
+
 }

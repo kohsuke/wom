@@ -112,7 +112,7 @@ public class Input extends AbstractHandler {
         int index = test.getIndex("name");
         if (index >= 0)
             validattrs[index] = 1;
-        input = new WSDLInputImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name));
+        input = new WSDLInputImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
 
         index = test.getIndex("message");
 

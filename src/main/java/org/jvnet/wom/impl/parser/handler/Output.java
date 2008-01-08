@@ -108,7 +108,7 @@ public class Output extends AbstractHandler {
         int index = test.getIndex("name");
         if (index >= 0)
             validattrs[index] = 1;
-        output = new WSDLOutputImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name));
+        output = new WSDLOutputImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
 
         index = test.getIndex("message");
 

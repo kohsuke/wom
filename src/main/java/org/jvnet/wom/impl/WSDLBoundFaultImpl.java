@@ -38,6 +38,7 @@ package org.jvnet.wom.impl;
 import org.jvnet.wom.WSDLBoundFault;
 import org.jvnet.wom.WSDLFault;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -48,8 +49,8 @@ import javax.xml.namespace.QName;
 public class WSDLBoundFaultImpl extends WSDLBoundFault {
     private WSDLFaultImpl abstractFault;
 
-    protected WSDLBoundFaultImpl(Locator locator, QName name) {
-        super(locator, name);
+    protected WSDLBoundFaultImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+        super(locator, name, document);
     }
 
     public WSDLFault getFault() {

@@ -35,6 +35,7 @@
  */
 package org.jvnet.wom;
 
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -45,8 +46,8 @@ import javax.xml.namespace.QName;
  * @author Vivek Pandey
  */
 public abstract class WSDLDefinitions extends WSDLEntity {
-    protected WSDLDefinitions(Locator locator, QName name) {
-        super(locator, name);
+    protected WSDLDefinitions(Locator locator, QName name, WSDLDocumentImpl ownerWSDLDoc) {
+        super(locator, name, ownerWSDLDoc);
     }
 
     public abstract String getTargetNamespace();

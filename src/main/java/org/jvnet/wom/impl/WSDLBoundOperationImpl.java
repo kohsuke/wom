@@ -38,6 +38,7 @@ package org.jvnet.wom.impl;
 import org.jvnet.wom.WSDLBoundFault;
 import org.jvnet.wom.WSDLBoundOperation;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -56,8 +57,8 @@ public class WSDLBoundOperationImpl extends WSDLBoundOperation {
     private Map<String, WSDLPartImpl> outputParts = new HashMap<String, WSDLPartImpl>();
     private Set<WSDLBoundFaultImpl> faults = new HashSet<WSDLBoundFaultImpl>();
 
-    protected WSDLBoundOperationImpl(Locator locator, QName name) {
-        super(locator, name);
+    protected WSDLBoundOperationImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+        super(locator, name, document);
     }
 
     public String getSOAPAction() {

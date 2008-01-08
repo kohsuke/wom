@@ -39,6 +39,7 @@ import org.jvnet.wom.WSDLBoundPortType;
 import org.jvnet.wom.WSDLPort;
 import org.jvnet.wom.WSDLService;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -51,8 +52,8 @@ public class WSDLPortImpl extends WSDLPort {
     private String address;
     private WSDLServiceImpl owner;
 
-    protected WSDLPortImpl(Locator locator, QName name) {
-        super(locator, name);
+    protected WSDLPortImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+        super(locator, name, document);
     }
 
     public WSDLBoundPortType getBinding() {

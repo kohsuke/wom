@@ -37,6 +37,7 @@ package org.jvnet.wom.impl;
 
 import org.jvnet.wom.WSDLInput;
 import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -51,8 +52,8 @@ public class WSDLInputImpl extends WSDLInput {
     private String action = "";
     private String doc;
 
-    public WSDLInputImpl(Locator locator, QName name) {
-        super(locator, name);
+    public WSDLInputImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+        super(locator, name, document);
     }
 
     public void visit(WSDLVisitor visitor) {

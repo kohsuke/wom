@@ -35,6 +35,7 @@
  */
 package org.jvnet.wom;
 
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -46,8 +47,8 @@ import java.util.Map;
  * @author Vivek Pandey
  */
 public abstract class WSDLBoundOperation extends WSDLEntity {
-    protected WSDLBoundOperation(Locator locator, QName name) {
-        super(locator, name);
+    protected WSDLBoundOperation(Locator locator, QName name, WSDLDocumentImpl ownerWSDLDoc) {
+        super(locator, name, ownerWSDLDoc);
     }
 
     /**

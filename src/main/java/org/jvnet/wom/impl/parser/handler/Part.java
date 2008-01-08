@@ -159,7 +159,7 @@ public class Part extends AbstractHandler {
         }
 
         WSDLPart.WSDLPartDescriptor descriptor = new WSDLPart.WSDLPartDescriptor(descName, k);
-        part = new WSDLPartImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), descriptor);
+        part = new WSDLPartImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), descriptor, runtime.document);
         validateAttribute(runtime.getErrorHandler(), test, validattrs);
     }
 

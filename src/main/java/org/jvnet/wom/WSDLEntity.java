@@ -35,7 +35,6 @@
  */
 package org.jvnet.wom;
 
-import org.jvnet.wom.impl.WSDLDefinitionsImpl;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.jvnet.wom.parser.WSDLDocument;
 import org.xml.sax.Locator;
@@ -51,16 +50,16 @@ import java.util.Set;
  * @author Vivek Pandey
  */
 public abstract class WSDLEntity implements WSDLExtensible {
-    private WSDLDefinitionsImpl model;
-    private WSDLDocumentImpl ownerDoc;
+    private final WSDLDocumentImpl ownerDoc;
 
     private final Set<WSDLExtension> extensions = new HashSet<WSDLExtension>();
     private final Locator locator;
     private final QName name;
 
-    protected WSDLEntity(Locator locator, QName name) {
+    protected WSDLEntity(Locator locator, QName name, WSDLDocumentImpl ownerDoc) {
         this.locator = locator;
         this.name = name;
+        this.ownerDoc = ownerDoc;
     }
 
     public QName getName() {
@@ -82,7 +81,7 @@ public abstract class WSDLEntity implements WSDLExtensible {
      * @return
      */
     public WSDLDefinitions getOwnerWSDLModel() {
-        return model;
+        return ownerDoc.getWSDLModel();
     }
 
     /**
@@ -127,11 +126,4 @@ public abstract class WSDLEntity implements WSDLExtensible {
         extensions.add(extension);
     }
 
-    protected void setModel(WSDLDefinitionsImpl model) {
-        this.model = model;
-    }
-
-    protected void setOwnerDoc(WSDLDocumentImpl ownerDoc) {
-        this.ownerDoc = ownerDoc;
-    }
 }

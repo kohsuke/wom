@@ -35,9 +35,10 @@
  */
 package org.jvnet.wom.impl.parser.handler;
 
-import org.jvnet.wom.impl.WSDLOperationImpl;
-import org.jvnet.wom.impl.WSDLPortTypeImpl;
+import org.jvnet.wom.impl.WSDLBoundOperationImpl;
+import org.jvnet.wom.impl.WSDLBoundPortTypeImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -48,61 +49,50 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public class PortType extends AbstractHandler {
-    private WSDLPortTypeImpl portType;
+public class BoundPortType extends AbstractHandler {
+    private WSDLBoundPortTypeImpl boundPortType;
     private WSDLContentHandlerEx runtime;
-    private String expectedNS;
-    private int state;
+    private String expectedNamespace;
 
-    protected PortType(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
-        super(source, parent, parentCookie);
-    }
-
-    public PortType(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
+    public BoundPortType(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
         super(source, parent, cookie);
         this.runtime = runtime;
-        this.expectedNS = expectedNamespace;
-        state = 1;
+        this.expectedNamespace = expectedNamespace;
     }
 
+    protected BoundPortType(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
+        super(source, parent, parentCookie);
+    }
 
     protected WSDLContentHandler getRuntime() {
         return runtime;
     }
 
     protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
-        switch (cookie) {
-            case 61:
-                portType.addOperation((WSDLOperationImpl) result);
-                break;
+        if (cookie == 71) {
+            boundPortType.addBoundOperation((WSDLBoundOperationImpl) result);
         }
     }
 
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-        switch (state) {
-            case 1:
-                if (WSDL_NS.equals(uri) && localName.equals("portType")) {
-                    runtime.onEnterElementConsumed(uri, localName, qname, atts);
-                    Attributes test = runtime.getCurrentAttributes();
-                    processAttributes(test);
-                } else if (WSDL_NS.equals(uri) && localName.equals("documentation")) {
-                    String doc = processDocumentation(uri, localName, qname);
-                    runtime.onEnterElementConsumed(uri, localName, qname, atts);
-                    portType.setDocumentation(doc);
-                } else if (WSDL_NS.equals(uri) && localName.equals("operation")) {
-                    Operation operation = new Operation(this, _source, runtime, 61, expectedNS);
-                    spawnChildFromEnterElement(operation, uri, localName, qname, atts);
-                }
-                break;
+        if (WSDL_NS.equals(uri) && localName.equals("binding")) {
+            runtime.onEnterElementConsumed(uri, localName, qname, atts);
+            Attributes test = runtime.getCurrentAttributes();
+            processAttributes(test);
+        } else if (WSDL_NS.equals(uri) && localName.equals("documentation")) {
+            String doc = processDocumentation(uri, localName, qname);
+            runtime.onEnterElementConsumed(uri, localName, qname, atts);
+            boundPortType.setDocumentation(doc);
+        } else if (WSDL_NS.equals(uri) && localName.equals("operation")) {
+            BoundOperation boundOperation = new BoundOperation(this, _source, runtime, 71, expectedNamespace);
+            spawnChildFromEnterElement(boundOperation, uri, localName, qname, atts);
         }
+
     }
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
-        switch (state) {
-            case 1:
-                if (WSDL_NS.equals(uri) && localName.equals("portType")) {
-                    revertToParentFromLeaveElement(portType, _cookie, uri, localName, qname);
-                }
+        if (WSDL_NS.equals(uri) && localName.equals("binding")) {
+            revertToParentFromLeaveElement(boundPortType, _cookie, uri, localName, qname);
         }
     }
 
@@ -122,15 +112,31 @@ public class PortType extends AbstractHandler {
         int[] validattrs = new int[test.getLength()];
         String name = fixNull(test.getValue("name"));
         if (name.equals("")) {
-            runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:portType", name), runtime.getLocator()));
+            runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:binding", name), runtime.getLocator()));
         }
         int index = test.getIndex("name");
         if (index >= 0)
             validattrs[index] = 1;
+        boundPortType = new WSDLBoundPortTypeImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
 
-        portType = new WSDLPortTypeImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
+        index = test.getIndex("message");
 
+        if (index >= 0) {
+            validattrs[index] = 1;
+            String qname = test.getValue(index);
+            String uri = runtime.resolveNamespacePrefix(XmlUtil.getPrefix(qname));
+            String localname = XmlUtil.getLocalPart(qname);
+
+            QName portTypeName = new QName(uri, localname);
+
+
+            if (uri == null || localname == null) {
+                runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.INVALID_PORTTYPE_DESCRIPTOR, qname, name), runtime.getLocator()));
+            }
+            boundPortType.setPortType(portTypeName);
+        }
         validateAttribute(runtime.getErrorHandler(), test, validattrs);
     }
+
 
 }

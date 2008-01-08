@@ -115,7 +115,7 @@ public class Message extends AbstractHandler {
         int index = test.getIndex("name");
         if (index >= 0)
             validattrs[index] = 1;
-        message = new WSDLMessageImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name));
+        message = new WSDLMessageImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
         validateAttribute(runtime.getErrorHandler(), test, validattrs);
     }
 
