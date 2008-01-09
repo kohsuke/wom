@@ -36,8 +36,6 @@
 
 package org.jvnet.wom.binding.soap11;
 
-import org.jvnet.wom.WSDLExtension;
-
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,15 +43,13 @@ import java.util.List;
 /**
  * @author Vivek Pandey
  */
-public final class SOAPHeader extends HeaderAttributes implements WSDLExtension {
+public final class SOAPHeader extends HeaderAttributes{
     private final List<SOAPHeaderFault> headerFaults = new ArrayList<SOAPHeaderFault>();
 
-    SOAPHeader(QName message, String part, SOAPBody.Use use, List<String> encodingStyle, String namespace) {
-        super(message, part, use, encodingStyle, namespace);
-    }
+    public static final QName SOAPHEADER_NAME = new QName(SOAPBinding.SOAP_NS, "header");
 
     public QName getName() {
-        return new QName(SOAPBinding.SOAP_NS, "header");
+        return SOAPHEADER_NAME;
     }
 
     public void addHeaderFault(SOAPHeaderFault headerFault) {
@@ -62,25 +58,5 @@ public final class SOAPHeader extends HeaderAttributes implements WSDLExtension 
 
     public Iterable<SOAPHeaderFault> getHeaderFaults() {
         return headerFaults;
-    }
-
-    public QName getMessage() {
-        return message;
-    }
-
-    public String getPart() {
-        return part;
-    }
-
-    public SOAPBody.Use getUse() {
-        return use;
-    }
-
-    public List<String> getEncodingStyle() {
-        return encodingStyle;
-    }
-
-    public String getNamespace() {
-        return namespace;
     }
 }

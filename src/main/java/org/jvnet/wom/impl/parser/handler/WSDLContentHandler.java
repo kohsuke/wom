@@ -44,8 +44,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import javax.xml.namespace.NamespaceContext;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -359,8 +363,8 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
         // modified to report active bindings only.
         for (int i = 0; i < namespaces.size(); i += 2)
             redirect.startPrefixMapping(
-                    (String) namespaces.get(i),
-                    (String) namespaces.get(i + 1)
+                    namespaces.get(i),
+                    namespaces.get(i + 1)
             );
 
         redirect.startElement(uri, local, qname, currentAtts);
@@ -377,7 +381,7 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
      * namespaces[2n  ] := prefix
      * namespaces[2n+1] := namespace URI
      */
-    private final ArrayList namespaces = new ArrayList();
+    private final List<String> namespaces = new ArrayList<String>();
     /**
      * Index on the namespaces array, which points to
      * the top of the effective bindings. Because of the
@@ -415,6 +419,43 @@ public class WSDLContentHandler implements ContentHandler, WSDLEventSource {
             return "http://www.w3.org/XML/1998/namespace";
         else return null;    // prefix undefined
     }
+
+    NamespaceContext nsContext = new NamespaceContextImpl();
+
+    private class NamespaceContextImpl implements NamespaceContext {
+
+        public String getNamespaceURI(String prefix) {
+            for (int i = nsEffectivePtr - 2; i >= 0; i -= 2)
+                if (namespaces.get(i).equals(prefix))
+                    return namespaces.get(i + 1);
+
+            // no binding was found.
+            if (prefix.equals("")) return "";  // return the default no-namespace
+            if (prefix.equals("xml"))    // pre-defined xml prefix
+                return "http://www.w3.org/XML/1998/namespace";
+            else return null;    // prefix undefined
+        }
+
+        public String getPrefix(String namespaceURI) {
+            for (int i = nsEffectivePtr - 2; i >= 0; i -= 2)
+                if (namespaces.get(i+1).equals(namespaceURI))
+                    return namespaces.get(i);
+            if (namespaceURI.equals("")) return "";  // return the default no-namespace
+            if (namespaceURI.equals("http://www.w3.org/XML/1998/namespace"))    // pre-defined xml prefix
+                return "xml";
+            else
+                return null;
+        }
+
+        public Iterator getPrefixes(String namespaceURI) {
+            String[] prefixes = new String[nsEffectivePtr/2];
+            for (int i = nsEffectivePtr - 2, j=0; i >= 0; i -= 2,j++){
+                prefixes[j] = namespaces.get(i);
+            }
+            return Arrays.asList(prefixes).iterator();
+        }
+    }
+
 
 
     // error reporting

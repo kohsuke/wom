@@ -36,7 +36,16 @@
 package org.jvnet.wom.impl.parser;
 
 import org.jvnet.wom.WSDLSet;
+import org.jvnet.wom.impl.extension.SOAPAddressExtensionHandler;
+import org.jvnet.wom.impl.extension.SOAPBindingExtensionHandler;
+import org.jvnet.wom.impl.extension.SOAPBodyExtensionHandler;
+import org.jvnet.wom.impl.extension.SOAPFaultExtensionHandler;
+import org.jvnet.wom.impl.extension.SOAPHeaderExtensionHandler;
+import org.jvnet.wom.impl.extension.SOAPHeaderFaultExtensionHandler;
+import org.jvnet.wom.impl.extension.SOAPOperationExtensionHandler;
+import org.jvnet.wom.impl.util.QNameMap;
 import org.jvnet.wom.parser.WOMParser;
+import org.jvnet.wom.parser.WSDLExtensionHandler;
 import org.jvnet.wom.parser.WSDLParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -60,6 +69,7 @@ import java.util.Vector;
  * a different package.
  *
  * @author Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
+ * @author Vivek Pandey
  */
 public class ParserContext {
 
@@ -72,6 +82,14 @@ public class ParserContext {
 
     final WSDLParser parser;
 
+    private final QNameMap<WSDLExtensionHandler> extensionMap = new QNameMap<WSDLExtensionHandler>();
+
+    private void addKnownWSDLExtensionHandler(WSDLExtensionHandler... extensionHandlers){
+        for(WSDLExtensionHandler extensionHandler:extensionHandlers){
+            extensionMap.put(extensionHandler.extensibilityName(), extensionHandler);
+        }
+    }
+    
     /* ContentHandler to parse schema inside the wsdl:types element */
     private ContentHandler schemaContentHandler = new DefaultHandler();
 
@@ -92,6 +110,15 @@ public class ParserContext {
     public ParserContext(WOMParser owner, WSDLParser parser) {
         this.owner = owner;
         this.parser = parser;
+        addKnownWSDLExtensionHandler(
+                new SOAPAddressExtensionHandler(errorHandler, owner.getEntityResolver()),
+                new SOAPBindingExtensionHandler(errorHandler, owner.getEntityResolver()),
+                new SOAPBodyExtensionHandler(errorHandler, owner.getEntityResolver()),
+                new SOAPFaultExtensionHandler(errorHandler, owner.getEntityResolver()),
+                new SOAPHeaderExtensionHandler(errorHandler, owner.getEntityResolver()),
+                new SOAPHeaderFaultExtensionHandler(errorHandler, owner.getEntityResolver()),
+                new SOAPOperationExtensionHandler(errorHandler, owner.getEntityResolver()));
+
     }
 
     public EntityResolver getEntityResolver() {
@@ -217,4 +244,12 @@ public class ParserContext {
             setErrorFlag();
         }
     };
+
+    public void addWSDLExtensionHandler(WSDLExtensionHandler extension) {
+        extensionMap.put(extension.extensibilityName(), extension);
+    }
+
+    public WSDLExtensionHandler getWSDLExtensionHandler(String uri, String localName){
+        return extensionMap.get(uri, localName);
+    }
 }

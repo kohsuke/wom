@@ -49,8 +49,9 @@ import javax.xml.namespace.QName;
 public class WSDLServiceImpl extends WSDLService {
     private WSDLDefinitionsImpl parent;
     private final QNameMap<WSDLPortImpl> ports = new QNameMap<WSDLPortImpl>();
+    private String doc;
 
-    protected WSDLServiceImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+    public WSDLServiceImpl(Locator locator, QName name, WSDLDocumentImpl document) {
         super(locator, name);
         setOwnerWSDLDocument(document);
     }
@@ -77,5 +78,14 @@ public class WSDLServiceImpl extends WSDLService {
 
     public void visit(WSDLVisitor visitor) {
         visitor.service(this);
+    }
+
+    public void setDocumentation(String doc) {
+        this.doc = doc;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return doc;
     }
 }

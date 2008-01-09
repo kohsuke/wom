@@ -49,28 +49,22 @@ import javax.xml.namespace.QName;
  */
 public class WSDLPortImpl extends WSDLPort {
     private WSDLBoundPortTypeImpl binding;
+    private QName bindingName;
     private String address;
     private WSDLServiceImpl owner;
+    private String doc;
 
-    protected WSDLPortImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+    public WSDLPortImpl(Locator locator, QName name, WSDLDocumentImpl document) {
         super(locator, name);
         setOwnerWSDLDocument(document);
     }
 
     public WSDLBoundPortType getBinding() {
-        return binding;
+        return getOwnerWSDLModel().getBinding(bindingName);
     }
 
-    public void setBinding(WSDLBoundPortTypeImpl binding) {
-        this.binding = binding;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setBinding(QName qName) {
+        this.bindingName = qName;
     }
 
     public WSDLService getOwner() {
@@ -84,5 +78,14 @@ public class WSDLPortImpl extends WSDLPort {
 
     public void visit(WSDLVisitor visitor) {
         visitor.port(this);
+    }
+
+    @Override
+    public String getDocumentation() {
+        return doc;
+    }
+
+    public void setDocumentation(String doc) {
+        this.doc = doc;
     }
 }

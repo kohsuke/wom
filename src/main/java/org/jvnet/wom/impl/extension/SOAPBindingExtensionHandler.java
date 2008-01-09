@@ -35,7 +35,7 @@
  */
 package org.jvnet.wom.impl.extension;
 
-import org.jvnet.wom.WSDLEntity;
+import org.jvnet.wom.WSDLExtension;
 import org.jvnet.wom.binding.soap11.SOAPBinding;
 import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.AbstractWSDLExtensionHandler;
@@ -43,10 +43,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.LocatorImpl;
 
 import javax.xml.namespace.QName;
 
@@ -55,46 +53,27 @@ import javax.xml.namespace.QName;
  */
 public class SOAPBindingExtensionHandler extends AbstractWSDLExtensionHandler {
 
-    private SOAPBinding soapBinding;
-    private final ContentHandler soapBindingCH = new SOAPBindingContentHandler();
+    private final ContentHandler soapBindingCH = new SOAPBindingCH();
+    private SOAPBinding binding;
 
-    public SOAPBindingExtensionHandler(WSDLEntity parent, ErrorHandler errorHandler, EntityResolver entityResolver) {
-        super(parent, errorHandler, entityResolver);
+    public SOAPBindingExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
+        super(errorHandler, entityResolver);
     }
 
-    public boolean isSupported(QName extensibilityElement) {
-        return extensibilityElement.equals(SOAPBinding.SOAPBinding_NAME);
+    public WSDLExtension getExtension() {
+        return binding;
+    }
+
+    public QName extensibilityName() {
+        return SOAPBinding.SOAPBinding_NAME;
     }
 
     public ContentHandler getContentHandler() {
         return soapBindingCH;
     }
 
-    public class SOAPBindingContentHandler implements ContentHandler {
-
-        //default locator
-        Locator locator = new LocatorImpl();
-
-        public void setDocumentLocator(Locator locator) {
-            this.locator = locator;
-        }
-
-        public void startDocument() throws SAXException {
-
-        }
-
-        public void endDocument() throws SAXException {
-
-        }
-
-        public void startPrefixMapping(String prefix, String uri) throws SAXException {
-
-        }
-
-        public void endPrefixMapping(String prefix) throws SAXException {
-
-        }
-
+    private class SOAPBindingCH extends WSDLExtensibilityContentHandler{
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
             if (uri.equals(SOAPBinding.SOAP_NS) && "binding".equals(localName)) {
                 String transport = atts.getValue("transport");
@@ -116,35 +95,12 @@ public class SOAPBindingExtensionHandler extends AbstractWSDLExtensionHandler {
                 } else if (styleattr.equals("document")) {
                     style = SOAPBinding.Style.Document;
                 } else if (styleattr.length() > 0) {
-                    errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "use", styleattr, "document or rpc"), locator));
+                    errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "style", styleattr, "document or rpc"), locator));
                 }
-
-                soapBinding = new SOAPBinding(transport, style);
-                parent.addExtension(soapBinding);
-
+                binding = new SOAPBinding();
+                binding.setTransport(transport);
+                binding.setStyle(style);
             }
         }
-
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-
-        }
-
-        public void characters(char ch[], int start, int length) throws SAXException {
-
-        }
-
-        public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
-
-        }
-
-        public void processingInstruction(String target, String data) throws SAXException {
-
-        }
-
-        public void skippedEntity(String name) throws SAXException {
-
-        }
-
-
     }
 }

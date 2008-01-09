@@ -49,7 +49,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.LocatorImpl;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Stack;
 
 public class WSDLContentHandlerEx extends WSDLContentHandler {
@@ -324,15 +323,15 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
     }
 
 
-    protected void unexpectedX(String token) throws SAXException {
-        SAXParseException e = new SAXParseException(MessageFormat.format(
-                "Unexpected {0} appears at line {1} column {2}",
-                token,
-                getLocator().getLineNumber(),
-                getLocator().getColumnNumber()),
-                getLocator());
-
-        parser.errorHandler.fatalError(e);
-        throw e;    // we will abort anyway
-    }
+//    protected void unexpectedX(String token) throws SAXException {
+//        SAXParseException e = new SAXParseException(MessageFormat.format(
+//                "Unexpected {0} appears at line {1} column {2}",
+//                token,
+//                getLocator().getLineNumber(),
+//                getLocator().getColumnNumber()),
+//                getLocator());
+//
+//        parser.errorHandler.fatalError(e);
+//        throw e;    // we will abort anyway
+//    }
 }

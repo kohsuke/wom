@@ -41,14 +41,11 @@ import org.xml.sax.Locator;
 import javax.xml.namespace.QName;
 
 /**
+ *
  * @author Vivek Pandey
  */
-public class WSDLBoundOutput extends WSDLEntity{
+public abstract class WSDLBoundOutput extends WSDLEntity{
     public WSDLBoundOutput(Locator locator, QName name) {
         super(locator, name);
-    }
-
-    public void visit(WSDLVisitor visitor) {
-
     }
 }

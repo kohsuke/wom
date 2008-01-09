@@ -36,15 +36,20 @@
 
 package org.jvnet.wom.impl.parser.handler;
 
+import org.jvnet.wom.impl.WSDLBoundInputImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import javax.xml.namespace.QName;
+
 /**
  * @author Vivek Pandey
  */
-public class BoundInput extends AbstractHandler{
+public class BoundInput extends AbstractHandler {
+    private WSDLBoundInputImpl input;
     private WSDLContentHandlerEx runtime;
     private String expectedNamespace;
 
@@ -58,7 +63,7 @@ public class BoundInput extends AbstractHandler{
         super(source, parent, parentCookie);
     }
 
-    protected WSDLContentHandler getRuntime() {
+    protected WSDLContentHandlerEx getRuntime() {
         return runtime;
     }
 
@@ -67,22 +72,33 @@ public class BoundInput extends AbstractHandler{
     }
 
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-
+        if (WSDL_NS.equals(uri) && localName.equals("input")) {
+            runtime.onEnterElementConsumed(uri, localName, qname, atts);
+            Attributes test = runtime.getCurrentAttributes();
+            processAttributes(test);
+        } else {
+            super.enterElement(uri, localName, qname, atts);
+        }
     }
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
+        if (WSDL_NS.equals(uri) && localName.equals("input")) {
+            endProcessingExtentionElement(input);
+            revertToParentFromLeaveElement(input, _cookie, uri, localName, qname);
+            input.setDocumentation(getWSDLDocumentation());
+        }
+    }
+    
+    private void processAttributes(Attributes test) throws SAXException {
+        int[] validattrs = new int[test.getLength()];
+        String name = XmlUtil.fixNull(test.getValue("name"));
 
+        int index = test.getIndex("name");
+        if (index >= 0)
+            validattrs[index] = 1;
+
+        input = new WSDLBoundInputImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
+        validateAttribute(runtime.getErrorHandler(), test, validattrs);
     }
 
-    public void text(String value) throws SAXException {
-
-    }
-
-    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
-
-    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
 }

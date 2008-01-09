@@ -35,11 +35,16 @@
  */
 package org.jvnet.wom.impl.parser.handler;
 
+import org.jvnet.wom.impl.WSDLPortImpl;
 import org.jvnet.wom.impl.WSDLServiceImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
@@ -60,31 +65,47 @@ public class Service extends AbstractHandler {
         super(source, parent, parentCookie);
     }
 
-    protected WSDLContentHandler getRuntime() {
+    protected WSDLContentHandlerEx getRuntime() {
         return runtime;
     }
 
     protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
-
+        if(cookie == 81){
+            service.add((WSDLPortImpl) result);
+        }
     }
 
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-
+        if (uri.equals(WSDL_NS) && localName.equals("service")) {
+            runtime.onEnterElementConsumed(uri, localName, qname, atts);
+            Attributes test = runtime.getCurrentAttributes();
+            processAttributes(test);
+        } else if (uri.equals(WSDL_NS) && localName.equals("port")) {
+            Port part = new Port(this, _source, runtime, 81, expectedNamespace);
+            spawnChildFromEnterElement(part, uri, localName, qname, atts);
+        } else {
+            super.enterElement(uri, localName, qname, atts);
+        }
     }
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
-
+        if (uri.equals(WSDL_NS) && localName.equals("service")) {
+            endProcessingExtentionElement(service);
+            revertToParentFromLeaveElement(service, _cookie, uri, localName, qname);
+            service.setDocumentation(getWSDLDocumentation());
+        }
     }
 
-    public void text(String value) throws SAXException {
-
-    }
-
-    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
-
-    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
+    private void processAttributes(Attributes test) throws SAXException {
+        int[] validattrs = new int[test.getLength()];
+        String name = XmlUtil.fixNull(test.getValue("name"));
+        if (name.equals("")) {
+            runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:message", name), runtime.getLocator()));
+        }
+        int index = test.getIndex("name");
+        if (index >= 0)
+            validattrs[index] = 1;
+        service = new WSDLServiceImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
+        validateAttribute(runtime.getErrorHandler(), test, validattrs);
+    }    
 }

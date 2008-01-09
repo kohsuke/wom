@@ -36,25 +36,57 @@
 
 package org.jvnet.wom.binding.soap11;
 
+import org.jvnet.wom.WSDLExtension;
+
 import javax.xml.namespace.QName;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-class HeaderAttributes {
-    final QName message;
-    final String part;
-    final SOAPBody.Use use;
-    final List<String> encodingStyle;
-    final String namespace;
+abstract class HeaderAttributes extends WSDLExtension {
+    QName message;
+    String part;
+    SOAPBody.Use use;
+    String[] encodingStyle;
+    String namespace;
 
-    HeaderAttributes(QName message, String part, SOAPBody.Use use, List<String> encodingStyle, String namespace) {
+    public QName getMessage() {
+        return message;
+    }
+
+    public void setMessage(QName message) {
         this.message = message;
+    }
+
+    public String getPart() {
+        return part;
+    }
+
+    public void setPart(String part) {
         this.part = part;
-        this.use = (use == null)? SOAPBody.Use.literal:use;
-        this.encodingStyle = Collections.unmodifiableList(encodingStyle);
+    }
+
+    public SOAPBody.Use getUse() {
+        return use;
+    }
+
+    public void setUse(SOAPBody.Use use) {
+        this.use = use;
+    }
+
+    public String[] getEncodingStyle() {
+        return encodingStyle;
+    }
+
+    public void setEncodingStyle(String[] encodingStyle) {
+        this.encodingStyle = encodingStyle;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 }

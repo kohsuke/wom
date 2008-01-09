@@ -38,6 +38,7 @@ package org.jvnet.wom.impl.parser.handler;
 import org.jvnet.wom.impl.WSDLOperationImpl;
 import org.jvnet.wom.impl.WSDLPortTypeImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -66,7 +67,7 @@ public class PortType extends AbstractHandler {
     }
 
 
-    protected WSDLContentHandler getRuntime() {
+    protected WSDLContentHandlerEx getRuntime() {
         return runtime;
     }
 
@@ -85,13 +86,11 @@ public class PortType extends AbstractHandler {
                     runtime.onEnterElementConsumed(uri, localName, qname, atts);
                     Attributes test = runtime.getCurrentAttributes();
                     processAttributes(test);
-                } else if (WSDL_NS.equals(uri) && localName.equals("documentation")) {
-                    String doc = processDocumentation(uri, localName, qname);
-                    runtime.onEnterElementConsumed(uri, localName, qname, atts);
-                    portType.setDocumentation(doc);
                 } else if (WSDL_NS.equals(uri) && localName.equals("operation")) {
                     Operation operation = new Operation(this, _source, runtime, 61, expectedNS);
                     spawnChildFromEnterElement(operation, uri, localName, qname, atts);
+                }else{
+                    super.enterElement(uri, localName, qname, atts);
                 }
                 break;
         }
@@ -101,21 +100,11 @@ public class PortType extends AbstractHandler {
         switch (state) {
             case 1:
                 if (WSDL_NS.equals(uri) && localName.equals("portType")) {
+                    endProcessingExtentionElement(portType);
                     revertToParentFromLeaveElement(portType, _cookie, uri, localName, qname);
+                    portType.setDocumentation(getWSDLDocumentation());
                 }
         }
-    }
-
-    public void text(String value) throws SAXException {
-
-    }
-
-    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
-
-    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
-
     }
 
     private void processAttributes(Attributes test) throws SAXException {

@@ -35,7 +35,12 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.*;
+import org.jvnet.wom.WSDLBoundFault;
+import org.jvnet.wom.WSDLBoundInput;
+import org.jvnet.wom.WSDLBoundOperation;
+import org.jvnet.wom.WSDLBoundOutput;
+import org.jvnet.wom.WSDLOperation;
+import org.jvnet.wom.WSDLVisitor;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
@@ -55,7 +60,8 @@ public class WSDLBoundOperationImpl extends WSDLBoundOperation {
     private Set<WSDLBoundFaultImpl> faults = new HashSet<WSDLBoundFaultImpl>();
     private String doc;
     private WSDLBoundPortTypeImpl owner;
-    private QName operationName;
+    private WSDLBoundInput input;
+    private WSDLBoundOutput output;
 
     public WSDLBoundOperationImpl(Locator locator, QName name, WSDLDocumentImpl document) {
         super(locator, name);
@@ -71,24 +77,30 @@ public class WSDLBoundOperationImpl extends WSDLBoundOperation {
         this.soapAction = soapAction;
     }
 
+    public void addBoundFault(WSDLBoundFaultImpl fault){
+        faults.add(fault);
+    }
+
     public void setOwner(WSDLBoundPortTypeImpl owner) {
         this.owner = owner;
     }
 
     public WSDLOperation getOperation() {
-        return owner.getPortType().get(operationName);
+        return owner.getPortType().get(getName());
     }
 
+    public void setBoundInput(WSDLBoundInput input){
+        this.input = input;
+    }
+    public void setBoundOutput(WSDLBoundOutput output){
+        this.output = output;
+    }
     public WSDLBoundInput getInput() {
-        return null;
+        return input;
     }
 
     public WSDLBoundOutput getOutput() {
-        return null;
-    }
-
-    public void setOperation(QName name) {
-        this.operationName = name;
+        return output;
     }
 
     public final Map<String, WSDLPartImpl> getInParts() {

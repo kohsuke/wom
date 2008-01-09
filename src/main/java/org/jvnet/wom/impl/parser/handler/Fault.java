@@ -63,7 +63,7 @@ public class Fault extends AbstractHandler {
         super(source, parent, parentCookie);
     }
 
-    protected WSDLContentHandler getRuntime() {
+    protected WSDLContentHandlerEx getRuntime() {
         return runtime;
     }
 
@@ -76,28 +76,17 @@ public class Fault extends AbstractHandler {
             runtime.onEnterElementConsumed(uri, localName, qname, atts);
             Attributes test = runtime.getCurrentAttributes();
             processAttributes(test);
-        } else if (WSDL_NS.equals(uri) && localName.equals("documentation")) {
-            String doc = processDocumentation(uri, localName, qname);
-            runtime.onEnterElementConsumed(uri, localName, qname, atts);
-            fault.setDocumentation(doc);
+        } else{
+            super.enterElement(uri, localName, qname, atts);
         }
     }
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
         if (WSDL_NS.equals(uri) && localName.equals("fault")) {
+            endProcessingExtentionElement(fault);
             revertToParentFromLeaveElement(fault, _cookie, uri, localName, qname);
+            fault.setDocumentation(getWSDLDocumentation());            
         }
-    }
-
-    public void text(String value) throws SAXException {
-
-    }
-
-    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
-
-    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
     }
 
     private void processAttributes(Attributes test) throws SAXException {

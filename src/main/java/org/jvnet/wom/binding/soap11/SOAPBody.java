@@ -46,39 +46,49 @@ import java.util.List;
 /**
  * @author Vivek Pandey
  */
-public final class SOAPBody implements WSDLExtension {
-    private final List<String> encodingStyle;
-    private final String namespace;
-    private final Use use;
-    private final List<String> parts;
+public final class SOAPBody extends WSDLExtension {
+    private String[] encodingStyle;
+    private String namespace;
+    private Use use;
+    private List<String> parts;
 
-    public SOAPBody(String[] parts, List<String> encodingStyle, String namespace, Use use) {
-        //The soap:body parts attribute could be an empty string, which means no part is
+    public static final QName SOAPBODY_NAME = new QName(SOAPBinding.SOAP_NS, "body");
+
+    public void setEncodingStyle(String[] encodingStyle) {
+        this.encodingStyle = encodingStyle;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
+    public void setUse(Use use) {
+        this.use = (use == null) ? Use.literal : null;
+    }
+
+    public void setParts(String[] parts) {
+        // The soap:body parts attribute could be an empty string, which means no part is
         // bound to body. Otherwise if present would represent space delimited parts (NMTOKENS)
-        if(parts != null){
+        if (parts != null) {
             List<String> tmpList = new ArrayList<String>();
-            for(String part:parts){
+            for (String part : parts) {
                 tmpList.add(part);
             }
             this.parts = Collections.unmodifiableList(tmpList);
-        }else{
+        } else {
             this.parts = null;
         }
-
-        this.encodingStyle = encodingStyle;
-        this.namespace = namespace;
-        this.use = (use==null)?Use.literal:null;
     }
 
     /**
-     * Maybe null. It is supposed to be non-null only for the encoded case. 
+     * Maybe null. It is supposed to be non-null only for the encoded case.
      */
-    public List<String> getEncodingStyle() {
+    public String[] getEncodingStyle() {
         return encodingStyle;
     }
 
     /**
-     *  null when {@link SOAPBinding.Style} is Document, otherwise will be non-null.
+     * null when {@link SOAPBinding.Style} is Document, otherwise will be non-null.
      */
     public String getNamespace() {
         return namespace;
@@ -92,15 +102,17 @@ public final class SOAPBody implements WSDLExtension {
     }
 
     public QName getName() {
-        return new QName(SOAPBinding.SOAP_NS, "body");
+        return SOAPBODY_NAME;
     }
 
     /**
-     * null if parts attribute is not defined on &lt;soap:body> element, otherwise non-null. 
+     * null if parts attribute is not defined on &lt;soap:body> element, otherwise non-null.
      */
     public List<String> getParts() {
         return parts;
     }
 
-    public enum Use{literal,encoded}
+    public enum Use {
+        literal, encoded
+    }
 }

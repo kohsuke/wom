@@ -35,9 +35,13 @@
  */
 package org.jvnet.wom.impl.parser.handler;
 
+import org.jvnet.wom.impl.WSDLBoundPortTypeImpl;
 import org.jvnet.wom.impl.WSDLMessageImpl;
+import org.jvnet.wom.impl.WSDLPortTypeImpl;
+import org.jvnet.wom.impl.WSDLServiceImpl;
 import org.jvnet.wom.impl.parser.Messages;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -60,7 +64,7 @@ public class Definitions extends AbstractHandler {
         this(null, runtime, runtime, -1, _expectedNamespace);
     }
 
-    protected WSDLContentHandler getRuntime() {
+    protected WSDLContentHandlerEx getRuntime() {
         return runtime;
     }
 
@@ -69,6 +73,15 @@ public class Definitions extends AbstractHandler {
             case 50:
                 WSDLMessageImpl message = (WSDLMessageImpl) result;
                 runtime.currentWSDL.addMessage(message);
+                break;
+            case 60:
+                runtime.currentWSDL.addPortType((WSDLPortTypeImpl) result);
+                break;
+            case 70:
+                runtime.currentWSDL.addBoundPortType((WSDLBoundPortTypeImpl) result);
+                break;
+            case 80:
+                runtime.currentWSDL.addService((WSDLServiceImpl) result);
                 break;
         }
     }
@@ -106,10 +119,7 @@ public class Definitions extends AbstractHandler {
                 }
                 break;
             case 2: //children of wsdl:definitions
-                if (uri.equals(WSDL_NS) && localName.equals("documentation")) {
-                    String doc = processDocumentation(uri, localName, qname);
-                    runtime.currentWSDL.setDocumentation(doc);
-                } else if (uri.equals(WSDL_NS) && localName.equals("types")) {
+                 if (uri.equals(WSDL_NS) && localName.equals("types")) {
                     //Let the ContentHandler for Schema handle it
                     runtime.redirectSubtree(runtime.parser.getSchemaContentHandler(), uri, localName, qname);
                 } else if (uri.equals(WSDL_NS) && localName.equals("message")) {
@@ -126,6 +136,8 @@ public class Definitions extends AbstractHandler {
                     spawnChildFromEnterElement(service, uri, localName, qname, atts);
                 } else if (uri.equals(WSDL_NS) && localName.equals("import")) {
                     //TODO
+                }else{
+                    super.enterElement(uri, localName, qname, atts);
                 }
                 break;
             default: //unknown, it might be extensibility element
@@ -138,7 +150,10 @@ public class Definitions extends AbstractHandler {
     }
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
-
+        if (uri.equals(WSDL_NS) && localName.equals("definitions")) {
+            endProcessingExtentionElement(runtime.currentWSDL);
+            runtime.currentWSDL.setDocumentation(getWSDLDocumentation());
+        }
     }
 
     public void text(String value) throws SAXException {

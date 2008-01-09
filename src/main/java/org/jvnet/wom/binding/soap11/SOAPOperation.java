@@ -43,12 +43,16 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public final class SOAPOperation implements WSDLExtension {
-    private final String soapAction;
-    private final SOAPBinding.Style style;
+public final class SOAPOperation extends WSDLExtension {
+    private String soapAction;
+    private SOAPBinding.Style style;
+    public static final QName SOAPOPERATION_NAME = new QName(SOAPBinding.SOAP_NS, "operation");
 
-    public SOAPOperation(String soapAction, SOAPBinding.Style style) {
-        this.soapAction = (soapAction == null)?"":soapAction;
+    public void setSoapAction(String soapAction) {
+        this.soapAction = soapAction;
+    }
+
+    public void setStyle(SOAPBinding.Style style) {
         this.style = style;
     }
 
@@ -61,6 +65,6 @@ public final class SOAPOperation implements WSDLExtension {
     }
 
     public QName getName() {
-        return new QName(SOAPBinding.SOAP_NS, "operation");
+        return SOAPOPERATION_NAME;
     }
 }

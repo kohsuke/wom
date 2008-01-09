@@ -40,11 +40,14 @@ import org.jvnet.wom.impl.WSDLBoundPortTypeImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
+import org.jvnet.wom.parser.WSDLExtensionHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Vivek Pandey
@@ -64,53 +67,40 @@ public class BoundPortType extends AbstractHandler {
         super(source, parent, parentCookie);
     }
 
-    protected WSDLContentHandler getRuntime() {
+    protected WSDLContentHandlerEx getRuntime() {
         return runtime;
     }
 
     protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
         if (cookie == 71) {
-            boundPortType.addBoundOperation((WSDLBoundOperationImpl) result);
+            WSDLBoundOperationImpl operation = (WSDLBoundOperationImpl) result;
+            operation.setOwner(boundPortType);
+            boundPortType.addBoundOperation(operation);
         }
     }
 
+    List<WSDLExtensionHandler> handlers = new ArrayList<WSDLExtensionHandler>();
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
         if (WSDL_NS.equals(uri) && localName.equals("binding")) {
             runtime.onEnterElementConsumed(uri, localName, qname, atts);
             Attributes test = runtime.getCurrentAttributes();
             processAttributes(test);
-        } else if (WSDL_NS.equals(uri) && localName.equals("documentation")) {
-            String doc = processDocumentation(uri, localName, qname);
-            runtime.onEnterElementConsumed(uri, localName, qname, atts);
-            boundPortType.setDocumentation(doc);
         } else if (WSDL_NS.equals(uri) && localName.equals("operation")) {
             BoundOperation boundOperation = new BoundOperation(this, _source, runtime, 71, expectedNamespace);
             spawnChildFromEnterElement(boundOperation, uri, localName, qname, atts);
         } else {
-            //give extensions a chance
-
+            super.enterElement(uri, localName, qname, atts);
         }
-
     }
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
         if (WSDL_NS.equals(uri) && localName.equals("binding")) {
+            endProcessingExtentionElement(boundPortType);
             revertToParentFromLeaveElement(boundPortType, _cookie, uri, localName, qname);
+            boundPortType.setDocumentation(getWSDLDocumentation());
         }
     }
-
-    public void text(String value) throws SAXException {
-
-    }
-
-    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
-
-    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
-
+    
     private void processAttributes(Attributes test) throws SAXException {
         int[] validattrs = new int[test.getLength()];
         String name = XmlUtil.fixNull(test.getValue("name"));

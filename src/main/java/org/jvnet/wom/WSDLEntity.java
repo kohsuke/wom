@@ -122,6 +122,7 @@ public abstract class WSDLEntity implements WSDLExtensible {
     public void addExtension(WSDLExtension extension) {
         if (extension == null)
             throw new IllegalArgumentException();
+        extension.owner = this;
         extensions.add(extension);
     }
 

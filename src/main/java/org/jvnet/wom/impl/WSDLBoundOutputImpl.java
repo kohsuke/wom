@@ -33,43 +33,42 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+
+package org.jvnet.wom.impl;
+
+import org.jvnet.wom.WSDLBoundOutput;
+import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
+import org.xml.sax.Locator;
+
+import javax.xml.namespace.QName;
 
 /**
- * Visitor for {@link WSDLEntity}
- *
  * @author Vivek Pandey
  */
-public interface WSDLVisitor {
-    void definitions(WSDLDefinitions definitions);
+public class WSDLBoundOutputImpl extends WSDLBoundOutput {
+    private WSDLBoundOperationImpl parent;
+    private String doc;
 
-    void types(WSDLTypes types);
+    public WSDLBoundOutputImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+        super(locator, name);
+        setOwnerWSDLDocument(document);
+    }
 
-    void messages(WSDLMessage message);
+    public void visit(WSDLVisitor visitor) {
+        visitor.boundOutput(this);
+    }
 
-    void part(WSDLPart part);
+    public void setParent(WSDLBoundOperationImpl parent) {
+        this.parent = parent;
+    }
 
-    void portType(WSDLPortType portType);
+    @Override
+    public String getDocumentation() {
+        return doc;
+    }
 
-    void operation(WSDLOperation operation);
-
-    void input(WSDLInput input);
-
-    void output(WSDLOutput output);
-
-    void fault(WSDLFault fault);
-
-    void binding(WSDLBoundPortType binding);
-
-    void bindingOperation(WSDLBoundOperation boundOperation);
-
-    void boundInput(WSDLBoundInput boundInput);
-
-    void boundOutput(WSDLBoundOutput boundOutput);
-
-    void bindingFault(WSDLBoundFault fault);
-
-    void service(WSDLService service);
-
-    void port(WSDLPort port);
+    public void setDocumentation(String doc) {
+        this.doc = doc;
+    }
 }

@@ -68,7 +68,7 @@ public class Message extends AbstractHandler {
         super(source, parent, parentCookie);
     }
 
-    protected WSDLContentHandler getRuntime() {
+    protected WSDLContentHandlerEx getRuntime() {
         return runtime;
     }
 
@@ -94,13 +94,8 @@ public class Message extends AbstractHandler {
                 } else if (uri.equals(WSDL_NS) && localName.equals("part")) {
                     Part part = new Part(this, _source, runtime, 51, expectedNS);
                     spawnChildFromEnterElement(part, uri, localName, qname, atts);
-                } else if (uri.equals(WSDL_NS) && localName.equals("documentation")) {
-                    String doc = processDocumentation(uri, localName, qname);
-                    runtime.onEnterElementConsumed(uri, localName, qname, atts);
-                    message.setDocumentation(doc);
                 } else {
-                    //TODO: give unkown elements to extension handlers
-                    runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ELEMENT, new QName(uri, localName)), runtime.getLocator()));
+                    super.enterElement(uri, localName, qname, atts);
                 }
                 break;
 
@@ -125,21 +120,11 @@ public class Message extends AbstractHandler {
         switch (state) {
             case 1:
                 if (uri.equals(WSDL_NS) && localName.equals("message")) {
+                    endProcessingExtentionElement(message);
                     revertToParentFromLeaveElement(message, _cookie, uri, localName, qname);
+                    message.setDocumentation(getWSDLDocumentation());
                 }
                 break;
         }
-    }
-
-    public void text(String value) throws SAXException {
-
-    }
-
-    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
-
-    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
+    }    
 }

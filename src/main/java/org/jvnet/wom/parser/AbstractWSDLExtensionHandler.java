@@ -35,12 +35,16 @@
  */
 package org.jvnet.wom.parser;
 
-import org.jvnet.wom.WSDLEntity;
+import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.LocatorImpl;
 
-import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Any WSDL extensibility handler should extend from this abstract class.
@@ -50,19 +54,76 @@ import javax.xml.namespace.QName;
 public abstract class AbstractWSDLExtensionHandler implements WSDLExtensionHandler {
     protected final ErrorHandler errorHandler;
     protected final EntityResolver entityResolver;
-    protected final WSDLEntity parent;
 
-    protected AbstractWSDLExtensionHandler(WSDLEntity parent, ErrorHandler errorHandler, EntityResolver entityResolver) {
+    protected AbstractWSDLExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
         this.errorHandler = errorHandler;
         this.entityResolver = entityResolver;
-        this.parent = parent;
-    }
-
-
-    public boolean isSupported(QName extensibilityElement) {
-        return false;
     }
 
     public abstract ContentHandler getContentHandler();
+
+    protected abstract class WSDLExtensibilityContentHandler implements ContentHandler{
+        protected Locator locator = new LocatorImpl();
+        public void setDocumentLocator(Locator locator) {
+            this.locator = locator;
+        }
+
+        public void startDocument() throws SAXException {
+
+        }
+
+        public void endDocument() throws SAXException {
+
+        }
+
+        List<String> namespaces = new ArrayList<String>();
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            namespaces.add(prefix);
+            namespaces.add(uri);
+        }
+
+        public void endPrefixMapping(String prefix) throws SAXException {
+            namespaces.remove(namespaces.size() - 1);
+            namespaces.remove(namespaces.size() - 1);
+        }
+
+        public String resolveNamespacePrefix(String prefix) {
+            for (int i = namespaces.size() - 2; i >= 0; i -= 2)
+                if (namespaces.get(i).equals(prefix))
+                    return namespaces.get(i + 1);
+
+            // no binding was found.
+            if (prefix.equals("")) return "";  // return the default no-namespace
+            if (prefix.equals("xml"))    // pre-defined xml prefix
+                return "http://www.w3.org/XML/1998/namespace";
+            else return null;    // prefix undefined
+        }
+
+        
+
+        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+
+        }
+
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+
+        }
+
+        public void characters(char ch[], int start, int length) throws SAXException {
+
+        }
+
+        public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
+
+        }
+
+        public void processingInstruction(String target, String data) throws SAXException {
+
+        }
+
+        public void skippedEntity(String name) throws SAXException {
+
+        }
+    }
 
 }

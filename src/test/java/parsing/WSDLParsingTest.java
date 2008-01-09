@@ -76,6 +76,8 @@ public class WSDLParsingTest extends TestCase {
 
         assertNotNull(def.getMessage(new QName("http://example.com/wsdl", "echoResponse")));
 
+        
+
 
     }
 }

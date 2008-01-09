@@ -36,30 +36,32 @@
 
 package org.jvnet.wom.impl.parser.handler;
 
-import org.jvnet.wom.impl.WSDLBoundOutputImpl;
+import org.jvnet.wom.impl.WSDLBoundFaultImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public class BoundOutput extends AbstractHandler {
-    private WSDLBoundOutputImpl output;
+public class BoundFault extends AbstractHandler{
+    private WSDLBoundFaultImpl fault;
+
     private WSDLContentHandlerEx runtime;
     private String expectedNamespace;
 
-    public BoundOutput(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
+    public BoundFault(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
         super(source, parent, cookie);
         this.runtime = runtime;
         this.expectedNamespace = expectedNamespace;
     }
 
-    protected BoundOutput(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
+    protected BoundFault(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
         super(source, parent, parentCookie);
     }
 
@@ -72,22 +74,22 @@ public class BoundOutput extends AbstractHandler {
     }
 
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-        if (WSDL_NS.equals(uri) && localName.equals("output")) {
+        if (WSDL_NS.equals(uri) && localName.equals("fault")) {
             runtime.onEnterElementConsumed(uri, localName, qname, atts);
             Attributes test = runtime.getCurrentAttributes();
             processAttributes(test);
-        }else {
+        }else{
             super.enterElement(uri, localName, qname, atts);
         }
     }
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
-        if (WSDL_NS.equals(uri) && localName.equals("output")) {
-            endProcessingExtentionElement(output);
-            revertToParentFromLeaveElement(output, _cookie, uri, localName, qname);
-            output.setDocumentation(getWSDLDocumentation());
+        if (WSDL_NS.equals(uri) && localName.equals("fault")) {
+            endProcessingExtentionElement(fault);
+            revertToParentFromLeaveElement(fault, _cookie, uri, localName, qname);
+            fault.setDocumentation(getWSDLDocumentation());
         }
-    }
+    }    
 
     private void processAttributes(Attributes test) throws SAXException {
         int[] validattrs = new int[test.getLength()];
@@ -97,7 +99,11 @@ public class BoundOutput extends AbstractHandler {
         if (index >= 0)
             validattrs[index] = 1;
 
-        output = new WSDLBoundOutputImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
+        if (name.equals("")) {
+            runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.MISSING_NAME, "wsdl:fault", name), runtime.getLocator()));
+        }
+        fault = new WSDLBoundFaultImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), runtime.document);
         validateAttribute(runtime.getErrorHandler(), test, validattrs);
     }
+
 }

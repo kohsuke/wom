@@ -35,6 +35,7 @@
  */
 package org.jvnet.wom.parser;
 
+import org.jvnet.wom.WSDLExtension;
 import org.xml.sax.ContentHandler;
 
 import javax.xml.namespace.QName;
@@ -46,14 +47,28 @@ import javax.xml.namespace.QName;
  * @author Vivek Pandey
  */
 public interface WSDLExtensionHandler {
+
     /**
-     * Returns true of the extensibilityElement is supported, false otherwise.
+     * This method should be called only after the parsing of extensibility element is complete.
+     * Caller will know this when the extension's ContentHandler returns.
+     *
+     * If called in the middle, it may be null otherwise {@link WSDLExtension}
      */
-    public boolean isSupported(QName extensibilityElement);
+    public WSDLExtension getExtension();
+
+    /**
+     * Gives the qualified name of wsdl extensibility element or attribute
+     */
+    public QName extensibilityName();
 
     /**
      * Gives the {@link ContentHandler} which will receive SAX events for the extensibility element
      */
     public ContentHandler getContentHandler();
+
+//    /**
+//     * Sometimes WSDL extensibility handlers need to get the namespace context
+//     */
+//    public void setNamespaceContext(NamespaceContext nsContext);
 
 }

@@ -52,7 +52,6 @@ public class Input extends AbstractHandler {
     private WSDLInputImpl input;
     private WSDLContentHandlerEx runtime;
     private String expectedNS;
-    private int state;
 
     protected Input(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
         super(source, parent, parentCookie);
@@ -62,10 +61,9 @@ public class Input extends AbstractHandler {
         super(source, parent, cookie);
         this.runtime = runtime;
         this.expectedNS = expectedNamespace;
-        state = 1;
     }
 
-    protected WSDLContentHandler getRuntime() {
+    protected WSDLContentHandlerEx getRuntime() {
         return runtime;
     }
 
@@ -78,30 +76,16 @@ public class Input extends AbstractHandler {
             runtime.onEnterElementConsumed(uri, localName, qname, atts);
             Attributes test = runtime.getCurrentAttributes();
             processAttributes(test);
-        } else if (WSDL_NS.equals(uri) && localName.equals("documentation")) {
-            String doc = processDocumentation(uri, localName, qname);
-            runtime.onEnterElementConsumed(uri, localName, qname, atts);
-            input.setDocumentation(doc);
+        }else{
+            super.enterElement(uri, localName, qname, atts);
         }
     }
-
 
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
         if (WSDL_NS.equals(uri) && localName.equals("input")) {
+            endProcessingExtentionElement(input);
             revertToParentFromLeaveElement(input, _cookie, uri, localName, qname);
-        }
-    }
-
-    public void text(String value) throws SAXException {
-
-    }
-
-    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
-
-    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
-        if (WSDL_NS.equals(uri) && localName.equals("input")) {
+            input.setDocumentation(getWSDLDocumentation());
         }
     }
 

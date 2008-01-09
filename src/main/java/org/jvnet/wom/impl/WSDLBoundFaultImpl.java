@@ -47,9 +47,11 @@ import javax.xml.namespace.QName;
  * @author Vivek Pandey
  */
 public class WSDLBoundFaultImpl extends WSDLBoundFault {
+    private WSDLBoundOperationImpl parent;
     private WSDLFaultImpl abstractFault;
+    private String doc;
 
-    protected WSDLBoundFaultImpl(Locator locator, QName name, WSDLDocumentImpl document) {
+    public WSDLBoundFaultImpl(Locator locator, QName name, WSDLDocumentImpl document) {
         super(locator, name);
         setOwnerWSDLDocument(document);
     }
@@ -60,5 +62,18 @@ public class WSDLBoundFaultImpl extends WSDLBoundFault {
 
     public void visit(WSDLVisitor visitor) {
         visitor.bindingFault(this);
+    }
+
+    public void setParent(WSDLBoundOperationImpl parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return doc;
+    }
+
+    public void setDocumentation(String doc) {
+        this.doc = doc;
     }
 }

@@ -33,43 +33,21 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+
 package org.jvnet.wom;
 
 /**
- * Visitor for {@link WSDLEntity}
- *
  * @author Vivek Pandey
  */
-public interface WSDLVisitor {
-    void definitions(WSDLDefinitions definitions);
+public abstract class AbstractWSDLExtension extends WSDLExtension{
+    private WSDLEntity owner;
 
-    void types(WSDLTypes types);
+    public void setOwner(WSDLEntity owner) {
+        this.owner = owner;
+    }
 
-    void messages(WSDLMessage message);
-
-    void part(WSDLPart part);
-
-    void portType(WSDLPortType portType);
-
-    void operation(WSDLOperation operation);
-
-    void input(WSDLInput input);
-
-    void output(WSDLOutput output);
-
-    void fault(WSDLFault fault);
-
-    void binding(WSDLBoundPortType binding);
-
-    void bindingOperation(WSDLBoundOperation boundOperation);
-
-    void boundInput(WSDLBoundInput boundInput);
-
-    void boundOutput(WSDLBoundOutput boundOutput);
-
-    void bindingFault(WSDLBoundFault fault);
-
-    void service(WSDLService service);
-
-    void port(WSDLPort port);
+    public WSDLEntity getOwner() {
+        return owner;
+    }
+    
 }

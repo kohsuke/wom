@@ -35,11 +35,16 @@
  */
 package org.jvnet.wom.impl.extension;
 
-import org.jvnet.wom.WSDLEntity;
+import org.jvnet.wom.WSDLExtension;
+import org.jvnet.wom.binding.soap11.SOAPAddress;
+import org.jvnet.wom.binding.soap11.SOAPBinding;
 import org.jvnet.wom.parser.AbstractWSDLExtensionHandler;
+import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
 
@@ -47,16 +52,36 @@ import javax.xml.namespace.QName;
  * @author Vivek Pandey
  */
 public class SOAPAddressExtensionHandler extends AbstractWSDLExtensionHandler {
-    public SOAPAddressExtensionHandler(WSDLEntity parent, ErrorHandler errorHandler, EntityResolver entityResolver) {
-        super(parent, errorHandler, entityResolver);
+    private final ContentHandler contentHandler = new SOAPAddressCH();
+    private SOAPAddress address;
+
+    public SOAPAddressExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
+        super(errorHandler, entityResolver);
     }
 
-    @Override
-    public boolean isSupported(QName extensibilityElement) {
-        return true;
+    public WSDLExtension getExtension() {
+        return address;
+    }
+
+    public QName extensibilityName() {
+        return SOAPAddress.SOAPADDRESS_NAME;
     }
 
     public ContentHandler getContentHandler() {
-        return null;
+        return contentHandler;
+    }
+
+    private class SOAPAddressCH extends WSDLExtensibilityContentHandler{
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+            if(uri.equals(SOAPBinding.SOAP_NS) && localName.equals("address")){
+                String location = atts.getValue("location");
+                if(location == null){
+                    errorHandler.error(new SAXParseException(Messages.format(Messages.MISSING_ATTR, "location", "soap:address"), locator));
+                }
+                address = new SOAPAddress();
+                address.setLocation(location);
+            }
+        }
     }
 }

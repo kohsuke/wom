@@ -47,11 +47,36 @@ import javax.xml.namespace.QName;
  *
  * @author Vivek Pandey
  */
-public interface WSDLExtension {
+public abstract class WSDLExtension {
+    /**
+     * Gives the {@link WSDLEntity} that owns this extensibility element/attribute
+     * <p>
+     * For example, <br> <code>&lt;wsdl:Operation name="echo"><br>
+     *                  &lt;soap:operation action="http://tempuri.org"></code>
+     * <p>
+     * Here for the soap:operation, the WSDLExtention is {@link org.jvnet.wom.binding.soap11.SOAPOperation}
+     * and the owner will be {@link WSDLBoundOperation}
+     *
+     */
+    public WSDLEntity owner;
+
     /**
      * Gets the qualified name of the WSDL extensibility element or attribute.
      *
      * @return must not be null.
      */
-    public QName getName();
+    public abstract QName getName();
+
+    /**
+     * Gives the {@link WSDLEntity} that owns this extensibility element/attribute
+     * <p>
+     * For example, <br> <code>&lt;wsdl:Operation name="echo"><br>
+     *                  &lt;soap:operation action="http://tempuri.org"></code>
+     * <p>
+     * Here for the soap:operation, the WSDLExtention is {@link org.jvnet.wom.binding.soap11.SOAPOperation}
+     * and the owner will be {@link WSDLBoundOperation}
+     *
+     */
+    //public abstract WSDLEntity getOwner();
+
 }

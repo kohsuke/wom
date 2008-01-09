@@ -39,26 +39,35 @@ package org.jvnet.wom.binding.soap11;
 import org.jvnet.wom.WSDLExtension;
 
 import javax.xml.namespace.QName;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public final class SOAPFault implements WSDLExtension {
-    private final List<String> encodingStyle;
-    private final String namespace;
-    private final SOAPBody.Use use;
-    private final String name;
+public final class SOAPFault extends WSDLExtension {
+    private String[] encodingStyle;
+    private String namespace;
+    private SOAPBody.Use use;
+    private String name;
 
-    public SOAPFault(List<String> encodingStyle, String namespace, SOAPBody.Use use, String name) {
-        this.encodingStyle = Collections.unmodifiableList(encodingStyle);
+    public static final QName SOAPFAULT_NAME = new QName(SOAPBinding.SOAP_NS, "fault");
+
+    public void setEncodingStyle(String[] encodingStyle) {
+        this.encodingStyle = encodingStyle;
+    }
+
+    public void setNamespace(String namespace) {
         this.namespace = namespace;
+    }
+
+    public void setUse(SOAPBody.Use use) {
         this.use = (use == null) ? SOAPBody.Use.literal : null;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public List<String> getEncodingStyle() {
+    public String[] getEncodingStyle() {
         return encodingStyle;
     }
 
@@ -75,7 +84,7 @@ public final class SOAPFault implements WSDLExtension {
     }
 
     public QName getName() {
-        return new QName(SOAPBinding.SOAP_NS, "fault");
+        return SOAPFAULT_NAME;
     }
 
 

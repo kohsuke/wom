@@ -208,4 +208,8 @@ public final class WOMParser {
     public void setSchemaContentHandler(ContentHandler handler) {
         context.setSchemaContentHandler(handler);
     }
+
+    public void addWSDLExtensionHandler(WSDLExtensionHandler extension){
+        context.addWSDLExtensionHandler(extension);
+    }
 }

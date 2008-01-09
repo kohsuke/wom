@@ -35,12 +35,22 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.*;
+import org.jvnet.wom.WSDLFault;
+import org.jvnet.wom.WSDLInput;
+import org.jvnet.wom.WSDLOperation;
+import org.jvnet.wom.WSDLOutput;
+import org.jvnet.wom.WSDLPart;
+import org.jvnet.wom.WSDLPortType;
+import org.jvnet.wom.WSDLVisitor;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Vivek Pandey

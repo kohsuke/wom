@@ -43,12 +43,8 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public class WSDLBoundInput extends WSDLEntity{
+public abstract class WSDLBoundInput extends WSDLEntity{
     public WSDLBoundInput(Locator locator, QName name) {
         super(locator, name);
-    }
-
-    public void visit(WSDLVisitor visitor) {
-
     }
 }

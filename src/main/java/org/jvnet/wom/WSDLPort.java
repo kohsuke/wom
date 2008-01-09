@@ -52,14 +52,7 @@ public abstract class WSDLPort extends WSDLEntity {
     /**
      * Gets {@link WSDLBoundPortType} associated with the {@link WSDLPort}, always non-null.
      */
-    public abstract WSDLBoundPortType getBinding();
-
-    /**
-     * Gets endpoint address of this port.
-     *
-     * @return always non-null.
-     */
-    public abstract String getAddress();
+    public abstract WSDLBoundPortType getBinding();    
 
     /**
      * Gets the {@link WSDLService} that owns this port.

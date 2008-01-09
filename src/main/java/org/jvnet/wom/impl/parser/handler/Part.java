@@ -38,6 +38,7 @@ package org.jvnet.wom.impl.parser.handler;
 import org.jvnet.wom.WSDLPart;
 import org.jvnet.wom.impl.WSDLPartImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -66,7 +67,7 @@ public class Part extends AbstractHandler {
         super(source, parent, parentCookie);
     }
 
-    protected WSDLContentHandler getRuntime() {
+    protected WSDLContentHandlerEx getRuntime() {
         return runtime;
     }
 
@@ -81,35 +82,16 @@ public class Part extends AbstractHandler {
                     runtime.onEnterElementConsumed(uri, localName, qname, atts);
                     Attributes test = runtime.getCurrentAttributes();
                     processAttributes(test);
-                } else if (uri.equals(WSDL_NS) && localName.equals("documentation")) {
-                    runtime.onEnterElementConsumed(uri, localName, qname, atts);
-                    String doc = processDocumentation(uri, localName, qname);
-                    part.setDocumentation(doc);
                 } else {
-                    //TODO: give unkown elements to extension handlers
-                    runtime.getErrorHandler().warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ELEMENT, new QName(uri, localName)), runtime.getLocator()));
+                    super.enterElement(uri, localName, qname, atts);
                 }
                 break;
         }
     }
 
-    public static String getPrefix(String s) {
-        int i = s.indexOf(':');
-        if (i == -1)
-            return null;
-        return s.substring(0, i);
-    }
-
-    public static String getLocalPart(String s) {
-        int i = s.indexOf(':');
-        if (i == -1)
-            return s;
-        return s.substring(i + 1);
-    }
-
     private QName getDescriptorName(String qualifiedName) {
-        String uri = runtime.resolveNamespacePrefix(getPrefix(qualifiedName));
-        String localname = getLocalPart(qualifiedName);
+        String uri = runtime.resolveNamespacePrefix(XmlUtil.getPrefix(qualifiedName));
+        String localname = XmlUtil.getLocalPart(qualifiedName);
         if (localname == null || localname.trim().equals(""))
             return null;
         return new QName(uri, localname);
@@ -167,7 +149,9 @@ public class Part extends AbstractHandler {
         switch (state) {
             case 1:
                 if (uri.equals(WSDL_NS) && localName.equals("part")) {
+                    endProcessingExtentionElement(part);
                     revertToParentFromLeaveElement(part, _cookie, uri, localName, qname);
+                    part.setDocumentation(getWSDLDocumentation());
                 }
                 break;
         }

@@ -37,33 +37,14 @@
 package org.jvnet.wom.binding.soap11;
 
 import javax.xml.namespace.QName;
-import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
 public final class SOAPHeaderFault extends HeaderAttributes {
-    SOAPHeaderFault(QName message, String part, SOAPBody.Use use, List<String> encodingStyle, String namespace) {
-        super(message, part, use, encodingStyle, namespace);
-    }
+    public static final QName SOAPHEADERFAULT_NAME = new QName(SOAPBinding.SOAP_NS, "headerfault");
 
-    public QName getMessage() {
-        return message;
-    }
-
-    public String getPart() {
-        return part;
-    }
-
-    public SOAPBody.Use getUse() {
-        return use;
-    }
-
-    public List<String> getEncodingStyle() {
-        return encodingStyle;
-    }
-
-    public String getNamespace() {
-        return namespace;
+    public QName getName() {
+        return SOAPHEADERFAULT_NAME;
     }
 }
