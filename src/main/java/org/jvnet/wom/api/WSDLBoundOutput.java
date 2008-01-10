@@ -33,34 +33,19 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+
+package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
 
 /**
- * Abstraction of wsdl:portType.
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLPortType extends WSDLEntity {
-    protected WSDLPortType(Locator locator, QName name) {
+public abstract class WSDLBoundOutput extends WSDLEntity{
+    public WSDLBoundOutput(Locator locator, QName name) {
         super(locator, name);
     }
-
-    /**
-     * Gets the {@link WSDLOperation} for a given operation name
-     *
-     * @param operationName non-null operationName
-     * @return null if a {@link WSDLOperation} is not found
-     */
-    public abstract WSDLOperation get(QName operationName);
-
-
-    /**
-     * Gets {@link Iterable}<{$link WSDLOperation}>
-     */
-    public abstract Iterable<? extends WSDLOperation> getOperations();
-
 }

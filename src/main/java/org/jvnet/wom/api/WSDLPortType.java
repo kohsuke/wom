@@ -33,42 +33,34 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
 
 /**
- * Abstraction of wsdl:portType/wsdl:operation/wsdl:input
+ * Abstraction of wsdl:portType.
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLInput extends WSDLEntity {
-    protected WSDLInput(Locator locator, QName name) {
+public abstract class WSDLPortType extends WSDLEntity {
+    protected WSDLPortType(Locator locator, QName name) {
         super(locator, name);
     }
 
     /**
-     * Gives the WSDLMessage corresponding to wsdl:input@message
-     * <p/>
-     * This method should not be called before the entire WSDLDefinitions is built. Basically after the WSDLDefinitions is built
-     * all the references are resolve in a post processing phase. IOW, the WSDL extensions should
-     * not call this method.
+     * Gets the {@link WSDLOperation} for a given operation name
      *
-     * @return Always returns null when called from inside WSDL extensions.
+     * @param operationName non-null operationName
+     * @return null if a {@link WSDLOperation} is not found
      */
-    public abstract WSDLMessage getMessage();
+    public abstract WSDLOperation get(QName operationName);
+
 
     /**
-     * Gives the Action Message Addressing Property value for
-     * {@link this} message.
-     * <p/>
-     * This method provides the correct value irrespective of
-     * whether the Action is explicitly specified in the WSDL or
-     * implicitly derived using the rules defined in WS-Addressing.
-     *
-     * @return Action
+     * Gets {@link Iterable}<{$link WSDLOperation}>
      */
-//    public abstract String getAction();
+    public abstract Iterable<? extends WSDLOperation> getOperations();
+
 }

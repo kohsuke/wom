@@ -33,31 +33,32 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
 
 /**
- * Abstracts wsdl:service/wsdl:port
+ * Abstracts wsdl:service.
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLPort extends WSDLEntity {
-    protected WSDLPort(Locator locator, QName name) {
+public abstract class WSDLService extends WSDLEntity {
+    protected WSDLService(Locator locator, QName name) {
         super(locator, name);
     }
 
     /**
-     * Gets {@link WSDLBoundPortType} associated with the {@link WSDLPort}, always non-null.
+     * Gets the {@link WSDLPort} for a given port name
+     *
+     * @param portName non-null operationName
+     * @return null if a {@link WSDLPort} is not found
      */
-    public abstract WSDLBoundPortType getBinding();    
+    public abstract WSDLPort get(QName portName);
 
     /**
-     * Gets the {@link WSDLService} that owns this port.
-     *
-     * @return always non-null.
+     * Gives all the {@link WSDLPort} in a wsdl:service {@link WSDLService}
      */
-    public abstract WSDLService getOwner();
+    public abstract Iterable<? extends WSDLPort> getPorts();
 }

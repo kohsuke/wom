@@ -33,21 +33,29 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+package org.jvnet.wom.api;
 
-package org.jvnet.wom;
+import org.xml.sax.Locator;
+
+import javax.xml.namespace.QName;
 
 /**
+ * Abstraction of wsdl:message.
+ *
  * @author Vivek Pandey
  */
-public abstract class AbstractWSDLExtension extends WSDLExtension{
-    private WSDLEntity owner;
-
-    public void setOwner(WSDLEntity owner) {
-        this.owner = owner;
+public abstract class WSDLMessage extends WSDLEntity {
+    public WSDLMessage(Locator locator, QName name) {
+        super(locator, name);
     }
 
-    public WSDLEntity getOwner() {
-        return owner;
-    }
-    
+    /**
+     * Gets all the parts.
+     */
+    public abstract Iterable<? extends WSDLPart> parts();
+
+    /**
+     * Get a part of specific name
+     */
+    public abstract WSDLPart getPart(String partName);
 }

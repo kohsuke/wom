@@ -33,29 +33,42 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
 
 /**
- * Abstracts wsdl:binding/wsdl:operation/wsdl:fault
+ * Abstraction of wsdl:portType/wsdl:operation/wsdl:output
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLBoundFault extends WSDLEntity {
-    protected WSDLBoundFault(Locator locator, QName name) {
+public abstract class WSDLOutput extends WSDLEntity {
+    protected WSDLOutput(Locator locator, QName name) {
         super(locator, name);
     }
 
     /**
-     * Gives the associated abstract fault from
-     * wsdl:portType/wsdl:operation/wsdl:fault. It is only available after
-     * the WSDL parsing is complete and the entire model is frozen.
+     * Gives the WSDLMessage corresponding to wsdl:output@message
      * <p/>
-     * Maybe null if a binding fault has no corresponding fault in abstract
-     * wsdl:portType/wsdl:operation
+     * This method should not be called before the entire WSDLDefinitions is built. Basically after the WSDLDefinitions is built
+     * all the references are resolve in a post processing phase. IOW, the WSDL extensions should
+     * not call this method.
+     *
+     * @return Always returns null when called from inside WSDL extensions.
      */
-    public abstract WSDLFault getFault();
+    public abstract WSDLMessage getMessage();
+
+    /**
+     * Gives the Action Message Addressing Property value for
+     * {@link this} message.
+     * <p/>
+     * This method provides the correct value irrespective of
+     * whether the Action is explicitly specified in the WSDL or
+     * implicitly derived using the rules defined in WS-Addressing.
+     *
+     * @return Action
+     */
+//    public abstract String getAction();
 }

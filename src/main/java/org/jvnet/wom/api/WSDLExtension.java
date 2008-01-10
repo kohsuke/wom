@@ -33,29 +33,50 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
-
-import org.xml.sax.Locator;
+package org.jvnet.wom.api;
 
 import javax.xml.namespace.QName;
 
 /**
- * Abstraction of wsdl:message.
+ * Represents a WSDL extensibility element or attribute.
+ * <p/>
+ * <p/>
+ * This interface can be implemented by the programs that build
+ * on top of the WOM, to hook additional information into
+ * {@link WSDLDefinitions}.
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLMessage extends WSDLEntity {
-    public WSDLMessage(Locator locator, QName name) {
-        super(locator, name);
-    }
+public abstract class WSDLExtension {
+    /**
+     * Gives the {@link WSDLEntity} that owns this extensibility element/attribute
+     * <p>
+     * For example, <br> <code>&lt;wsdl:Operation name="echo"><br>
+     *                  &lt;soap:operation action="http://tempuri.org"></code>
+     * <p>
+     * Here for the soap:operation, the WSDLExtention is {@link org.jvnet.wom.api.binding.soap11.SOAPOperation}
+     * and the owner will be {@link WSDLBoundOperation}
+     *
+     */
+    public WSDLEntity owner;
 
     /**
-     * Gets all the parts.
+     * Gets the qualified name of the WSDL extensibility element or attribute.
+     *
+     * @return must not be null.
      */
-    public abstract Iterable<? extends WSDLPart> parts();
+    public abstract QName getName();
 
     /**
-     * Get a part of specific name
+     * Gives the {@link WSDLEntity} that owns this extensibility element/attribute
+     * <p>
+     * For example, <br> <code>&lt;wsdl:Operation name="echo"><br>
+     *                  &lt;soap:operation action="http://tempuri.org"></code>
+     * <p>
+     * Here for the soap:operation, the WSDLExtention is {@link org.jvnet.wom.api.binding.soap11.SOAPOperation}
+     * and the owner will be {@link WSDLBoundOperation}
+     *
      */
-    public abstract WSDLPart getPart(String partName);
+    //public abstract WSDLEntity getOwner();
+
 }

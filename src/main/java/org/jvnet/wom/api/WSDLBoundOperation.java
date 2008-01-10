@@ -33,96 +33,62 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
 
 /**
- * Abstracts wsdl:part after applying binding information from wsdl:binding.
+ * Abstracts wsdl:binding/wsdl:operation. It can be used to determine the parts and their binding.
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLPart extends WSDLEntity {
-    protected WSDLPart(Locator locator, QName name) {
+public abstract class WSDLBoundOperation extends WSDLEntity {
+    protected WSDLBoundOperation(Locator locator, QName name) {
         super(locator, name);
     }
 
     /**
-     * Gets the wsdl:part binding as seen thru wsdl:binding
+     * Gives soapbinding:operation@soapAction value. soapbinding:operation@soapAction is optional attribute.
+     * If not present an empty String is returned as per BP 1.1 R2745.
      */
-//    ParameterBinding getBinding();
+    public abstract String getSOAPAction();
 
     /**
-     * Index value is as the order in which the wsdl:part appears inside the input or output wsdl:message.
+     * Gets the wsdl:portType/wsdl:operation model - {@link WSDLOperation},
+     * associated with this binding operation.
      *
-     * @return n where n >= 0
+     * @return always same {@link WSDLOperation}
      */
-    public abstract int getIndex();
+    public abstract WSDLOperation getOperation();
+
+//    /**
+//     * Gets all inbound {@link WSDLPart} by its {@link WSDLPart#getName() name}.
+//     */
+//    public abstract Map<String, ? extends WSDLPart> getInParts();
+//
+//    /**
+//     * Gets all outbound {@link WSDLPart} by its {@link WSDLPart#getName() name}.
+//     */
+//    public abstract Map<String, ? extends WSDLPart> getOutParts();
 
     /**
-     * Gives the XML Schema descriptor referenced using either wsdl:part@element or wsdl:part@type.
-     */
-    public abstract WSDLPartDescriptor getDescriptor();
-
-    /**
-     * Abstracts wsdl:part descriptor that is defined using element or type attribute.
+     * Gets the wsdl:input of this operation
      *
-     * @author Vivek Pandey
+     * @return non-null {@link WSDLBoundInput}
      */
-    public static final class WSDLPartDescriptor {
-        private final QName name;
-        private final Kind type;
+    public abstract WSDLBoundInput getInput();
 
-        public WSDLPartDescriptor(QName name, Kind kind) {
-            this.name = name;
-            this.type = kind;
-        }
+    /**
+     * Gets the wsdl:output of this operation.
+     *
+     * @return null if this is an one-way operation.
+     */
+    public abstract WSDLBoundOutput getOutput();
 
-        /**
-         * Gives Qualified name of the XML Schema element or type
-         */
-
-        public QName name() {
-            return name;
-        }
-
-        /**
-         * Gives whether wsdl:part references a schema type or a global element.
-         */
-
-        public Kind type() {
-            return type;
-        }
-
-
-        /**
-         * Enumeration that tells a wsdl:part that can be defined either using a type
-         * attribute or an element attribute.
-         *
-         * @author Vivek Pandey
-         */
-        public enum Kind {
-            /**
-             * wsdl:part is defined using element attribute.
-             * <p/>
-             * <pre>
-             * for exmaple,
-             * &lt;wsdl:part name="foo" element="ns1:FooElement">
-             * </pre>
-             */
-            ELEMENT,
-
-            /**
-             * wsdl:part is defined using type attribute.
-             * <p/>
-             * <pre>
-             * for exmaple,
-             * &lt;wsdl:part name="foo" element="ns1:FooType">
-             * </pre>
-             */
-            TYPE
-        }
-    }
+    /**
+     * Gets all the {@link WSDLFault} bound to this operation.
+     */
+    public abstract Iterable<? extends WSDLBoundFault> getFaults();    
 }

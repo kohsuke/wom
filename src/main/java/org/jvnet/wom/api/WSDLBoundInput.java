@@ -33,43 +33,18 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+
+package org.jvnet.wom.api;
+
+import org.xml.sax.Locator;
+
+import javax.xml.namespace.QName;
 
 /**
- * Visitor for {@link WSDLEntity}
- *
  * @author Vivek Pandey
  */
-public interface WSDLVisitor {
-    void definitions(WSDLDefinitions definitions);
-
-    void types(WSDLTypes types);
-
-    void messages(WSDLMessage message);
-
-    void part(WSDLPart part);
-
-    void portType(WSDLPortType portType);
-
-    void operation(WSDLOperation operation);
-
-    void input(WSDLInput input);
-
-    void output(WSDLOutput output);
-
-    void fault(WSDLFault fault);
-
-    void binding(WSDLBoundPortType binding);
-
-    void bindingOperation(WSDLBoundOperation boundOperation);
-
-    void boundInput(WSDLBoundInput boundInput);
-
-    void boundOutput(WSDLBoundOutput boundOutput);
-
-    void bindingFault(WSDLBoundFault fault);
-
-    void service(WSDLService service);
-
-    void port(WSDLPort port);
+public abstract class WSDLBoundInput extends WSDLEntity{
+    public WSDLBoundInput(Locator locator, QName name) {
+        super(locator, name);
+    }
 }

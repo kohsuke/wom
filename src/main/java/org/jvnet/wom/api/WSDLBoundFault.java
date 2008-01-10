@@ -33,62 +33,29 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
 
 /**
- * Abstracts wsdl:binding/wsdl:operation. It can be used to determine the parts and their binding.
+ * Abstracts wsdl:binding/wsdl:operation/wsdl:fault
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLBoundOperation extends WSDLEntity {
-    protected WSDLBoundOperation(Locator locator, QName name) {
+public abstract class WSDLBoundFault extends WSDLEntity {
+    protected WSDLBoundFault(Locator locator, QName name) {
         super(locator, name);
     }
 
     /**
-     * Gives soapbinding:operation@soapAction value. soapbinding:operation@soapAction is optional attribute.
-     * If not present an empty String is returned as per BP 1.1 R2745.
+     * Gives the associated abstract fault from
+     * wsdl:portType/wsdl:operation/wsdl:fault. It is only available after
+     * the WSDL parsing is complete and the entire model is frozen.
+     * <p/>
+     * Maybe null if a binding fault has no corresponding fault in abstract
+     * wsdl:portType/wsdl:operation
      */
-    public abstract String getSOAPAction();
-
-    /**
-     * Gets the wsdl:portType/wsdl:operation model - {@link WSDLOperation},
-     * associated with this binding operation.
-     *
-     * @return always same {@link WSDLOperation}
-     */
-    public abstract WSDLOperation getOperation();
-
-//    /**
-//     * Gets all inbound {@link WSDLPart} by its {@link WSDLPart#getName() name}.
-//     */
-//    public abstract Map<String, ? extends WSDLPart> getInParts();
-//
-//    /**
-//     * Gets all outbound {@link WSDLPart} by its {@link WSDLPart#getName() name}.
-//     */
-//    public abstract Map<String, ? extends WSDLPart> getOutParts();
-
-    /**
-     * Gets the wsdl:input of this operation
-     *
-     * @return non-null {@link WSDLBoundInput}
-     */
-    public abstract WSDLBoundInput getInput();
-
-    /**
-     * Gets the wsdl:output of this operation.
-     *
-     * @return null if this is an one-way operation.
-     */
-    public abstract WSDLBoundOutput getOutput();
-
-    /**
-     * Gets all the {@link WSDLFault} bound to this operation.
-     */
-    public abstract Iterable<? extends WSDLBoundFault> getFaults();    
+    public abstract WSDLFault getFault();
 }

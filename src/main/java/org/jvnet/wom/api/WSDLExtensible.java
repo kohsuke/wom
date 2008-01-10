@@ -33,42 +33,45 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
-
-import org.xml.sax.Locator;
-
-import javax.xml.namespace.QName;
+package org.jvnet.wom.api;
 
 /**
- * Abstraction of wsdl:portType/wsdl:operation/wsdl:output
+ * Interface that represents WSDL concepts that
+ * can have extensions.
  *
  * @author Vivek Pandey
+ * @author Kohsuke Kawaguchi
  */
-public abstract class WSDLOutput extends WSDLEntity {
-    protected WSDLOutput(Locator locator, QName name) {
-        super(locator, name);
-    }
+public interface WSDLExtensible {
+    /**
+     * Gets all the {@link WSDLExtension}s
+     * added through {@link #addExtension(WSDLExtension)}.
+     *
+     * @return never null.
+     */
+    Iterable<WSDLExtension> getExtensions();
 
     /**
-     * Gives the WSDLMessage corresponding to wsdl:output@message
+     * Gets the extension that is assignable to the given type.
      * <p/>
-     * This method should not be called before the entire WSDLDefinitions is built. Basically after the WSDLDefinitions is built
-     * all the references are resolve in a post processing phase. IOW, the WSDL extensions should
-     * not call this method.
+     * <p/>
+     * This is just a convenient version that does
+     * <p/>
+     * <pre>
+     * Iterator itr = getExtensions(type);
+     * if(itr.hasNext())  return itr.next();
+     * else               return null;
+     * </pre>
      *
-     * @return Always returns null when called from inside WSDL extensions.
+     * @return null if the extension was not found.
      */
-    public abstract WSDLMessage getMessage();
+    <T extends WSDLExtension> T getExtension(Class<T> type);
 
     /**
-     * Gives the Action Message Addressing Property value for
-     * {@link this} message.
-     * <p/>
-     * This method provides the correct value irrespective of
-     * whether the Action is explicitly specified in the WSDL or
-     * implicitly derived using the rules defined in WS-Addressing.
+     * Adds a new {@link WSDLExtension}
+     * to this object.
      *
-     * @return Action
+     * @param extension must not be null.
      */
-//    public abstract String getAction();
+    void addExtension(WSDLExtension extension);
 }

@@ -33,45 +33,31 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+package org.jvnet.wom.api;
+
+import org.xml.sax.Locator;
+
+import javax.xml.namespace.QName;
 
 /**
- * Interface that represents WSDL concepts that
- * can have extensions.
+ * Abstracts wsdl:service/wsdl:port
  *
  * @author Vivek Pandey
- * @author Kohsuke Kawaguchi
  */
-public interface WSDLExtensible {
-    /**
-     * Gets all the {@link WSDLExtension}s
-     * added through {@link #addExtension(WSDLExtension)}.
-     *
-     * @return never null.
-     */
-    Iterable<WSDLExtension> getExtensions();
+public abstract class WSDLPort extends WSDLEntity {
+    protected WSDLPort(Locator locator, QName name) {
+        super(locator, name);
+    }
 
     /**
-     * Gets the extension that is assignable to the given type.
-     * <p/>
-     * <p/>
-     * This is just a convenient version that does
-     * <p/>
-     * <pre>
-     * Iterator itr = getExtensions(type);
-     * if(itr.hasNext())  return itr.next();
-     * else               return null;
-     * </pre>
-     *
-     * @return null if the extension was not found.
+     * Gets {@link WSDLBoundPortType} associated with the {@link WSDLPort}, always non-null.
      */
-    <T extends WSDLExtension> T getExtension(Class<T> type);
+    public abstract WSDLBoundPortType getBinding();    
 
     /**
-     * Adds a new {@link WSDLExtension}
-     * to this object.
+     * Gets the {@link WSDLService} that owns this port.
      *
-     * @param extension must not be null.
+     * @return always non-null.
      */
-    void addExtension(WSDLExtension extension);
+    public abstract WSDLService getOwner();
 }

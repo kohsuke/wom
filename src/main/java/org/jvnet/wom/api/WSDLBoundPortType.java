@@ -33,21 +33,38 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
 
 /**
- * Abstraction for wsdl:types. wsdl:types do not have name attribute, since it extends from {@WSDLEntity}
- * you still get name as "", which is equivalent to no name.
+ * {@link WSDLPortType} bound with a specific binding.
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLTypes extends WSDLEntity {
-
-    public WSDLTypes(Locator locator, QName name) {
+public abstract class WSDLBoundPortType extends WSDLEntity {
+    protected WSDLBoundPortType(Locator locator, QName name) {
         super(locator, name);
     }
+
+    /**
+     * Gets the {@link WSDLBoundOperation} for a given operation name
+     *
+     * @param operationName non-null wsdl:operation 'name' attribute value
+     * @return null if a {@link WSDLBoundOperation} is not found
+     */
+    public abstract WSDLBoundOperation get(QName operationName);
+
+    /**
+     * Gets the {@link WSDLPortType} associated with the wsdl:binding
+     */
+    public abstract WSDLPortType getPortType();
+
+    /**
+     * Gets the {@link WSDLBoundOperation}s
+     */
+    public abstract Iterable<? extends WSDLBoundOperation> getBindingOperations();
 }
+

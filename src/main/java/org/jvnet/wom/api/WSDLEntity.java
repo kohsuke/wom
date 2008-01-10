@@ -33,10 +33,10 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+package org.jvnet.wom.api;
 
+import org.jvnet.wom.api.parser.WSDLDocument;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.jvnet.wom.parser.WSDLDocument;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -84,7 +84,7 @@ public abstract class WSDLEntity implements WSDLExtensible {
     }
 
     /**
-     * The {@link WSDLDocument} associated with this WSDL entity.
+     * The {@link org.jvnet.wom.api.parser.WSDLDocument} associated with this WSDL entity.
      *
      * @return Always non-null.
      */

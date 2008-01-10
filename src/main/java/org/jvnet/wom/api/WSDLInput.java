@@ -33,50 +33,42 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom;
+package org.jvnet.wom.api;
+
+import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
 
 /**
- * Represents a WSDL extensibility element or attribute.
- * <p/>
- * <p/>
- * This interface can be implemented by the programs that build
- * on top of the WOM, to hook additional information into
- * {@link WSDLDefinitions}.
+ * Abstraction of wsdl:portType/wsdl:operation/wsdl:input
  *
  * @author Vivek Pandey
  */
-public abstract class WSDLExtension {
-    /**
-     * Gives the {@link WSDLEntity} that owns this extensibility element/attribute
-     * <p>
-     * For example, <br> <code>&lt;wsdl:Operation name="echo"><br>
-     *                  &lt;soap:operation action="http://tempuri.org"></code>
-     * <p>
-     * Here for the soap:operation, the WSDLExtention is {@link org.jvnet.wom.binding.soap11.SOAPOperation}
-     * and the owner will be {@link WSDLBoundOperation}
-     *
-     */
-    public WSDLEntity owner;
+public abstract class WSDLInput extends WSDLEntity {
+    protected WSDLInput(Locator locator, QName name) {
+        super(locator, name);
+    }
 
     /**
-     * Gets the qualified name of the WSDL extensibility element or attribute.
+     * Gives the WSDLMessage corresponding to wsdl:input@message
+     * <p/>
+     * This method should not be called before the entire WSDLDefinitions is built. Basically after the WSDLDefinitions is built
+     * all the references are resolve in a post processing phase. IOW, the WSDL extensions should
+     * not call this method.
      *
-     * @return must not be null.
+     * @return Always returns null when called from inside WSDL extensions.
      */
-    public abstract QName getName();
+    public abstract WSDLMessage getMessage();
 
     /**
-     * Gives the {@link WSDLEntity} that owns this extensibility element/attribute
-     * <p>
-     * For example, <br> <code>&lt;wsdl:Operation name="echo"><br>
-     *                  &lt;soap:operation action="http://tempuri.org"></code>
-     * <p>
-     * Here for the soap:operation, the WSDLExtention is {@link org.jvnet.wom.binding.soap11.SOAPOperation}
-     * and the owner will be {@link WSDLBoundOperation}
+     * Gives the Action Message Addressing Property value for
+     * {@link this} message.
+     * <p/>
+     * This method provides the correct value irrespective of
+     * whether the Action is explicitly specified in the WSDL or
+     * implicitly derived using the rules defined in WS-Addressing.
      *
+     * @return Action
      */
-    //public abstract WSDLEntity getOwner();
-
+//    public abstract String getAction();
 }

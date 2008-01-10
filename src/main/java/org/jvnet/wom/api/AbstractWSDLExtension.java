@@ -34,17 +34,20 @@
  * holder.
  */
 
-package org.jvnet.wom;
-
-import org.xml.sax.Locator;
-
-import javax.xml.namespace.QName;
+package org.jvnet.wom.api;
 
 /**
  * @author Vivek Pandey
  */
-public abstract class WSDLBoundInput extends WSDLEntity{
-    public WSDLBoundInput(Locator locator, QName name) {
-        super(locator, name);
+public abstract class AbstractWSDLExtension extends WSDLExtension{
+    private WSDLEntity owner;
+
+    public void setOwner(WSDLEntity owner) {
+        this.owner = owner;
     }
+
+    public WSDLEntity getOwner() {
+        return owner;
+    }
+    
 }
