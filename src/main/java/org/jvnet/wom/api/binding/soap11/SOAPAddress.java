@@ -36,14 +36,14 @@
 
 package org.jvnet.wom.api.binding.soap11;
 
-import org.jvnet.wom.WSDLExtension;
+import org.jvnet.wom.api.WSDLExtension;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public final class SOAPAddress extends WSDLExtension{
+public final class SOAPAddress extends WSDLExtension {
     private  String location;
 
     public static final QName SOAPADDRESS_NAME = new QName(SOAPBinding.SOAP_NS, "address");

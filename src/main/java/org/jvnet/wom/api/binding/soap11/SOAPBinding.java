@@ -35,7 +35,7 @@
  */
 package org.jvnet.wom.api.binding.soap11;
 
-import org.jvnet.wom.WSDLExtension;
+import org.jvnet.wom.api.WSDLExtension;
 
 import javax.xml.namespace.QName;
 
