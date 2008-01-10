@@ -72,6 +72,10 @@ public class SOAPBindingExtensionHandler extends AbstractWSDLExtensionHandler {
         return soapBindingCH;
     }
 
+    public ContentHandler getContentHandler(String systemId) {
+        return soapBindingCH;
+    }
+
     private class SOAPBindingCH extends WSDLExtensibilityContentHandler{
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {

@@ -72,6 +72,10 @@ public class SOAPHeaderFaultExtensionHandler extends AbstractWSDLExtensionHandle
         return contentHandler;
     }
 
+    public ContentHandler getContentHandler(String systemId) {
+        return contentHandler;
+    }
+
     private final ContentHandler contentHandler = new SOAPHeaderFaultCH();
     private class SOAPHeaderFaultCH extends WSDLExtensibilityContentHandler {
         @Override

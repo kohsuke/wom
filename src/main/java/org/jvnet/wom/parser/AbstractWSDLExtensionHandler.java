@@ -60,7 +60,6 @@ public abstract class AbstractWSDLExtensionHandler implements WSDLExtensionHandl
         this.entityResolver = entityResolver;
     }
 
-    public abstract ContentHandler getContentHandler();
 
     protected abstract class WSDLExtensibilityContentHandler implements ContentHandler{
         protected Locator locator = new LocatorImpl();

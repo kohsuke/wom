@@ -42,6 +42,7 @@ import org.jvnet.wom.WSDLService;
 import org.jvnet.wom.WSDLVisitor;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.jvnet.wom.impl.parser.WSDLSetImpl;
+import org.jvnet.wom.impl.parser.WSDLTypesImpl;
 import org.jvnet.wom.impl.util.QNameMap;
 import org.xml.sax.Locator;
 
@@ -56,6 +57,7 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
     private final QNameMap<WSDLPortTypeImpl> portTypes = new QNameMap<WSDLPortTypeImpl>();
     private final QNameMap<WSDLBoundPortTypeImpl> bindings = new QNameMap<WSDLBoundPortTypeImpl>();
     private final QNameMap<WSDLServiceImpl> services = new QNameMap<WSDLServiceImpl>();
+    private WSDLTypesImpl types;
 
 
     public WSDLDefinitionsImpl(WSDLSetImpl parent, Locator locator, QName name) {
@@ -137,5 +139,9 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
 
     public void visit(WSDLVisitor visitor) {
         visitor.definitions(this);
+    }
+
+    public void setTypes(WSDLTypesImpl wsdlTypes) {
+        this.types = types;
     }
 }

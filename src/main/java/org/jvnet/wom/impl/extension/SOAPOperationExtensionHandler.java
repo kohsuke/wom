@@ -72,6 +72,10 @@ public class SOAPOperationExtensionHandler extends AbstractWSDLExtensionHandler 
         return contentHandler;
     }
 
+    public ContentHandler getContentHandler(String systemId) {
+        return contentHandler;
+    }
+
     private final ContentHandler contentHandler = new SOAPOperationCH();
 
     private class SOAPOperationCH extends WSDLExtensibilityContentHandler{

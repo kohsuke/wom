@@ -41,10 +41,12 @@ import org.jvnet.wom.impl.WSDLPortTypeImpl;
 import org.jvnet.wom.impl.WSDLServiceImpl;
 import org.jvnet.wom.impl.parser.Messages;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.parser.WSDLTypesImpl;
 import org.jvnet.wom.impl.util.XmlUtil;
 import org.jvnet.wom.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class Definitions extends AbstractHandler {
@@ -83,6 +85,9 @@ public class Definitions extends AbstractHandler {
             case 80:
                 runtime.currentWSDL.addService((WSDLServiceImpl) result);
                 break;
+            case 90:
+                runtime.currentWSDL.setTypes((WSDLTypesImpl) result);
+                break;
         }
     }
 
@@ -120,8 +125,8 @@ public class Definitions extends AbstractHandler {
                 break;
             case 2: //children of wsdl:definitions
                  if (uri.equals(WSDL_NS) && localName.equals("types")) {
-                    //Let the ContentHandler for Schema handle it
-                    runtime.redirectSubtree(runtime.parser.getSchemaContentHandler(), uri, localName, qname);
+                    Types types = new Types(this, _source, runtime, 90, expectedNamespace);
+                    spawnChildFromEnterElement(types, uri, localName, qname, atts);
                 } else if (uri.equals(WSDL_NS) && localName.equals("message")) {
                     Message message = new Message(this, _source, runtime, 50, expectedNamespace);
                     spawnChildFromEnterElement(message, uri, localName, qname, atts);
@@ -135,7 +140,18 @@ public class Definitions extends AbstractHandler {
                     Service service = new Service(this, _source, runtime, 80, expectedNamespace);
                     spawnChildFromEnterElement(service, uri, localName, qname, atts);
                 } else if (uri.equals(WSDL_NS) && localName.equals("import")) {
-                    //TODO
+                    String namespace = atts.getValue("namespace");
+                    if(namespace == null){
+                        runtime.getErrorHandler().error(new SAXParseException(org.jvnet.wom.impl.parser.handler.Messages.format(org.jvnet.wom.impl.parser.handler.Messages.MISSING_ATTRIBUTE, "namespace", "wsdl:import"), runtime.getLocator()));
+                    }
+                    String location = atts.getValue("location");
+                    if(location == null){
+                        runtime.getErrorHandler().error(new SAXParseException(org.jvnet.wom.impl.parser.handler.Messages.format(org.jvnet.wom.impl.parser.handler.Messages.MISSING_ATTRIBUTE, "location", "wsdl:import"), runtime.getLocator()));
+                    }
+                    if(location != null && namespace != null){                        
+                        runtime.importWSDL(namespace, location);
+                    }
+
                 }else{
                     super.enterElement(uri, localName, qname, atts);
                 }

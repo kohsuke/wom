@@ -33,63 +33,56 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.impl.WSDLDefinitionsImpl;
-import org.jvnet.wom.parser.WSDLDocument;
+package org.jvnet.wom.impl.parser.handler;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.parser.WSDLTypesImpl;
+import org.jvnet.wom.parser.WSDLEventSource;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
-public class WSDLDocumentImpl implements WSDLDocument {
-    private final WSDLDefinitionsImpl wsdl;
-    private final String systemId;
+import javax.xml.namespace.QName;
 
+/**
+ * @author Vivek Pandey
+ */
+public class Types extends AbstractHandler{
+    WSDLTypesImpl types;
+    private WSDLContentHandlerEx runtime;
+    private String expectedNamespace;
 
-    /**
-     * WSDLs that are referenced from this document
-     */
-    final Set<WSDLDocumentImpl> references = new HashSet<WSDLDocumentImpl>();
-
-    /**
-     * {@link WSDLDocumentImpl}s that are referencing this document.
-     */
-    final Set<WSDLDocumentImpl> referers = new HashSet<WSDLDocumentImpl>();
-
-
-    public WSDLDocumentImpl(WSDLDefinitionsImpl wsdl, String systemId) {
-        this.wsdl = wsdl;
-        this.systemId = systemId;
+    public Types(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
+        super(source, parent, cookie);
+        this.runtime = runtime;
+        this.expectedNamespace = expectedNamespace;
+    }
+    protected Types(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
+        super(source, parent, parentCookie);
     }
 
-    public String getSystemId() {
-        return systemId;
+    protected WSDLContentHandlerEx getRuntime() {
+        return runtime;
     }
 
-    public String getTargetNamespace() {
-        return wsdl.getTargetNamespace();
+    protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
+
     }
 
-    public WSDLDefinitionsImpl getWSDLModel() {
-        return wsdl;
+    @Override
+    public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
+        if (uri.equals(WSDL_NS) && localName.equals("types")) {
+            types = new WSDLTypesImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getTargetNamespace(), ""), runtime.document);
+        }else{//schema extensibility element
+            super.enterElement(uri, localName, qname, atts);
+        }
     }
 
-    public Set<WSDLDocumentImpl> getImportedWSDLs() {
-        return references;
-    }
-
-    public boolean equals(Object o) {
-        WSDLDocumentImpl rhs = (WSDLDocumentImpl) o;
-
-        if( this.systemId==null || rhs.systemId==null)
-            return this==rhs;
-        if(!systemId.equals(rhs.systemId) )
-            return false;
-        return this.wsdl==rhs.wsdl;
-    }
-    public int hashCode() {
-        if(systemId==null)
-            return super.hashCode();
-        return systemId.hashCode()^this.systemId.hashCode();
+    @Override
+    public void leaveElement(String uri, String localName, String qname) throws SAXException {
+        if (uri.equals(WSDL_NS) && localName.equals("types")) {
+            endProcessingExtentionElement(types);
+            revertToParentFromLeaveElement(types, _cookie, uri, localName, qname);
+        }
     }
 }

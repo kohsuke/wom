@@ -72,6 +72,10 @@ public class SOAPHeaderExtensionHandler extends AbstractWSDLExtensionHandler {
         return contentHandler;
     }
 
+    public ContentHandler getContentHandler(String systemId) {
+        return contentHandler;
+    }
+
     private final ContentHandler contentHandler = new SOAPHeaderCH();
     private class SOAPHeaderCH extends WSDLExtensibilityContentHandler {
         @Override

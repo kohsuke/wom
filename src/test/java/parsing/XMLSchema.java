@@ -33,63 +33,19 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.impl.WSDLDefinitionsImpl;
-import org.jvnet.wom.parser.WSDLDocument;
+package parsing;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.jvnet.wom.WSDLExtension;
 
-public class WSDLDocumentImpl implements WSDLDocument {
-    private final WSDLDefinitionsImpl wsdl;
-    private final String systemId;
+import javax.xml.namespace.QName;
 
-
-    /**
-     * WSDLs that are referenced from this document
-     */
-    final Set<WSDLDocumentImpl> references = new HashSet<WSDLDocumentImpl>();
-
-    /**
-     * {@link WSDLDocumentImpl}s that are referencing this document.
-     */
-    final Set<WSDLDocumentImpl> referers = new HashSet<WSDLDocumentImpl>();
-
-
-    public WSDLDocumentImpl(WSDLDefinitionsImpl wsdl, String systemId) {
-        this.wsdl = wsdl;
-        this.systemId = systemId;
-    }
-
-    public String getSystemId() {
-        return systemId;
-    }
-
-    public String getTargetNamespace() {
-        return wsdl.getTargetNamespace();
-    }
-
-    public WSDLDefinitionsImpl getWSDLModel() {
-        return wsdl;
-    }
-
-    public Set<WSDLDocumentImpl> getImportedWSDLs() {
-        return references;
-    }
-
-    public boolean equals(Object o) {
-        WSDLDocumentImpl rhs = (WSDLDocumentImpl) o;
-
-        if( this.systemId==null || rhs.systemId==null)
-            return this==rhs;
-        if(!systemId.equals(rhs.systemId) )
-            return false;
-        return this.wsdl==rhs.wsdl;
-    }
-    public int hashCode() {
-        if(systemId==null)
-            return super.hashCode();
-        return systemId.hashCode()^this.systemId.hashCode();
+/**
+ * @author Vivek Pandey
+ */
+public class XMLSchema extends WSDLExtension {
+    public static final QName XMLSCHEMA_NAME = new QName("http://www.w3.org/2001/XMLSchema", "schema");
+    public QName getName() {
+        return XMLSCHEMA_NAME;
     }
 }

@@ -71,6 +71,10 @@ public class SOAPAddressExtensionHandler extends AbstractWSDLExtensionHandler {
         return contentHandler;
     }
 
+    public ContentHandler getContentHandler(String systemId) {
+        return contentHandler;
+    }
+
     private class SOAPAddressCH extends WSDLExtensibilityContentHandler{
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {

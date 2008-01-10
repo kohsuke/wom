@@ -65,10 +65,4 @@ public interface WSDLExtensionHandler {
      * Gives the {@link ContentHandler} which will receive SAX events for the extensibility element
      */
     public ContentHandler getContentHandler();
-
-//    /**
-//     * Sometimes WSDL extensibility handlers need to get the namespace context
-//     */
-//    public void setNamespaceContext(NamespaceContext nsContext);
-
 }

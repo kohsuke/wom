@@ -35,6 +35,7 @@
  */
 package parsing;
 
+import com.sun.tools.xjc.api.S2JJAXBModel;
 import junit.framework.TestCase;
 import org.jvnet.wom.WSDLBoundInput;
 import org.jvnet.wom.WSDLBoundOperation;
@@ -55,14 +56,16 @@ import org.jvnet.wom.binding.soap11.SOAPBinding;
 import org.jvnet.wom.binding.soap11.SOAPBody;
 import org.jvnet.wom.binding.soap11.SOAPOperation;
 import org.jvnet.wom.parser.WOMParser;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.namespace.QName;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class WSDLParsingTest extends TestCase {
 
-    public void testWSDL() throws SAXException {
+    public void testSimpleWSDL() throws SAXException {
         InputStream is = getClass().getResourceAsStream("../simple.wsdl");
         WOMParser parser = new WOMParser();
         WSDLSet wsdls = parser.parse(is);
@@ -155,5 +158,28 @@ public class WSDLParsingTest extends TestCase {
         SOAPAddress soapAdd = port.getExtension(SOAPAddress.class);
         assertNotNull(soapAdd);
         assertEquals(soapAdd.getLocation(), "http://localhost/HelloService");
+    }
+
+    public void testCyclicWsdl() throws IOException, SAXException {
+        WOMParser parser = new WOMParser();
+        WSDLSet wsdls = parser.parse(new InputSource("http://131.107.72.15/Security_WsSecurity_Service_Indigo/WsSecurity10.svc?wsdl"));
+        assertTrue(wsdls.getWSDLs().iterator().hasNext());
+        WSDLDefinitions def = wsdls.getWSDLs().iterator().next();
+        assertNotNull(def);
+    }
+
+    public void testSchema() throws SAXException {
+        InputStream is = getClass().getResourceAsStream("../simple.wsdl");
+        WOMParser parser = new WOMParser();
+        XMLSchemaExtensionHandler handler = new XMLSchemaExtensionHandler(parser.getErrorHandler(), parser.getEntityResolver());
+        parser.addWSDLExtensionHandler(handler);
+        WSDLSet wsdls = parser.parse(is);
+        assertTrue(wsdls.getWSDLs().iterator().hasNext());
+        WSDLDefinitions def = wsdls.getWSDLs().iterator().next();
+        S2JJAXBModel jaxbModel = handler.bind();
+        WSDLPortType pt = def.getPortTypes().iterator().next();
+        WSDLOperation operation = pt.getOperations().iterator().next();
+        WSDLPart part = operation.getInput().getMessage().parts().iterator().next();
+        assertEquals(jaxbModel.get(part.getDescriptor().name()).getType().getTypeClass().fullName(), "com.example.types.EchoType");
     }
 }

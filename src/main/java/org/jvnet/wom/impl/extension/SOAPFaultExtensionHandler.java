@@ -73,6 +73,10 @@ public class SOAPFaultExtensionHandler extends AbstractWSDLExtensionHandler {
         return contentHandler;
     }
 
+    public ContentHandler getContentHandler(String systemId) {
+        return contentHandler;
+    }
+
     private class SOAPFaultCH extends WSDLExtensibilityContentHandler{
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
