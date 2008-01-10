@@ -37,8 +37,8 @@
 package parsing;
 
 import junit.framework.TestCase;
-import org.jvnet.wom.*;
-import org.jvnet.wom.parser.WOMParser;
+import org.jvnet.wom.api.*;
+import org.jvnet.wom.api.parser.WOMParser;
 
 import java.io.InputStream;
 

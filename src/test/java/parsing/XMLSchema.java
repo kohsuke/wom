@@ -36,7 +36,7 @@
 
 package parsing;
 
-import org.jvnet.wom.WSDLExtension;
+import org.jvnet.wom.api.WSDLExtension;
 
 import javax.xml.namespace.QName;
 
