@@ -34,7 +34,7 @@
  * holder.
  */
 
-package org.jvnet.wom.binding.soap11;
+package org.jvnet.wom.api.binding.soap11;
 
 import org.jvnet.wom.WSDLExtension;
 

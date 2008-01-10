@@ -33,42 +33,30 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.binding.soap11;
 
-import org.jvnet.wom.WSDLExtension;
+package org.jvnet.wom.api.binding.soap11;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public final class SOAPBinding extends WSDLExtension {
-    public static final String SOAP_NS = "http://schemas.xmlsoap.org/wsdl/soap/";
-    public static final QName SOAPBinding_NAME = new QName(SOAP_NS, "binding");
-    private String transport;
-    private Style style;
+public final class SOAPHeader extends HeaderAttributes{
+    private final List<SOAPHeaderFault> headerFaults = new ArrayList<SOAPHeaderFault>();
+
+    public static final QName SOAPHEADER_NAME = new QName(SOAPBinding.SOAP_NS, "header");
 
     public QName getName() {
-        return SOAPBinding_NAME;
+        return SOAPHEADER_NAME;
     }
 
-    public Style getStyle() {
-        return style;
+    public void addHeaderFault(SOAPHeaderFault headerFault) {
+        headerFaults.add(headerFault);
     }
 
-    public String getTransport() {
-        return transport;
-    }
-
-    public void setTransport(String transport) {
-        this.transport = transport;
-    }
-
-    public void setStyle(Style style) {
-        this.style = style;
-    }
-
-    public enum Style {
-        Document, Rpc
+    public Iterable<SOAPHeaderFault> getHeaderFaults() {
+        return headerFaults;
     }
 }

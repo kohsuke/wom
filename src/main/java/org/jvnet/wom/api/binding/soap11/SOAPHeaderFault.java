@@ -34,59 +34,17 @@
  * holder.
  */
 
-package org.jvnet.wom.binding.soap11;
-
-import org.jvnet.wom.WSDLExtension;
+package org.jvnet.wom.api.binding.soap11;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-abstract class HeaderAttributes extends WSDLExtension {
-    QName message;
-    String part;
-    SOAPBody.Use use;
-    String[] encodingStyle;
-    String namespace;
+public final class SOAPHeaderFault extends HeaderAttributes {
+    public static final QName SOAPHEADERFAULT_NAME = new QName(SOAPBinding.SOAP_NS, "headerfault");
 
-    public QName getMessage() {
-        return message;
-    }
-
-    public void setMessage(QName message) {
-        this.message = message;
-    }
-
-    public String getPart() {
-        return part;
-    }
-
-    public void setPart(String part) {
-        this.part = part;
-    }
-
-    public SOAPBody.Use getUse() {
-        return use;
-    }
-
-    public void setUse(SOAPBody.Use use) {
-        this.use = use;
-    }
-
-    public String[] getEncodingStyle() {
-        return encodingStyle;
-    }
-
-    public void setEncodingStyle(String[] encodingStyle) {
-        this.encodingStyle = encodingStyle;
-    }
-
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+    public QName getName() {
+        return SOAPHEADERFAULT_NAME;
     }
 }

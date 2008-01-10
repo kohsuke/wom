@@ -34,29 +34,59 @@
  * holder.
  */
 
-package org.jvnet.wom.binding.soap11;
+package org.jvnet.wom.api.binding.soap11;
+
+import org.jvnet.wom.WSDLExtension;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public final class SOAPHeader extends HeaderAttributes{
-    private final List<SOAPHeaderFault> headerFaults = new ArrayList<SOAPHeaderFault>();
+abstract class HeaderAttributes extends WSDLExtension {
+    QName message;
+    String part;
+    SOAPBody.Use use;
+    String[] encodingStyle;
+    String namespace;
 
-    public static final QName SOAPHEADER_NAME = new QName(SOAPBinding.SOAP_NS, "header");
-
-    public QName getName() {
-        return SOAPHEADER_NAME;
+    public QName getMessage() {
+        return message;
     }
 
-    public void addHeaderFault(SOAPHeaderFault headerFault) {
-        headerFaults.add(headerFault);
+    public void setMessage(QName message) {
+        this.message = message;
     }
 
-    public Iterable<SOAPHeaderFault> getHeaderFaults() {
-        return headerFaults;
+    public String getPart() {
+        return part;
+    }
+
+    public void setPart(String part) {
+        this.part = part;
+    }
+
+    public SOAPBody.Use getUse() {
+        return use;
+    }
+
+    public void setUse(SOAPBody.Use use) {
+        this.use = use;
+    }
+
+    public String[] getEncodingStyle() {
+        return encodingStyle;
+    }
+
+    public void setEncodingStyle(String[] encodingStyle) {
+        this.encodingStyle = encodingStyle;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 }

@@ -34,7 +34,7 @@
  * holder.
  */
 
-package org.jvnet.wom.binding.soap11;
+package org.jvnet.wom.api.binding.soap11;
 
 import org.jvnet.wom.WSDLExtension;
 
@@ -43,49 +43,21 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public final class SOAPFault extends WSDLExtension {
-    private String[] encodingStyle;
-    private String namespace;
-    private SOAPBody.Use use;
-    private String name;
+public final class SOAPAddress extends WSDLExtension{
+    private  String location;
 
-    public static final QName SOAPFAULT_NAME = new QName(SOAPBinding.SOAP_NS, "fault");
+    public static final QName SOAPADDRESS_NAME = new QName(SOAPBinding.SOAP_NS, "address");
 
-    public void setEncodingStyle(String[] encodingStyle) {
-        this.encodingStyle = encodingStyle;
+    public String getLocation() {
+        return location;
     }
 
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public void setUse(SOAPBody.Use use) {
-        this.use = (use == null) ? SOAPBody.Use.literal : null;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String[] getEncodingStyle() {
-        return encodingStyle;
-    }
-
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public SOAPBody.Use getUse() {
-        return use;
-    }
-
-    public String getFaultName() {
-        return name;
-    }
 
     public QName getName() {
-        return SOAPFAULT_NAME;
+        return SOAPADDRESS_NAME;
     }
-
-
 }
