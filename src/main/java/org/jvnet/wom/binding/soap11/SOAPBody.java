@@ -63,7 +63,7 @@ public final class SOAPBody extends WSDLExtension {
     }
 
     public void setUse(Use use) {
-        this.use = (use == null) ? Use.literal : null;
+        this.use = (use == null) ? Use.literal : use;
     }
 
     public void setParts(String[] parts) {

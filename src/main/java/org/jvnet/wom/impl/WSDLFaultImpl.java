@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 public class WSDLFaultImpl extends WSDLFault {
     private QName messageName;
     private String doc;
+    private WSDLOperationImpl parent;
 
     public WSDLFaultImpl(Locator locator, QName name, WSDLDocumentImpl document) {
         super(locator, name);
@@ -61,6 +62,10 @@ public class WSDLFaultImpl extends WSDLFault {
 
     public void setMessage(QName name) {
         this.messageName = name;
+    }
+
+    public void setParent(WSDLOperationImpl parent) {
+        this.parent = parent;
     }
 
     public void visit(WSDLVisitor visitor) {

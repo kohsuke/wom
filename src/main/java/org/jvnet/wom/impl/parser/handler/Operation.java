@@ -73,13 +73,19 @@ public class Operation extends AbstractHandler {
     protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
         switch (cookie) {
             case 611:
-                operation.setInput((WSDLInputImpl) result);
+                WSDLInputImpl input = (WSDLInputImpl) result;
+                input.setParent(operation);
+                operation.setInput(input);
                 break;
             case 612:
-                operation.setOutput((WSDLOutputImpl) result);
+                WSDLOutputImpl output = (WSDLOutputImpl) result;
+                output.setParent(operation);
+                operation.setOutput(output);
                 break;
             case 613:
-                operation.addFault((WSDLFaultImpl) result);
+                WSDLFaultImpl fault = (WSDLFaultImpl) result;
+                fault.setParent(operation);
+                operation.addFault(fault);
                 break;
         }
     }

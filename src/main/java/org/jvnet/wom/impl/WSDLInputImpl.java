@@ -36,6 +36,7 @@
 package org.jvnet.wom.impl;
 
 import org.jvnet.wom.WSDLInput;
+import org.jvnet.wom.WSDLMessage;
 import org.jvnet.wom.WSDLVisitor;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
@@ -46,8 +47,8 @@ import javax.xml.namespace.QName;
  * @author Vivek Pandey
  */
 public class WSDLInputImpl extends WSDLInput {
-    private WSDLMessageImpl message;
     private QName messageName;
+    private WSDLOperationImpl parent;
 
     private String action = "";
     private String doc;
@@ -61,21 +62,25 @@ public class WSDLInputImpl extends WSDLInput {
         visitor.input(this);
     }
 
-    public WSDLMessageImpl getMessage() {
-        return message;
+    public WSDLMessage getMessage() {
+        return getOwnerWSDLModel().getMessage(messageName);
     }
 
     public void setMessage(QName name) {
         messageName = name;
     }
 
-    public String getAction() {
-        return action;
-    }
+//    /**
+//     * TODO:This should move to extension
+//     */
+//    public String getAction() {
+//        char delimiter = getName().getNamespaceURI().startsWith("urn:")?':':'/';
+//        String inputName = getName().getLocalPart().equals("")?parent.getName().getLocalPart():parent.isOneWay()?getName().getLocalPart():getName().getLocalPart()+"Request";
+//        return action.equals("")?getName().getNamespaceURI()+delimiter+parent.getPortType().getName().getLocalPart()+delimiter+inputName:action;
+//    }
 
-    public void finalize(WSDLDefinitionsImpl root) {
-        if (messageName != null)
-            message = root.getMessage(messageName);
+    public void setParent(WSDLOperationImpl parent) {
+        this.parent = parent;
     }
 
     public void setDocumentation(String doc) {

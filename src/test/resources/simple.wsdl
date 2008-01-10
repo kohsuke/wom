@@ -55,12 +55,12 @@
 
         <!-- non-wrapper -->
         <wsdl:operation name="echo">
-            <soap:operation/>
+            <soap:operation soapAction="http://example.com/wsdl/echo"/>
             <wsdl:input>
-                <soap:body message="tns:echoRequest" parts="reqBody" use="literal"/>
+                <soap:body  parts="reqBody" use="literal"/>
             </wsdl:input>
             <wsdl:output>
-                <soap:body message="tns:echoResponse" parts="respBody" use="literal"/>
+                <soap:body  parts="respBody" use="literal"/>
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>

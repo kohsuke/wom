@@ -33,62 +33,90 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLMessage;
-import org.jvnet.wom.WSDLOutput;
-import org.jvnet.wom.WSDLVisitor;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.xml.sax.Locator;
+package parsing;
 
-import javax.xml.namespace.QName;
+import junit.framework.TestCase;
+import org.jvnet.wom.*;
+import org.jvnet.wom.parser.WOMParser;
+
+import java.io.InputStream;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLOutputImpl extends WSDLOutput {
-    private WSDLMessageImpl message;
-    private QName messageName;
-    private WSDLOperationImpl parent;
+public class WSDLVisitorTest extends TestCase {
 
-    private String action = "";
-    private String doc;
+    public void testVisitor(){
+        WOMParser parser = new WOMParser();
+        InputStream is = getClass().getResourceAsStream("../simple.wsdl");
 
-    public WSDLOutputImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name);
-        setOwnerWSDLDocument(document);
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.output(this);
-    }
+    private class TestVisitor implements WSDLVisitor{
 
-    public WSDLMessage getMessage() {
-        return getOwnerWSDLModel().getMessage(messageName);
-    }
+        public void definitions(WSDLDefinitions definitions) {
 
-    public void setParent(WSDLOperationImpl parent) {
-        this.parent = parent;
-    }
+        }
 
-    public void setMessage(QName message) {
-        this.messageName = message;
-    }
+        public void types(WSDLTypes types) {
 
-//    public void setAction(String action) {
-//        this.action = action;
-//    }
-//
-//    public String getAction() {
-//        return action;
-//    }
+        }
 
-    public void setDocumentation(String doc) {
-        this.doc = doc;
-    }
+        public void messages(WSDLMessage message) {
 
-    @Override
-    public String getDocumentation() {
-        return doc;
+        }
+
+        public void part(WSDLPart part) {
+
+        }
+
+        public void portType(WSDLPortType portType) {
+
+        }
+
+        public void operation(WSDLOperation operation) {
+
+        }
+
+        public void input(WSDLInput input) {
+
+        }
+
+        public void output(WSDLOutput output) {
+
+        }
+
+        public void fault(WSDLFault fault) {
+
+        }
+
+        public void binding(WSDLBoundPortType binding) {
+
+        }
+
+        public void bindingOperation(WSDLBoundOperation boundOperation) {
+
+        }
+
+        public void boundInput(WSDLBoundInput boundInput) {
+
+        }
+
+        public void boundOutput(WSDLBoundOutput boundOutput) {
+
+        }
+
+        public void bindingFault(WSDLBoundFault fault) {
+
+        }
+
+        public void service(WSDLService service) {
+
+        }
+
+        public void port(WSDLPort port) {
+
+        }
     }
 }

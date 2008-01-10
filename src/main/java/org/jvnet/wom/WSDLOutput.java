@@ -70,5 +70,5 @@ public abstract class WSDLOutput extends WSDLEntity {
      *
      * @return Action
      */
-    public abstract String getAction();
+//    public abstract String getAction();
 }

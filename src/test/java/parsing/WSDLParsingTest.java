@@ -36,10 +36,24 @@
 package parsing;
 
 import junit.framework.TestCase;
+import org.jvnet.wom.WSDLBoundInput;
+import org.jvnet.wom.WSDLBoundOperation;
+import org.jvnet.wom.WSDLBoundOutput;
+import org.jvnet.wom.WSDLBoundPortType;
 import org.jvnet.wom.WSDLDefinitions;
+import org.jvnet.wom.WSDLInput;
 import org.jvnet.wom.WSDLMessage;
+import org.jvnet.wom.WSDLOperation;
+import org.jvnet.wom.WSDLOutput;
 import org.jvnet.wom.WSDLPart;
+import org.jvnet.wom.WSDLPort;
+import org.jvnet.wom.WSDLPortType;
+import org.jvnet.wom.WSDLService;
 import org.jvnet.wom.WSDLSet;
+import org.jvnet.wom.binding.soap11.SOAPAddress;
+import org.jvnet.wom.binding.soap11.SOAPBinding;
+import org.jvnet.wom.binding.soap11.SOAPBody;
+import org.jvnet.wom.binding.soap11.SOAPOperation;
 import org.jvnet.wom.parser.WOMParser;
 import org.xml.sax.SAXException;
 
@@ -76,8 +90,70 @@ public class WSDLParsingTest extends TestCase {
 
         assertNotNull(def.getMessage(new QName("http://example.com/wsdl", "echoResponse")));
 
+        //portType
+        WSDLPortType portType = def.getPortType(new QName("http://example.com/wsdl", "HelloWorld"));
+        assertNotNull(portType);
+        assertEquals(portType.getDocumentation(), "This is a simple HelloWorld service.");
+        WSDLOperation operation = portType.get(new QName("http://example.com/wsdl", "echo"));
+        assertNotNull(operation);
+        assertEquals(operation.getDocumentation(), "This operation simply echoes back whatever it receives");
+
+        WSDLInput input = operation.getInput();
+        assertNotNull(input);
+        assertEquals(input.getMessage(), message1);
         
+        WSDLOutput output = operation.getOutput();
+        assertNotNull(output);
+        assertEquals(output.getMessage(), message2);
 
+        //binding
+        WSDLBoundPortType binding = def.getBinding(new QName("http://example.com/wsdl", "HelloWorldBinding"));
+        assertNotNull(binding);
+        assertEquals(binding.getPortType(), portType);
 
+        //test soap:binding
+        SOAPBinding sb = binding.getExtension(SOAPBinding.class);
+        assertEquals(sb.getStyle(), SOAPBinding.Style.Document);
+        assertEquals(sb.getTransport(), "http://schemas.xmlsoap.org/soap/http");
+
+        WSDLBoundOperation boundOp = binding.get(new QName("http://example.com/wsdl", "echo"));
+        assertNotNull(boundOp);
+        assertEquals(boundOp.getOperation(), operation);
+
+        //soap:operation
+        SOAPOperation soapOp = boundOp.getExtension(SOAPOperation.class);
+        assertNotNull(soapOp);
+        assertEquals(soapOp.getSoapAction(), "http://example.com/wsdl/echo");
+        assertNull(soapOp.getStyle());
+
+        WSDLBoundInput boundInput = boundOp.getInput();
+        assertNotNull(boundInput);
+
+        //soap:body
+        SOAPBody body = boundInput.getExtension(SOAPBody.class);
+        assertNotNull(body);
+        assertEquals(body.getUse(), SOAPBody.Use.literal);
+        assertEquals(body.getParts().get(0), "reqBody");
+
+        WSDLBoundOutput boundOutput = boundOp.getOutput();
+        assertNotNull(boundOutput);
+
+        //soap:body
+        body = boundOutput.getExtension(SOAPBody.class);
+        assertNotNull(body);
+        assertEquals(body.getUse(), SOAPBody.Use.literal);
+        assertEquals(body.getParts().get(0), "respBody");
+
+        WSDLService service = def.getService(new QName("http://example.com/wsdl", "HelloService"));
+        assertNotNull(service);
+        assertEquals(service.getDocumentation(), "This is a simple HelloWorld service.");
+        WSDLPort port = service.get(new QName("http://example.com/wsdl", "HelloWorldPort"));
+        assertNotNull(port);
+        assertEquals(port.getDocumentation(), "A SOAP 1.1 port");
+        assertEquals(port.getBinding(), binding);
+
+        SOAPAddress soapAdd = port.getExtension(SOAPAddress.class);
+        assertNotNull(soapAdd);
+        assertEquals(soapAdd.getLocation(), "http://localhost/HelloService");
     }
 }
