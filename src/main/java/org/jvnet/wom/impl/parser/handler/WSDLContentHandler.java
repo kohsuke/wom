@@ -35,8 +35,8 @@
  */
 package org.jvnet.wom.impl.parser.handler;
 
-import org.jvnet.wom.parser.WSDLEventReceiver;
-import org.jvnet.wom.parser.WSDLEventSource;
+import org.jvnet.wom.api.parser.WSDLEventReceiver;
+import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;

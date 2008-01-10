@@ -35,12 +35,12 @@
  */
 package org.jvnet.wom.impl.parser.handler;
 
-import org.jvnet.wom.WSDLEntity;
+import org.jvnet.wom.api.WSDLEntity;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.impl.parser.WSDLDocumentParser;
-import org.jvnet.wom.parser.WSDLEventReceiver;
-import org.jvnet.wom.parser.WSDLEventSource;
-import org.jvnet.wom.parser.WSDLExtensionHandler;
+import org.jvnet.wom.api.parser.WSDLEventReceiver;
+import org.jvnet.wom.api.parser.WSDLEventSource;
+import org.jvnet.wom.api.parser.WSDLExtensionHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;

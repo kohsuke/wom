@@ -36,8 +36,8 @@
 
 package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.WSDLTypes;
-import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.api.WSDLTypes;
+import org.jvnet.wom.api.WSDLVisitor;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;

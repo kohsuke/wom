@@ -43,7 +43,7 @@ import org.jvnet.wom.impl.parser.Messages;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.impl.parser.WSDLTypesImpl;
 import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.parser.WSDLEventSource;
+import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;

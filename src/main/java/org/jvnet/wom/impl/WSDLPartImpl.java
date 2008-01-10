@@ -35,8 +35,8 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLPart;
-import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.api.WSDLPart;
+import org.jvnet.wom.api.WSDLVisitor;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 

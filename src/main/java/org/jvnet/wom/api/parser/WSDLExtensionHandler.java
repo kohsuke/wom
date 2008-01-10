@@ -33,59 +33,36 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl.extension;
+package org.jvnet.wom.api.parser;
 
 import org.jvnet.wom.api.WSDLExtension;
-import org.jvnet.wom.api.binding.soap11.SOAPAddress;
-import org.jvnet.wom.api.binding.soap11.SOAPBinding;
-import org.jvnet.wom.api.parser.AbstractWSDLExtensionHandler;
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
 
 /**
+ * Abstrtaction to allow processing and populating WSDL extensibility elements in to the model. Only one
+ * WSDLExtensionHandler per WSDL extensibility element or attribute are allowed.
+ *
  * @author Vivek Pandey
  */
-public class SOAPAddressExtensionHandler extends AbstractWSDLExtensionHandler {
-    private final ContentHandler contentHandler = new SOAPAddressCH();
-    private SOAPAddress address;
+public interface WSDLExtensionHandler {
 
-    public SOAPAddressExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
-        super(errorHandler, entityResolver);
-    }
+    /**
+     * This method should be called only after the parsing of extensibility element is complete.
+     * Caller will know this when the extension's ContentHandler returns.
+     *
+     * If called in the middle, it may be null otherwise {@link WSDLExtension}
+     */
+    public WSDLExtension getExtension();
 
-    public WSDLExtension getExtension() {
-        return address;
-    }
+    /**
+     * Gives the qualified name of wsdl extensibility element or attribute
+     */
+    public QName extensibilityName();
 
-    public QName extensibilityName() {
-        return SOAPAddress.SOAPADDRESS_NAME;
-    }
-
-    public ContentHandler getContentHandler() {
-        return contentHandler;
-    }
-
-    public ContentHandler getContentHandler(String systemId) {
-        return contentHandler;
-    }
-
-    private class SOAPAddressCH extends WSDLExtensibilityContentHandler{
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            if(uri.equals(SOAPBinding.SOAP_NS) && localName.equals("address")){
-                String location = atts.getValue("location");
-                if(location == null){
-                    errorHandler.error(new SAXParseException(Messages.format(Messages.MISSING_ATTR, "location", "soap:address"), locator));
-                }
-                address = new SOAPAddress();
-                address.setLocation(location);
-            }
-        }
-    }
+    /**
+     * Gives the {@link ContentHandler} which will receive SAX events for the extensibility element
+     */
+    public ContentHandler getContentHandler();
 }

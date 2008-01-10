@@ -35,7 +35,7 @@
  */
 package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.WSDLSet;
+import org.jvnet.wom.api.WSDLSet;
 import org.jvnet.wom.impl.extension.SOAPAddressExtensionHandler;
 import org.jvnet.wom.impl.extension.SOAPBindingExtensionHandler;
 import org.jvnet.wom.impl.extension.SOAPBodyExtensionHandler;
@@ -44,9 +44,9 @@ import org.jvnet.wom.impl.extension.SOAPHeaderExtensionHandler;
 import org.jvnet.wom.impl.extension.SOAPHeaderFaultExtensionHandler;
 import org.jvnet.wom.impl.extension.SOAPOperationExtensionHandler;
 import org.jvnet.wom.impl.util.QNameMap;
-import org.jvnet.wom.parser.WOMParser;
-import org.jvnet.wom.parser.WSDLExtensionHandler;
-import org.jvnet.wom.parser.WSDLParser;
+import org.jvnet.wom.api.parser.WOMParser;
+import org.jvnet.wom.api.parser.WSDLExtensionHandler;
+import org.jvnet.wom.api.parser.WSDLParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -64,7 +64,7 @@ import java.util.Vector;
  * Provides context information to be used by {@link WSDLContentHandlerEx}s.
  * <p/>
  * <p/>
- * This class does the actual processing for {@link org.jvnet.wom.parser.WOMParser},
+ * This class does the actual processing for {@link WOMParser},
  * but to hide the details from the public API, this class in
  * a different package.
  *

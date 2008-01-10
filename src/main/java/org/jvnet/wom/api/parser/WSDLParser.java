@@ -33,56 +33,20 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+package org.jvnet.wom.api.parser;
 
-package org.jvnet.wom.impl.parser.handler;
-
-import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
-import org.jvnet.wom.impl.parser.WSDLTypesImpl;
-import org.jvnet.wom.api.parser.WSDLEventSource;
-import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.namespace.QName;
+import java.io.IOException;
+
 
 /**
  * @author Vivek Pandey
  */
-public class Types extends AbstractHandler{
-    WSDLTypesImpl types;
-    private WSDLContentHandlerEx runtime;
-    private String expectedNamespace;
-
-    public Types(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
-        super(source, parent, cookie);
-        this.runtime = runtime;
-        this.expectedNamespace = expectedNamespace;
-    }
-    protected Types(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
-        super(source, parent, parentCookie);
-    }
-
-    protected WSDLContentHandlerEx getRuntime() {
-        return runtime;
-    }
-
-    protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
-
-    }
-
-    @Override
-    public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-        if (uri.equals(WSDL_NS) && localName.equals("types")) {
-            types = new WSDLTypesImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getTargetNamespace(), ""), runtime.document);
-        }else{//schema extensibility element
-            super.enterElement(uri, localName, qname, atts);
-        }
-    }
-
-    @Override
-    public void leaveElement(String uri, String localName, String qname) throws SAXException {
-        if (uri.equals(WSDL_NS) && localName.equals("types")) {
-            endProcessingExtentionElement(types);
-            revertToParentFromLeaveElement(types, _cookie, uri, localName, qname);
-        }
-    }
+public interface WSDLParser {
+    void parse(InputSource wsdl, ContentHandler handler, EntityResolver entityResolver, ErrorHandler errHandler) throws SAXException, IOException;
 }

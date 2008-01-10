@@ -35,7 +35,7 @@
  */
 package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.parser.WSDLParser;
+import org.jvnet.wom.api.parser.WSDLParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;

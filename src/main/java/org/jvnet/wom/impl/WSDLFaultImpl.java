@@ -35,9 +35,9 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLFault;
-import org.jvnet.wom.WSDLMessage;
-import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.api.WSDLFault;
+import org.jvnet.wom.api.WSDLMessage;
+import org.jvnet.wom.api.WSDLVisitor;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 

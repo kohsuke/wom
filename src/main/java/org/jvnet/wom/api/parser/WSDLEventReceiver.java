@@ -1,8 +1,8 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
+ *
  * Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
- * 
+ *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
  * and Distribution License("CDDL") (collectively, the "License").  You
@@ -10,7 +10,7 @@
  * a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
  * or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
  * language governing permissions and limitations under the License.
- * 
+ *
  * When distributing the software, include this License Header Notice in each
  * file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
  * Sun designates this particular file as subject to the "Classpath" exception
@@ -19,9 +19,9 @@
  * Header, with the fields enclosed by brackets [] replaced by your own
  * identifying information: "Portions Copyrighted [year]
  * [name of copyright owner]"
- * 
+ *
  * Contributor(s):
- * 
+ *
  * If you wish your version of this file to be governed by only the CDDL or
  * only the GPL Version 2, indicate your decision by adding "[Contributor]
  * elects to include this software in this distribution under the [CDDL or GPL
@@ -34,55 +34,19 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.parser.handler;
+package org.jvnet.wom.api.parser;
 
-import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
-import org.jvnet.wom.impl.parser.WSDLTypesImpl;
-import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import javax.xml.namespace.QName;
+public interface WSDLEventReceiver {
+    void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException;
 
-/**
- * @author Vivek Pandey
- */
-public class Types extends AbstractHandler{
-    WSDLTypesImpl types;
-    private WSDLContentHandlerEx runtime;
-    private String expectedNamespace;
+    void leaveElement(String uri, String localName, String qname) throws SAXException;
 
-    public Types(AbstractHandler parent, WSDLEventSource source, WSDLContentHandlerEx runtime, int cookie, String expectedNamespace) {
-        super(source, parent, cookie);
-        this.runtime = runtime;
-        this.expectedNamespace = expectedNamespace;
-    }
-    protected Types(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
-        super(source, parent, parentCookie);
-    }
+    void text(String value) throws SAXException;
 
-    protected WSDLContentHandlerEx getRuntime() {
-        return runtime;
-    }
+    void enterAttribute(String uri, String localName, String qname) throws SAXException;
 
-    protected void onChildCompleted(Object result, int cookie, boolean needAttCheck) throws SAXException {
-
-    }
-
-    @Override
-    public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-        if (uri.equals(WSDL_NS) && localName.equals("types")) {
-            types = new WSDLTypesImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getTargetNamespace(), ""), runtime.document);
-        }else{//schema extensibility element
-            super.enterElement(uri, localName, qname, atts);
-        }
-    }
-
-    @Override
-    public void leaveElement(String uri, String localName, String qname) throws SAXException {
-        if (uri.equals(WSDL_NS) && localName.equals("types")) {
-            endProcessingExtentionElement(types);
-            revertToParentFromLeaveElement(types, _cookie, uri, localName, qname);
-        }
-    }
+    void leaveAttribute(String uri, String localName, String qname) throws SAXException;
 }

@@ -35,13 +35,13 @@
  */
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.WSDLFault;
-import org.jvnet.wom.WSDLInput;
-import org.jvnet.wom.WSDLOperation;
-import org.jvnet.wom.WSDLOutput;
-import org.jvnet.wom.WSDLPart;
-import org.jvnet.wom.WSDLPortType;
-import org.jvnet.wom.WSDLVisitor;
+import org.jvnet.wom.api.WSDLFault;
+import org.jvnet.wom.api.WSDLInput;
+import org.jvnet.wom.api.WSDLOperation;
+import org.jvnet.wom.api.WSDLOutput;
+import org.jvnet.wom.api.WSDLPart;
+import org.jvnet.wom.api.WSDLPortType;
+import org.jvnet.wom.api.WSDLVisitor;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 

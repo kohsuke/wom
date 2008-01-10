@@ -35,10 +35,10 @@
  */
 package org.jvnet.wom.impl.extension;
 
-import org.jvnet.wom.WSDLExtension;
-import org.jvnet.wom.binding.soap11.SOAPBinding;
+import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.binding.soap11.SOAPBinding;
 import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.parser.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.api.parser.AbstractWSDLExtensionHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
