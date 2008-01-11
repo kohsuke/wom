@@ -35,40 +35,12 @@
  */
 package org.jvnet.wom.api.parser;
 
-import org.jvnet.wom.api.WSDLExtension;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Attributes;
-
 import javax.xml.namespace.QName;
-import java.util.Collection;
 
 /**
- * Abstrtaction to allow processing and populating WSDL extensibility elements in to the model. Only one
- * WSDLExtensionHandler per WSDL extensibility element or attribute are allowed.
- *
  * @author Vivek Pandey
  */
-public interface WSDLExtensionHandler {
-
-    /**
-     * This method should be called only after the parsing of extensibility element is complete.
-     * Caller will know this when the extension's ContentHandler returns.
-     *
-     * If called in the middle, it may be null otherwise {@link WSDLExtension}
-     */
-    public Collection<WSDLExtension> getExtension();
-
-    /**
-     * Gives the qualified name of wsdl extensibility element or attribute
-     */
-    public boolean extensibilityName(QName name);
-
-    /**
-     * Gives the {@link ContentHandler} which will receive SAX events for the extensibility element
-     */
-    public ContentHandler getContentHandler();
-
-    public Collection<WSDLExtension> parseAttribute(Attributes atts);
-
-    public ContentHandler getContentHandlerFor(String nsUri, String localName);
+public interface XMLSchemaParser<E,T> extends WSDLExtensionHandler {
+    E resolveElement(QName elementName);
+    T resolveType(QName typeName);
 }

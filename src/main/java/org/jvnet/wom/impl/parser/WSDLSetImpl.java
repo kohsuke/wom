@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collections;
 
 public class WSDLSetImpl implements WSDLSet {
 
@@ -70,8 +71,8 @@ public class WSDLSetImpl implements WSDLSet {
         return wsdlMap.get(targetNamespace);
     }
 
-    public Collection<? extends WSDLDefinitions> getWSDLs() {
-        return wsdlMap.values();
+    public Collection<WSDLDefinitions> getWSDLs() {
+        return Collections.<WSDLDefinitions>unmodifiableCollection(wsdlMap.values());
     }
 
 }

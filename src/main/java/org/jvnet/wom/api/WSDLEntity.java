@@ -104,7 +104,7 @@ public abstract class WSDLEntity implements WSDLExtensible {
     /**
      * WSDL visitor
      */
-    public abstract void visit(WSDLVisitor visitor);
+    public abstract <V, P> V visit(WSDLVisitor<V, P> visitor, P param);
 
 
     public final Iterable<WSDLExtension> getExtensions() {

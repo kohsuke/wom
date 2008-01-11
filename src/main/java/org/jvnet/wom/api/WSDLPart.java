@@ -96,6 +96,8 @@ public abstract class WSDLPart extends WSDLEntity {
             return type;
         }
 
+        public Object getSchemaObject(){return null;};
+
 
         /**
          * Enumeration that tells a wsdl:part that can be defined either using a type

@@ -45,7 +45,7 @@ import java.io.IOException;
 
 
 /**
- * @author Vivek Pandey
+ * @author Vivek Pandey //XMLParser
  */
 public interface WSDLParser {
     void parse(InputSource wsdl, ContentHandler handler, EntityResolver entityResolver, ErrorHandler errHandler) throws SAXException, IOException;

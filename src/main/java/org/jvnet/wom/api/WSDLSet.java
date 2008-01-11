@@ -52,5 +52,5 @@ public interface WSDLSet {
     /**
      * Gives a collection of WSDLDefinitions.
      */
-    Collection<? extends WSDLDefinitions> getWSDLs();
+    Collection<WSDLDefinitions> getWSDLs();
 }
