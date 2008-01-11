@@ -1,8 +1,8 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- *
+ * 
  * Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
- *
+ * 
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
  * and Distribution License("CDDL") (collectively, the "License").  You
@@ -10,7 +10,7 @@
  * a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
  * or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
  * language governing permissions and limitations under the License.
- *
+ * 
  * When distributing the software, include this License Header Notice in each
  * file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
  * Sun designates this particular file as subject to the "Classpath" exception
@@ -19,9 +19,9 @@
  * Header, with the fields enclosed by brackets [] replaced by your own
  * identifying information: "Portions Copyrighted [year]
  * [name of copyright owner]"
- *
+ * 
  * Contributor(s):
- *
+ * 
  * If you wish your version of this file to be governed by only the CDDL or
  * only the GPL Version 2, indicate your decision by adding "[Contributor]
  * elects to include this software in this distribution under the [CDDL or GPL
@@ -33,24 +33,25 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.api;
 
-import java.util.Collection;
+package org.jvnet.wom.impl;
+
+import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.WSDLEntity;
 
 /**
- * Provides set of WSDL documents parsed.
+ *
+ * @author Vivek Pandey
  */
-public interface WSDLSet {
-    /**
-     * WSDLDefinitions for a given targetNamespace.
-     *
-     * @param targetNamespace non-null targetNamespace
-     * @return {@link org.jvnet.wom.api.WSDLDefinitions}, may be null
-     */
-    WSDLDefinitions getWSDL(String targetNamespace);
+public abstract class AbstractWSDLExtension extends WSDLExtension {
+    private WSDLEntity owner;
 
-    /**
-     * Gives a collection of WSDLDefinitions.
-     */
-    Collection<? extends WSDLDefinitions> getWSDLs();
+    public void setOwner(WSDLEntity owner) {
+        this.owner = owner;
+    }
+
+    public WSDLEntity getOwner() {
+        return owner;
+    }
+    
 }

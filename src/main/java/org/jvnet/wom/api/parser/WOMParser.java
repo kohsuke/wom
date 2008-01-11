@@ -52,7 +52,8 @@ import java.io.Reader;
 import java.net.URL;
 
 /**
- * Parses a WSDL and provides a model - {@link WSDLSet}.
+ * Parses a WSDL and provides a model - {@link WSDLSet}. The interfaces provided by {@link WOMParser} are largely based
+ * on XSOM.
  * <p/>
  * TODO: support for WSDL 2.0
  *
@@ -66,7 +67,7 @@ public final class WOMParser {
     private final ParserContext context;
 
     /**
-     * Creates a new {@link WOMParser} using SAX parser from {@link WSDLParser}
+     * Creates a new {@link WOMParser} using SAX parser from the default implementation of {@link WSDLParser}
      */
     public WOMParser() {
         this.parser = new WSDLParserImpl();
@@ -86,7 +87,8 @@ public final class WOMParser {
     }
 
     /**
-     * Creates a new WOMParser that will use the given WSDLParser to parse the WSDL.
+     * Creates a new WOMParser that will use the given WSDLParser to parse the WSDL. The provided {@link WSDLParser} will
+     * send SAX events to the WOM ContentHandler.
      *
      * @param parser non null.
      */

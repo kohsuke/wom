@@ -40,7 +40,7 @@ import org.xml.sax.Locator;
 import javax.xml.namespace.QName;
 
 /**
- * Abstracts wsdl:service.
+ * Abstraction of wsdl:service.
  *
  * @author Vivek Pandey
  */

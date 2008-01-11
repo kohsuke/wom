@@ -41,6 +41,11 @@ import org.xml.sax.Locator;
 import javax.xml.namespace.QName;
 
 /**
+ * Abstraction of wsdl:binding/wsdl:input. This is where all the binding extensibility elements
+ * such as soap:body, soap:binding etc are captured.
+ * <p>
+ * The binding extensibility elements are:
+ * {@link org.jvnet.wom.api.binding.soap11.SOAPBody} 
  * @author Vivek Pandey
  */
 public abstract class WSDLBoundInput extends WSDLEntity{
