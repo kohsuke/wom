@@ -40,36 +40,36 @@ package org.jvnet.wom.api;
  *
  * @author Vivek Pandey
  */
-public interface WSDLVisitor {
-    void definitions(WSDLDefinitions definitions);
+public interface WSDLVisitor<V, P> {
+    V definitions(WSDLDefinitions definitions, P param);
 
-    void types(WSDLTypes types);
+    V types(WSDLTypes types, P param);
 
-    void messages(WSDLMessage message);
+    V messages(WSDLMessage message, P param);
 
-    void part(WSDLPart part);
+    V part(WSDLPart part, P param);
 
-    void portType(WSDLPortType portType);
+    V portType(WSDLPortType portType, P param);
 
-    void operation(WSDLOperation operation);
+    V operation(WSDLOperation operation, P param);
 
-    void input(WSDLInput input);
+    V input(WSDLInput input, P param);
 
-    void output(WSDLOutput output);
+    V output(WSDLOutput output, P param);
 
-    void fault(WSDLFault fault);
+    V fault(WSDLFault fault, P param);
 
-    void binding(WSDLBoundPortType binding);
+    V binding(WSDLBoundPortType binding, P param);
 
-    void bindingOperation(WSDLBoundOperation boundOperation);
+    V bindingOperation(WSDLBoundOperation boundOperation, P param);
 
-    void boundInput(WSDLBoundInput boundInput);
+    V boundInput(WSDLBoundInput boundInput, P param);
 
-    void boundOutput(WSDLBoundOutput boundOutput);
+    V boundOutput(WSDLBoundOutput boundOutput, P param);
 
-    void bindingFault(WSDLBoundFault fault);
+    V bindingFault(WSDLBoundFault fault, P param);
 
-    void service(WSDLService service);
+    V service(WSDLService service, P param);
 
-    void port(WSDLPort port);
+    V port(WSDLPort port, P param);
 }
