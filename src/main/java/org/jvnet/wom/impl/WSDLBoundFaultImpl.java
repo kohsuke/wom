@@ -60,10 +60,6 @@ public class WSDLBoundFaultImpl extends WSDLBoundFault {
         return abstractFault;
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.bindingFault(this);
-    }
-
     public void setParent(WSDLBoundOperationImpl parent) {
         this.parent = parent;
     }
@@ -71,6 +67,10 @@ public class WSDLBoundFaultImpl extends WSDLBoundFault {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.bindingFault(this, param);
     }
 
     public void setDocumentation(String doc) {

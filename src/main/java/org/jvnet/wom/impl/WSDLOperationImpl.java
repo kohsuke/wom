@@ -125,10 +125,6 @@ public class WSDLOperationImpl extends WSDLOperation {
         this.parent = parent;
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.operation(this);
-    }
-
     public void setDocumentation(String doc) {
         this.doc = doc;
     }
@@ -136,5 +132,9 @@ public class WSDLOperationImpl extends WSDLOperation {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.operation(this, param);
     }
 }

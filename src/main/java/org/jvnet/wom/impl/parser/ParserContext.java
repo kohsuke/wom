@@ -46,7 +46,7 @@ import org.jvnet.wom.impl.extension.SOAPOperationExtensionHandler;
 import org.jvnet.wom.impl.util.QNameMap;
 import org.jvnet.wom.api.parser.WOMParser;
 import org.jvnet.wom.api.parser.WSDLExtensionHandler;
-import org.jvnet.wom.api.parser.WSDLParser;
+import org.jvnet.wom.api.parser.XMLParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -80,7 +80,7 @@ public class ParserContext {
 
     private final WOMParser owner;
 
-    final WSDLParser parser;
+    final XMLParser parser;
 
     private final QNameMap<WSDLExtensionHandler> extensionMap = new QNameMap<WSDLExtensionHandler>();
 
@@ -107,7 +107,7 @@ public class ParserContext {
     public final Map<WSDLDocumentImpl, WSDLDocumentImpl> parsedDocuments = new HashMap<WSDLDocumentImpl, WSDLDocumentImpl>();
 
 
-    public ParserContext(WOMParser owner, WSDLParser parser) {
+    public ParserContext(WOMParser owner, XMLParser parser) {
         this.owner = owner;
         this.parser = parser;
         addKnownWSDLExtensionHandler(

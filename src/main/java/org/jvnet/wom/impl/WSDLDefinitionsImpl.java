@@ -137,8 +137,8 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
         setOwnerWSDLDocument(owner);
     }
 
-    public <V> V visit(WSDLVisitor<V> visitor) {
-        return visitor.definitions(this);
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.definitions(this, param);
     }
 
     public void setTypes(WSDLTypesImpl wsdlTypes) {

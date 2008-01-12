@@ -75,12 +75,12 @@ public class WSDLMessageImpl extends WSDLMessage {
         partsMap.put(part.getName().getLocalPart(), part);
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.messages(this);
-    }
-
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.messages(this, param);
     }
 
     public void setDocumentation(String doc) {

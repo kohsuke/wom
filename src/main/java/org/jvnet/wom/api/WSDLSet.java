@@ -50,7 +50,7 @@ public interface WSDLSet {
     WSDLDefinitions getWSDL(String targetNamespace);
 
     /**
-     * Gives a collection of WSDLDefinitions.
+     * Gives an immutable collection of WSDLDefinitions.
      */
     Collection<WSDLDefinitions> getWSDLs();
 }

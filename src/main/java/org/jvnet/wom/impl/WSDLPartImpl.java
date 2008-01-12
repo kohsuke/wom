@@ -56,10 +56,6 @@ public class WSDLPartImpl extends WSDLPart {
         setOwnerWSDLDocument(document);
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.part(this);
-    }
-
     public void setIndex(int index) {
         this.index = index;
     }
@@ -74,6 +70,10 @@ public class WSDLPartImpl extends WSDLPart {
 
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.part(this, param);
     }
 
     public void setDocumentation(String doc) {

@@ -120,10 +120,6 @@ public class WSDLBoundOperationImpl extends WSDLBoundOperation {
         return null;
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.bindingOperation(this);
-    }
-
     public void setDocumentation(String doc) {
         this.doc = doc;
     }
@@ -131,5 +127,9 @@ public class WSDLBoundOperationImpl extends WSDLBoundOperation {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.bindingOperation(this, param);
     }
 }

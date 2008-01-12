@@ -45,8 +45,23 @@ import java.io.IOException;
 
 
 /**
- * @author Vivek Pandey //XMLParser
+ * Parser to parse the XML. WOM has a default implementation of it, however this is to allow an custom XMLParser to feed
+ * any events in to WOM.
+ *
+ * @see WOMParser#WOMParser(XMLParser)
+ *
+ * @author Vivek Pandey
  */
-public interface WSDLParser {
+public interface XMLParser {
+    /**
+     * This method will be called by WOM as the first thing during parsing.
+     *
+     * @param wsdl non-null. Location of a WSDL
+     * @param handler non-null. handler will receive all the SAX events
+     * @param entityResolver May be null
+     * @param errHandler May be null
+     * @throws SAXException
+     * @throws IOException
+     */
     void parse(InputSource wsdl, ContentHandler handler, EntityResolver entityResolver, ErrorHandler errHandler) throws SAXException, IOException;
 }

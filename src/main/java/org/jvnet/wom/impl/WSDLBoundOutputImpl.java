@@ -55,10 +55,6 @@ public class WSDLBoundOutputImpl extends WSDLBoundOutput {
         setOwnerWSDLDocument(document);
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.boundOutput(this);
-    }
-
     public void setParent(WSDLBoundOperationImpl parent) {
         this.parent = parent;
     }
@@ -66,6 +62,10 @@ public class WSDLBoundOutputImpl extends WSDLBoundOutput {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.boundOutput(this, param);
     }
 
     public void setDocumentation(String doc) {

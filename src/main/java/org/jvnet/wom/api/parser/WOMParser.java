@@ -37,7 +37,7 @@ package org.jvnet.wom.api.parser;
 
 import org.jvnet.wom.api.WSDLSet;
 import org.jvnet.wom.impl.parser.ParserContext;
-import org.jvnet.wom.impl.parser.WSDLParserImpl;
+import org.jvnet.wom.impl.parser.XMLParserImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -63,36 +63,36 @@ public final class WOMParser {
 
     private EntityResolver entityResolver;
     private ErrorHandler errorHandler;
-    private final WSDLParser parser;
+    private final XMLParser parser;
     private final ParserContext context;
 
     /**
-     * Creates a new {@link WOMParser} using SAX parser from the default implementation of {@link WSDLParser}
+     * Creates a new {@link WOMParser} using SAX parser from the default implementation of {@link XMLParser}
      */
     public WOMParser() {
-        this.parser = new WSDLParserImpl();
+        this.parser = new XMLParserImpl();
         this.context = new ParserContext(this, this.parser);
     }
 
 
     /**
-     * Creates a new {@link WOMParser}, the underlying WSDLParser will use the factory to create SAX parser.
+     * Creates a new {@link WOMParser}, the underlying XMLParser will use the factory to create SAX parser.
      *
      * @param factory Must be non-null. The factory must be configured correctly, such as
      *                <code>SAXParserFactory.setNamespaceAware(true) must be called</code> to create a namespace aware SAX parser.
      */
     public WOMParser(SAXParserFactory factory) {
-        this.parser = new WSDLParserImpl(factory);
+        this.parser = new XMLParserImpl(factory);
         this.context = new ParserContext(this, this.parser);
     }
 
     /**
-     * Creates a new WOMParser that will use the given WSDLParser to parse the WSDL. The provided {@link WSDLParser} will
+     * Creates a new WOMParser that will use the given XMLParser to parse the WSDL. The provided {@link XMLParser} will
      * send SAX events to the WOM ContentHandler.
      *
      * @param parser non null.
      */
-    public WOMParser(WSDLParser parser) {
+    public WOMParser(XMLParser parser) {
         this.parser = parser;
         this.context = new ParserContext(this, this.parser);
     }

@@ -76,10 +76,6 @@ public class WSDLServiceImpl extends WSDLService {
         ports.put(port.getName(), port);
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.service(this);
-    }
-
     public void setDocumentation(String doc) {
         this.doc = doc;
     }
@@ -87,5 +83,9 @@ public class WSDLServiceImpl extends WSDLService {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.service(this, param);
     }
 }

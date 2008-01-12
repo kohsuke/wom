@@ -55,10 +55,6 @@ public class WSDLBoundInputImpl extends WSDLBoundInput {
         setOwnerWSDLDocument(document);
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.boundInput(this);
-    }        
-
     public void setParent(WSDLBoundOperationImpl parent) {
         this.parent = parent;
     }
@@ -66,6 +62,10 @@ public class WSDLBoundInputImpl extends WSDLBoundInput {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.boundInput(this, param);
     }
 
     public void setDocumentation(String doc) {

@@ -58,10 +58,6 @@ public class WSDLInputImpl extends WSDLInput {
         setOwnerWSDLDocument(document);
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.input(this);
-    }
-
     public WSDLMessage getMessage() {
         return getOwnerWSDLModel().getMessage(messageName);
     }
@@ -90,5 +86,9 @@ public class WSDLInputImpl extends WSDLInput {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.input(this, param);
     }
 }

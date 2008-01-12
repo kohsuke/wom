@@ -43,8 +43,7 @@ import javax.xml.namespace.QName;
 import java.util.Collection;
 
 /**
- * Abstrtaction to allow processing and populating WSDL extensibility elements in to the model. Only one
- * WSDLExtensionHandler per WSDL extensibility element or attribute are allowed.
+ * Abstraction to allow processing and populating WSDL extensibility elements in to the model.
  *
  * @author Vivek Pandey
  */
@@ -54,9 +53,9 @@ public interface WSDLExtensionHandler {
      * This method should be called only after the parsing of extensibility element is complete.
      * Caller will know this when the extension's ContentHandler returns.
      *
-     * If called in the middle, it may be null otherwise {@link WSDLExtension}
+     * @return Immutable collection of  {@link WSDLExtension}
      */
-    public Collection<WSDLExtension> getExtension();
+    public WSDLExtension getExtension();
 
     /**
      * Gives the qualified name of wsdl extensibility element or attribute
@@ -68,7 +67,20 @@ public interface WSDLExtensionHandler {
      */
     public ContentHandler getContentHandler();
 
+    /**
+     * With this the extension handlers get a chance to process the extensibility attributes.
+     *
+     * @return Immutable collection of {@link org.jvnet.wom.api.WSDLExtension}s
+     */
     public Collection<WSDLExtension> parseAttribute(Attributes atts);
 
+    /**
+     * Gives a {@link ContentHandler} if this extension handler can process the extensibility elements
+     * idetified by the nsUri and localName
+     *
+     * @param nsUri namespace of the extensiblity element, always non-null
+     * @param localName localName of the extensibility element, always non-null
+     */
     public ContentHandler getContentHandlerFor(String nsUri, String localName);
+
 }

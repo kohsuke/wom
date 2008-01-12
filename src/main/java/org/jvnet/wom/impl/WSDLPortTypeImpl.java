@@ -78,4 +78,8 @@ public class WSDLPortTypeImpl extends WSDLPortType {
     public String getDocumentation() {
         return doc;
     }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.portType(this, param);
+    }
 }

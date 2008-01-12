@@ -59,10 +59,6 @@ public class WSDLOutputImpl extends WSDLOutput {
         setOwnerWSDLDocument(document);
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.output(this);
-    }
-
     public WSDLMessage getMessage() {
         return getOwnerWSDLModel().getMessage(messageName);
     }
@@ -90,5 +86,9 @@ public class WSDLOutputImpl extends WSDLOutput {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.output(this, param);
     }
 }

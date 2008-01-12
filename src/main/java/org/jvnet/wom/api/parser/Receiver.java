@@ -33,59 +33,11 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl;
-
-import org.jvnet.wom.api.WSDLBoundPortType;
-import org.jvnet.wom.api.WSDLPort;
-import org.jvnet.wom.api.WSDLService;
-import org.jvnet.wom.api.WSDLVisitor;
-import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.xml.sax.Locator;
-
-import javax.xml.namespace.QName;
+package org.jvnet.wom.api.parser;
 
 /**
  * @author Vivek Pandey
  */
-public class WSDLPortImpl extends WSDLPort {
-    private WSDLBoundPortTypeImpl binding;
-    private QName bindingName;
-    private String address;
-    private WSDLServiceImpl owner;
-    private String doc;
-
-    public WSDLPortImpl(Locator locator, QName name, WSDLDocumentImpl document) {
-        super(locator, name);
-        setOwnerWSDLDocument(document);
-    }
-
-    public WSDLBoundPortType getBinding() {
-        return getOwnerWSDLModel().getBinding(bindingName);
-    }
-
-    public void setBinding(QName qName) {
-        this.bindingName = qName;
-    }
-
-    public WSDLService getOwner() {
-        return owner;
-    }
-
-
-    public void setOwner(WSDLServiceImpl owner) {
-        this.owner = owner;
-    }
-
-    @Override
-    public String getDocumentation() {
-        return doc;
-    }
-
-    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
-        return visitor.port(this, param);
-    }
-
-    public void setDocumentation(String doc) {
-        this.doc = doc;
-    }
+public interface Receiver<T> {
+    public void add(T type);
 }

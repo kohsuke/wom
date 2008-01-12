@@ -68,10 +68,6 @@ public class WSDLFaultImpl extends WSDLFault {
         this.parent = parent;
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.fault(this);
-    }
-
     public void setDocumentation(String doc) {
         this.doc = doc;
     }
@@ -79,5 +75,9 @@ public class WSDLFaultImpl extends WSDLFault {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.fault(this, param);
     }
 }

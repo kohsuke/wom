@@ -78,10 +78,6 @@ public class WSDLBoundPortTypeImpl extends WSDLBoundPortType {
         return operationMap.values();
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.binding(this);
-    }
-
     public void setDocumentation(String doc) {
         this.doc = doc;
     }
@@ -89,5 +85,9 @@ public class WSDLBoundPortTypeImpl extends WSDLBoundPortType {
     @Override
     public String getDocumentation() {
         return doc;
+    }
+
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.binding(this, param);
     }
 }

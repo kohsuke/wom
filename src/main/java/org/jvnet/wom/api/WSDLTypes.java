@@ -50,4 +50,6 @@ public abstract class WSDLTypes extends WSDLEntity {
     public WSDLTypes(Locator locator, QName name) {
         super(locator, name);
     }
+
+    
 }

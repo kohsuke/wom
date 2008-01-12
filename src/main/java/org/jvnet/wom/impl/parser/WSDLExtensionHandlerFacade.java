@@ -37,13 +37,20 @@
 package org.jvnet.wom.impl.parser;
 
 import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.WSDLEntity;
 import org.jvnet.wom.api.parser.WSDLExtensionHandler;
+import org.jvnet.wom.api.parser.Receiver;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
 
 
 /**
@@ -51,17 +58,18 @@ import javax.xml.namespace.QName;
  */
 public final class WSDLExtensionHandlerFacade implements WSDLExtensionHandler {
 
-    private final WSDLExtensionHandler[] extensions;
+    private final WSDLExtensionHandler[] extensionHandlers;
 
-    public WSDLExtensionHandlerFacade(WSDLExtensionHandler[] extensions) {
-        this.extensions = extensions;
+    private final Set<WSDLExtension> extensions
+    public WSDLExtensionHandlerFacade(WSDLExtensionHandler[] extensionHandlers) {
+        this.extensionHandlers = extensionHandlers;
     }
 
     public boolean isSupported(QName extensibilityElement) {
         return true;
     }
 
-    public WSDLExtension getExtension() {
+    public Collection<WSDLExtension> getExtension() {
         return null;
     }
 
@@ -73,72 +81,88 @@ public final class WSDLExtensionHandlerFacade implements WSDLExtensionHandler {
         return facade;
     }
 
+    public Collection<WSDLExtension> parseAttribute(Attributes atts, Receiver<WSDLExtension> receiver) {
+        List<WSDLExtension> extns = new ArrayList<WSDLExtension>();
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
+            for(WSDLExtension ext : wsdlExtensionHandler.parseAttribute(atts)){
+                receiver.add(ext);
+            }
+            extns.addAll(wsdlExtensionHandler.parseAttribute(atts));
+        }
+
+        return Collections.unmodifiableCollection(extns);
+    }
+
+    public ContentHandler getContentHandlerFor(String nsUri, String localName) {
+        return null;
+    }
+
     private final ContentHandler facade = new WSDLContentHandlerFacade();
     private class WSDLContentHandlerFacade implements ContentHandler{
         public void setDocumentLocator(Locator locator) {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().setDocumentLocator(locator);
         }
     }
 
     public void startDocument() throws SAXException {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().startDocument();
         }
     }
 
     public void endDocument() throws SAXException {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().endDocument();
         }
 
     }
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().startPrefixMapping(prefix, uri);
         }
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().endPrefixMapping(prefix);
         }
     }
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().startElement(uri, localName, qName, atts);
         }
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().endElement(uri, localName, qName);
         }
     }
 
     public void characters(char ch[], int start, int length) throws SAXException {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().characters(ch, start, length);
         }
     }
 
     public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().ignorableWhitespace(ch, start, length);
         }
     }
 
     public void processingInstruction(String target, String data) throws SAXException {
         //NOOP
-//        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+//        for(WSDLExtensionHandler wsdlExtensionHandler:extensionHandlers){
 //            wsdlExtensionHandler.getContentHandler().processingInstruction(target, data);
 //        }
     }
 
     public void skippedEntity(String name) throws SAXException {
-        for(WSDLExtensionHandler wsdlExtensionHandler:extensions){
+        for(WSDLExtensionHandler wsdlExtensionHandler: extensionHandlers){
             wsdlExtensionHandler.getContentHandler().skippedEntity(name);
         }
     }
