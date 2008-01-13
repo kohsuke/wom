@@ -34,17 +34,57 @@
  * holder.
  */
 
-package org.jvnet.wom.api.binding.soap11;
+package org.jvnet.wom.impl.extension.soap11;
 
-import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.binding.soap11.SOAPFault;
+import org.jvnet.wom.api.binding.soap11.SOAPBody;
+import org.jvnet.wom.api.binding.soap11.SOAPBinding;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public interface SOAPOperation extends WSDLExtension {
-    public static final QName SOAPOPERATION_NAME = new QName(SOAPBinding.SOAP_NS, "operation");
-    public String getSoapAction();
-    public SOAPBinding.Style getStyle();
+public class SOAPFaultImpl implements SOAPFault {
+    private String[] encodingStyle;
+    private String namespace;
+    private SOAPBody.Use use;
+    private String name;
+
+    public void setEncodingStyle(String[] encodingStyle) {
+        this.encodingStyle = encodingStyle;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
+    public void setUse(SOAPBody.Use use) {
+        this.use = (use == null) ? SOAPBody.Use.literal : null;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String[] getEncodingStyle() {
+        return encodingStyle;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public SOAPBody.Use getUse() {
+        return use;
+    }
+
+    public String getFaultName() {
+        return name;
+    }
+
+    public QName getName() {
+        return SOAPFAULT_NAME;
+    }
+
 }

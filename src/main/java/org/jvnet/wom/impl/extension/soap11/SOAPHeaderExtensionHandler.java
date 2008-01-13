@@ -34,12 +34,14 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.extension;
+package org.jvnet.wom.impl.extension.soap11;
 
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.binding.soap11.SOAPBody;
-import org.jvnet.wom.api.binding.soap11.SOAPHeaderFault;
+import org.jvnet.wom.api.binding.soap11.SOAPHeader;
 import org.jvnet.wom.impl.util.XmlUtil;
+import org.jvnet.wom.impl.extension.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.impl.extension.Messages;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -54,31 +56,31 @@ import java.util.Collections;
 /**
  * @author Vivek Pandey
  */
-public class SOAPHeaderFaultExtensionHandler extends AbstractWSDLExtensionHandler {
-    private SOAPHeaderFault headerFault;
+public class SOAPHeaderExtensionHandler extends AbstractWSDLExtensionHandler {
+    private SOAPHeaderImpl header;
 
-    public SOAPHeaderFaultExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
+    public SOAPHeaderExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
         super(errorHandler, entityResolver);
     }
 
     protected QName getExtensionName() {
-        return SOAPHeaderFault.SOAPHEADERFAULT_NAME;
+        return SOAPHeader.SOAPHEADER_NAME;
     }
 
     public Collection<WSDLExtension> getExtension() {
-        return Collections.<WSDLExtension>singleton(headerFault);
+        return Collections.<WSDLExtension>singleton(header);
     }
 
-    protected ContentHandler getContentHandler() {
+    public ContentHandler getContentHandler() {
         return contentHandler;
     }
 
-    private final ContentHandler contentHandler = new SOAPHeaderFaultCH();
-    private class SOAPHeaderFaultCH extends WSDLExtensibilityContentHandler {
+    private final ContentHandler contentHandler = new SOAPHeaderCH();
+    private class SOAPHeaderCH extends WSDLExtensibilityContentHandler {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            if (!uri.equals(SOAPHeaderFault.SOAPHEADERFAULT_NAME.getNamespaceURI()) ||
-                    !localName.equals(SOAPHeaderFault.SOAPHEADERFAULT_NAME.getLocalPart()))
+            if (!uri.equals(SOAPHeader.SOAPHEADER_NAME.getNamespaceURI()) ||
+                    !localName.equals(SOAPHeader.SOAPHEADER_NAME.getLocalPart()))
                 return;
 
             String encodingStyleAtt = atts.getValue("encodingStyle");
@@ -108,15 +110,11 @@ public class SOAPHeaderFaultExtensionHandler extends AbstractWSDLExtensionHandle
 
             String localPart = XmlUtil.getLocalPart(message);
             String prefix = XmlUtil.getPrefix(message);
-            headerFault = new SOAPHeaderFault();
-            
-            headerFault.setMessage(new QName(resolveNamespacePrefix(prefix), localPart));
-            headerFault.setPart(part);
-            headerFault.setUse(use);
-            headerFault.setEncodingStyle(encodingStyle);
-            headerFault.setNamespace(namespace);
+            header = new SOAPHeaderImpl();
+            header.setMessage(new QName(resolveNamespacePrefix(prefix), localPart));
+            header.setPart(part);
+            header.setEncodingStyle(encodingStyle);
+            header.setNamespace(namespace);
         }
     }
-
-
 }

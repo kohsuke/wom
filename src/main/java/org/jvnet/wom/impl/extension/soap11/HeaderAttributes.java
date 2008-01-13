@@ -34,18 +34,60 @@
  * holder.
  */
 
-package parsing;
+package org.jvnet.wom.impl.extension.soap11;
 
 import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.binding.soap11.SOAPBody;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public class XMLSchema extends WSDLExtension {
-    public static final QName XMLSCHEMA_NAME = new QName("http://www.w3.org/2001/XMLSchema", "schema");
-    public QName getName() {
-        return XMLSCHEMA_NAME;
+abstract class HeaderAttributes{
+    QName message;
+    String part;
+    SOAPBody.Use use;
+    String[] encodingStyle;
+    String namespace;
+
+    public QName getMessage() {
+        return message;
+    }
+
+    public void setMessage(QName message) {
+        this.message = message;
+    }
+
+    public String getPart() {
+        return part;
+    }
+
+    public void setPart(String part) {
+        this.part = part;
+    }
+
+    public SOAPBody.Use getUse() {
+        return use;
+    }
+
+    public void setUse(SOAPBody.Use use) {
+        this.use = use;
+    }
+
+    public String[] getEncodingStyle() {
+        return encodingStyle;
+    }
+
+    public void setEncodingStyle(String[] encodingStyle) {
+        this.encodingStyle = encodingStyle;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 }

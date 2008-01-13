@@ -39,13 +39,13 @@ import org.jvnet.wom.api.WSDLSet;
 import org.jvnet.wom.api.parser.WOMParser;
 import org.jvnet.wom.api.parser.WSDLExtensionHandler;
 import org.jvnet.wom.api.parser.XMLParser;
-import org.jvnet.wom.impl.extension.SOAPAddressExtensionHandler;
-import org.jvnet.wom.impl.extension.SOAPBindingExtensionHandler;
-import org.jvnet.wom.impl.extension.SOAPBodyExtensionHandler;
-import org.jvnet.wom.impl.extension.SOAPFaultExtensionHandler;
-import org.jvnet.wom.impl.extension.SOAPHeaderExtensionHandler;
-import org.jvnet.wom.impl.extension.SOAPHeaderFaultExtensionHandler;
-import org.jvnet.wom.impl.extension.SOAPOperationExtensionHandler;
+import org.jvnet.wom.impl.extension.soap11.SOAPAddressExtensionHandler;
+import org.jvnet.wom.impl.extension.soap11.SOAPBindingExtensionHandler;
+import org.jvnet.wom.impl.extension.soap11.SOAPBodyExtensionHandler;
+import org.jvnet.wom.impl.extension.soap11.SOAPFaultExtensionHandler;
+import org.jvnet.wom.impl.extension.soap11.SOAPHeaderExtensionHandler;
+import org.jvnet.wom.impl.extension.soap11.SOAPHeaderFaultExtensionHandler;
+import org.jvnet.wom.impl.extension.soap11.SOAPOperationExtensionHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -53,7 +53,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -92,8 +91,13 @@ public class ParserContext {
         }
     }
     
-    /* ContentHandler to parse schema inside the wsdl:types element */
-    private ContentHandler schemaContentHandler = new DefaultHandler();
+    /**
+     * ContentHandler to parse schema inside the wsdl:types element.
+     * If this is not set, then WOM will try to use default XSOM parser
+     * to provide XML schema model as XSOM.
+     * @see org.jvnet.wom.api.parser.XMLSchemaParser
+     */
+    private ContentHandler schemaContentHandler;
 
 
     private final Vector<Patch> patchers = new Vector<Patch>();

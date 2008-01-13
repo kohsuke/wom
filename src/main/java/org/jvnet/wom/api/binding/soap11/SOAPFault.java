@@ -43,49 +43,27 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public final class SOAPFault extends WSDLExtension {
-    private String[] encodingStyle;
-    private String namespace;
-    private SOAPBody.Use use;
-    private String name;
-
+public interface SOAPFault extends WSDLExtension {
     public static final QName SOAPFAULT_NAME = new QName(SOAPBinding.SOAP_NS, "fault");
 
-    public void setEncodingStyle(String[] encodingStyle) {
-        this.encodingStyle = encodingStyle;
-    }
+    /**
+     * Maybe null. It is supposed to be non-null only for the encoded case.
+     */
+    public String[] getEncodingStyle();
 
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
+    /**
+     * null when {@link SOAPBinding.Style} is Document, otherwise will be non-null.
+     */
+    public String getNamespace();
 
-    public void setUse(SOAPBody.Use use) {
-        this.use = (use == null) ? SOAPBody.Use.literal : null;
-    }
+    /**
+     * If not specified on &lt;soap:body> the default value is literal.
+     */
+    public SOAPBody.Use getUse();
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String[] getEncodingStyle() {
-        return encodingStyle;
-    }
-
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public SOAPBody.Use getUse() {
-        return use;
-    }
-
-    public String getFaultName() {
-        return name;
-    }
-
-    public QName getName() {
-        return SOAPFAULT_NAME;
-    }
-
-
+    /**
+     * &lt;wsdl:fault@name value.
+     * @return May be null
+     */
+    public String getFaultName();
 }

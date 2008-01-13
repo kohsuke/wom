@@ -39,78 +39,33 @@ package org.jvnet.wom.api.binding.soap11;
 import org.jvnet.wom.api.WSDLExtension;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author Vivek Pandey
  */
-public final class SOAPBody extends WSDLExtension {
-    private String[] encodingStyle;
-    private String namespace;
-    private Use use;
-    private List<String> parts;
-
+public interface SOAPBody extends WSDLExtension {
     public static final QName SOAPBODY_NAME = new QName(SOAPBinding.SOAP_NS, "body");
-
-    public void setEncodingStyle(String[] encodingStyle) {
-        this.encodingStyle = encodingStyle;
-    }
-
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
-
-    public void setUse(Use use) {
-        this.use = (use == null) ? Use.literal : use;
-    }
-
-    public void setParts(String[] parts) {
-        // The soap:body parts attribute could be an empty string, which means no part is
-        // bound to body. Otherwise if present would represent space delimited parts (NMTOKENS)
-        if (parts != null) {
-            List<String> tmpList = new ArrayList<String>();
-            for (String part : parts) {
-                tmpList.add(part);
-            }
-            this.parts = Collections.unmodifiableList(tmpList);
-        } else {
-            this.parts = null;
-        }
-    }
 
     /**
      * Maybe null. It is supposed to be non-null only for the encoded case.
      */
-    public String[] getEncodingStyle() {
-        return encodingStyle;
-    }
+    public String[] getEncodingStyle();
 
     /**
      * null when {@link SOAPBinding.Style} is Document, otherwise will be non-null.
      */
-    public String getNamespace() {
-        return namespace;
-    }
+    public String getNamespace();
 
     /**
      * If not specified on &lt;soap:body> the default value is literal.
      */
-    public Use getUse() {
-        return use;
-    }
-
-    public QName getName() {
-        return SOAPBODY_NAME;
-    }
+    public Use getUse();
 
     /**
      * null if parts attribute is not defined on &lt;soap:body> element, otherwise non-null.
      */
-    public List<String> getParts() {
-        return parts;
-    }
+    public Collection<String> getParts();
 
     public enum Use {
         literal, encoded

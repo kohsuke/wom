@@ -34,59 +34,29 @@
  * holder.
  */
 
-package org.jvnet.wom.api.binding.soap11;
+package org.jvnet.wom.impl.extension.soap11;
 
-import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.binding.soap11.SOAPAddress;
+import org.jvnet.wom.api.binding.soap11.SOAPBinding;
+import org.jvnet.wom.api.WSDLEntity;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-abstract class HeaderAttributes extends WSDLExtension {
-    QName message;
-    String part;
-    SOAPBody.Use use;
-    String[] encodingStyle;
-    String namespace;
-
-    public QName getMessage() {
-        return message;
+public class SOAPAddressImpl implements SOAPAddress {
+    private  String location;
+    
+    public String getLocation() {
+        return location;
     }
 
-    public void setMessage(QName message) {
-        this.message = message;
+    public QName getName() {
+        return SOAPADDRESS_NAME;
     }
 
-    public String getPart() {
-        return part;
-    }
-
-    public void setPart(String part) {
-        this.part = part;
-    }
-
-    public SOAPBody.Use getUse() {
-        return use;
-    }
-
-    public void setUse(SOAPBody.Use use) {
-        this.use = use;
-    }
-
-    public String[] getEncodingStyle() {
-        return encodingStyle;
-    }
-
-    public void setEncodingStyle(String[] encodingStyle) {
-        this.encodingStyle = encodingStyle;
-    }
-
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

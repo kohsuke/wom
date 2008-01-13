@@ -43,21 +43,14 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public final class SOAPAddress extends WSDLExtension {
-    private  String location;
-
+public  interface SOAPAddress extends WSDLExtension {
     public static final QName SOAPADDRESS_NAME = new QName(SOAPBinding.SOAP_NS, "address");
+    
+    /**
+     * &lt;soap:address@location value
+     *
+     * @return may be null
+     */
+    public String getLocation();
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-
-    public QName getName() {
-        return SOAPADDRESS_NAME;
-    }
 }

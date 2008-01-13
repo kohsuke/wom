@@ -35,7 +35,6 @@
  */
 package parsing;
 
-import com.sun.tools.xjc.api.S2JJAXBModel;
 import junit.framework.TestCase;
 import org.jvnet.wom.api.WSDLBoundInput;
 import org.jvnet.wom.api.WSDLBoundOperation;
@@ -136,7 +135,7 @@ public class WSDLParsingTest extends TestCase {
         SOAPBody body = boundInput.getExtension(SOAPBody.class);
         assertNotNull(body);
         assertEquals(body.getUse(), SOAPBody.Use.literal);
-        assertEquals(body.getParts().get(0), "reqBody");
+        assertEquals(body.getParts().iterator().next(), "reqBody");
 
         WSDLBoundOutput boundOutput = boundOp.getOutput();
         assertNotNull(boundOutput);
@@ -145,7 +144,7 @@ public class WSDLParsingTest extends TestCase {
         body = boundOutput.getExtension(SOAPBody.class);
         assertNotNull(body);
         assertEquals(body.getUse(), SOAPBody.Use.literal);
-        assertEquals(body.getParts().get(0), "respBody");
+        assertEquals(body.getParts().iterator().next(), "respBody");
 
         WSDLService service = def.getService(new QName("http://example.com/wsdl", "HelloService"));
         assertNotNull(service);
@@ -176,10 +175,10 @@ public class WSDLParsingTest extends TestCase {
         WSDLSet wsdls = parser.parse(is);
         assertTrue(wsdls.getWSDLs().iterator().hasNext());
         WSDLDefinitions def = wsdls.getWSDLs().iterator().next();
-        handler.freez();
+        handler.freeze();
         WSDLPortType pt = def.getPortTypes().iterator().next();
         WSDLOperation operation = pt.getOperations().iterator().next();
         WSDLPart part = operation.getInput().getMessage().parts().iterator().next();
-        assertEquals(handler.resolveElement(part.getDescriptor().name()).getType().getTypeClass().fullName(), "com.example.types.EchoType");
+        assertEquals(handler.getSchema().resolveElement(part.getDescriptor().name()).getType().getTypeClass().fullName(), "com.example.types.EchoType");
     }
 }

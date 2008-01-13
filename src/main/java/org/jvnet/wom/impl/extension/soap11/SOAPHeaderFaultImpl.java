@@ -34,17 +34,18 @@
  * holder.
  */
 
-package org.jvnet.wom.api.binding.soap11;
+package org.jvnet.wom.impl.extension.soap11;
 
-import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.binding.soap11.SOAPHeaderFault;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public interface SOAPOperation extends WSDLExtension {
-    public static final QName SOAPOPERATION_NAME = new QName(SOAPBinding.SOAP_NS, "operation");
-    public String getSoapAction();
-    public SOAPBinding.Style getStyle();
+public class SOAPHeaderFaultImpl extends HeaderAttributes implements SOAPHeaderFault {
+
+    public QName getName() {
+        return SOAPHEADERFAULT_NAME;
+    }
 }

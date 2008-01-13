@@ -33,11 +33,13 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl.extension;
+package org.jvnet.wom.impl.extension.soap11;
 
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.binding.soap11.SOAPBinding;
 import org.jvnet.wom.impl.util.XmlUtil;
+import org.jvnet.wom.impl.extension.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.impl.extension.Messages;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -52,10 +54,10 @@ import java.util.Collections;
 /**
  * @author Vivek Pandey
  */
-public class SOAPBindingExtensionHandler extends  AbstractWSDLExtensionHandler  {
+public class SOAPBindingExtensionHandler extends AbstractWSDLExtensionHandler {
 
     private final ContentHandler soapBindingCH = new SOAPBindingCH();
-    private SOAPBinding binding;
+    private SOAPBindingImpl binding;
 
     public SOAPBindingExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
         super(errorHandler, entityResolver);
@@ -98,7 +100,7 @@ public class SOAPBindingExtensionHandler extends  AbstractWSDLExtensionHandler  
                 } else if (styleattr.length() > 0) {
                     errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "style", styleattr, "document or rpc"), locator));
                 }
-                binding = new SOAPBinding();
+                binding = new SOAPBindingImpl();
                 binding.setTransport(transport);
                 binding.setStyle(style);
             }

@@ -34,12 +34,13 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.extension;
+package org.jvnet.wom.impl.extension.soap11;
 
 import org.jvnet.wom.api.WSDLExtension;
-import org.jvnet.wom.api.binding.soap11.SOAPBinding;
-import org.jvnet.wom.api.binding.soap11.SOAPOperation;
+import org.jvnet.wom.api.binding.soap11.SOAPBody;
 import org.jvnet.wom.impl.util.XmlUtil;
+import org.jvnet.wom.impl.extension.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.impl.extension.Messages;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -54,51 +55,59 @@ import java.util.Collections;
 /**
  * @author Vivek Pandey
  */
-public class SOAPOperationExtensionHandler extends AbstractWSDLExtensionHandler {
-    private SOAPOperation operation;
+public class SOAPBodyExtensionHandler extends AbstractWSDLExtensionHandler {
+    private final ContentHandler contentHandler = new SOAPBodyCH();
 
-    public SOAPOperationExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
+    private SOAPBodyImpl body;
+
+    public SOAPBodyExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
         super(errorHandler, entityResolver);
     }
 
-    protected QName getExtensionName() {
-        return SOAPOperation.SOAPOPERATION_NAME;
+    public Collection<WSDLExtension> getExtension() {
+        return Collections.<WSDLExtension>singleton(body);
     }
 
-    public Collection<WSDLExtension> getExtension() {
-        return Collections.<WSDLExtension>singleton(operation);
+    protected QName getExtensionName() {
+        return SOAPBody.SOAPBODY_NAME;
     }
 
     protected ContentHandler getContentHandler() {
         return contentHandler;
     }
 
-    private final ContentHandler contentHandler = new SOAPOperationCH();
-
-    private class SOAPOperationCH extends WSDLExtensibilityContentHandler{
+    private class SOAPBodyCH extends WSDLExtensibilityContentHandler {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            if (!uri.equals(SOAPOperation.SOAPOPERATION_NAME.getNamespaceURI()) ||
-                    !localName.equals(SOAPOperation.SOAPOPERATION_NAME.getLocalPart()))
+            if(!uri.equals(SOAPBody.SOAPBODY_NAME.getNamespaceURI()) ||
+                    !localName.equals(SOAPBody.SOAPBODY_NAME.getLocalPart()))
                 return;
 
-            String soapAction = atts.getValue("soapAction");
-
-            soapAction = XmlUtil.fixNull(soapAction);
-
-            String styleattr = XmlUtil.fixNull(atts.getValue("style"));
-            SOAPBinding.Style style = null;
-
-            if (styleattr.equals("rpc")) {
-                style = SOAPBinding.Style.Rpc;
-            } else if (styleattr.equals("document")) {
-                style = SOAPBinding.Style.Document;
-            } else if (styleattr.length() > 0) {
-                errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "style", styleattr, "document or rpc"), locator));
+            String encodingStyleAtt = atts.getValue("encodingStyle");
+            String[] encodingStyle = null;
+            if(encodingStyleAtt != null){
+                encodingStyle = encodingStyleAtt.split("\\s");
             }
-            operation = new SOAPOperation();
-            operation.setSoapAction(soapAction);
-            operation.setStyle(style);
+
+            String namespace = atts.getValue("namespace");
+            String useatt = XmlUtil.fixNull(atts.getValue("use")).trim();
+            SOAPBody.Use use = SOAPBody.Use.literal;
+            if(useatt.equals("encoded")){
+                use = SOAPBody.Use.encoded;
+            }else if(!useatt.equals("literal")){
+                errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "use", useatt, "literal or encoded"), locator));
+            }
+
+            String partsAtt = atts.getValue("parts");
+            String[] parts = null;
+            if(partsAtt != null){
+                parts = partsAtt.split("\\s");
+            }
+            body = new SOAPBodyImpl();
+            body.setParts(parts);
+            body.setEncodingStyle(encodingStyle);
+            body.setNamespace(namespace);
+            body.setUse(use);
         }
     }
 }

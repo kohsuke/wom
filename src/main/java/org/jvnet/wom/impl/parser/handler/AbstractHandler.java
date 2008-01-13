@@ -264,7 +264,7 @@ public abstract class AbstractHandler implements WSDLEventReceiver {
 
     }
 
-    private List<WSDLExtensionHandler> handlers = new ArrayList<WSDLExtensionHandler>();
+    protected List<WSDLExtensionHandler> handlers = new ArrayList<WSDLExtensionHandler>();
 
 //    void startProcessingExtentionElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
 //        WSDLExtensionHandler handler = getRuntime().parser.getWSDLExtensionHandler(uri, localName);

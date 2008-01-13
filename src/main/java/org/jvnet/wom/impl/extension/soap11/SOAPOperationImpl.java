@@ -34,17 +34,38 @@
  * holder.
  */
 
-package org.jvnet.wom.api.binding.soap11;
+package org.jvnet.wom.impl.extension.soap11;
 
-import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.binding.soap11.SOAPOperation;
+import org.jvnet.wom.api.binding.soap11.SOAPBinding;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public interface SOAPOperation extends WSDLExtension {
-    public static final QName SOAPOPERATION_NAME = new QName(SOAPBinding.SOAP_NS, "operation");
-    public String getSoapAction();
-    public SOAPBinding.Style getStyle();
+public class SOAPOperationImpl implements SOAPOperation {
+    private String soapAction;
+    private SOAPBinding.Style style;
+
+    public void setSoapAction(String soapAction) {
+        this.soapAction = soapAction;
+    }
+
+    public void setStyle(SOAPBinding.Style style) {
+        this.style = style;
+    }
+
+    public String getSoapAction() {
+        return soapAction;
+    }
+
+    public SOAPBinding.Style getStyle() {
+        return style;
+    }
+
+    public QName getName() {
+        return SOAPOPERATION_NAME;
+    }
+
 }

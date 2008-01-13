@@ -36,15 +36,15 @@
 
 package org.jvnet.wom.api.binding.soap11;
 
+import org.jvnet.wom.api.WSDLExtension;
+
 import javax.xml.namespace.QName;
 
 /**
+ * Marker interface of soap:headerfault elements.
  * @author Vivek Pandey
  */
-public final class SOAPHeaderFault extends HeaderAttributes {
+public interface SOAPHeaderFault extends WSDLExtension {
     public static final QName SOAPHEADERFAULT_NAME = new QName(SOAPBinding.SOAP_NS, "headerfault");
 
-    public QName getName() {
-        return SOAPHEADERFAULT_NAME;
-    }
 }

@@ -37,10 +37,13 @@
 package org.jvnet.wom.impl.parser.handler;
 
 import org.jvnet.wom.api.parser.WSDLEventSource;
+import org.jvnet.wom.api.parser.WSDLExtensionHandler;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.impl.parser.WSDLTypesImpl;
+import org.jvnet.wom.impl.extension.XMLSchemaParserImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.ContentHandler;
 
 import javax.xml.namespace.QName;
 
@@ -74,7 +77,27 @@ public class Types extends AbstractHandler{
         if (uri.equals(WSDL_NS) && localName.equals("types")) {
             types = new WSDLTypesImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getTargetNamespace(), ""), runtime.document);
         }else{//schema extensibility element
-            super.enterElement(uri, localName, qname, atts);
+            boolean noCh = true;
+            getRuntime().onEnterElementConsumed(uri, localName, qname, atts);
+            for(WSDLExtensionHandler extensionHandler:getRuntime().parser.getWSDLExtensionHandlers()){
+                ContentHandler ch = extensionHandler.getContentHandlerFor(uri, localName);
+                if(ch == null)
+                    continue;
+                getRuntime().redirectSubtree(ch, uri, localName, qname);
+                noCh = false;
+                handlers.add(extensionHandler);
+            }
+
+            //Lets check if there is no XML schema handlers
+            if(noCh && uri.equals("http://www.w3.org/2001/XMLSchema") &&
+                    localName.equals("schema")){
+                //let us try the default XSOM
+                XMLSchemaParserImpl xsomParser = new XMLSchemaParserImpl(runtime.getErrorHandler(), runtime.parser.getEntityResolver());
+                ContentHandler ch = xsomParser.getContentHandlerFor(uri, localName);
+                assert ch != null;
+                getRuntime().redirectSubtree(xsomParser.getContentHandlerFor(uri, localName), uri, localName, qname);
+                handlers.add(xsomParser);
+            }
         }
     }
 

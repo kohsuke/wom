@@ -33,11 +33,13 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl.extension;
+package org.jvnet.wom.impl.extension.soap11;
 
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.binding.soap11.SOAPAddress;
 import org.jvnet.wom.api.binding.soap11.SOAPBinding;
+import org.jvnet.wom.impl.extension.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.impl.extension.Messages;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -52,9 +54,9 @@ import java.util.Collections;
 /**
  * @author Vivek Pandey
  */
-public class SOAPAddressExtensionHandler extends  AbstractWSDLExtensionHandler {
+public class SOAPAddressExtensionHandler extends AbstractWSDLExtensionHandler {
 
-    private SOAPAddress address;
+    private SOAPAddressImpl address;
     private final ContentHandler contentHandler = new SOAPAddressCH();
 
 
@@ -86,7 +88,7 @@ public class SOAPAddressExtensionHandler extends  AbstractWSDLExtensionHandler {
                 if(location == null){
                     errorHandler.error(new SAXParseException(Messages.format(Messages.MISSING_ATTR, "location", "soap:address"), locator));
                 }
-                address = new SOAPAddress();
+                address = new SOAPAddressImpl();
                 address.setLocation(location);
             }
         }

@@ -41,8 +41,11 @@ import com.sun.tools.xjc.api.SchemaCompiler;
 import com.sun.tools.xjc.api.XJC;
 import com.sun.tools.xjc.api.Mapping;
 import com.sun.tools.xjc.api.TypeAndAnnotation;
+import com.sun.xml.xsom.XSElementDecl;
+import com.sun.xml.xsom.XSType;
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.parser.XMLSchemaParser;
+import org.jvnet.wom.Schema;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -57,7 +60,7 @@ import java.util.Collections;
 /**
  * @author Vivek Pandey
  */
-public class XMLSchemaExtensionHandler implements XMLSchemaParser<Mapping, TypeAndAnnotation> {
+public class XMLSchemaExtensionHandler implements XMLSchemaParser{
     private final ErrorHandler errorHandler;
     private final EntityResolver entityResolver;
 
@@ -86,23 +89,21 @@ public class XMLSchemaExtensionHandler implements XMLSchemaParser<Mapping, TypeA
     }
 
     public ContentHandler getContentHandlerFor(String nsUri, String localName) {
-        return (XMLSchema.XMLSCHEMA_NAME.getNamespaceURI().equals(nsUri) &&
-        XMLSchema.XMLSCHEMA_NAME.getLocalPart().equals(localName))?delegatingHandler:null;
+        return ("http://www.w3.org/2001/XMLSchema".equals(nsUri) &&
+        "schema".equals(localName))?delegatingHandler:null;
     }
 
     private S2JJAXBModel model;
 
-    public Mapping resolveElement(QName elementName) {
-        return model.get(elementName);
+    public Schema<Mapping, TypeAndAnnotation> getSchema() {
+        return xmlschema;
     }
 
-    public TypeAndAnnotation resolveType(QName typeName) {
-        return model.getJavaType(typeName);
-    }
-
-    public void freez() {
+    public void freeze() {
         model = schemaCompiler.bind();
+        xmlschema = new XMLSchema();
     }
+
     private class XMLSchemaCH extends XMLFilterImpl {
         private int counter=0;
 
@@ -116,5 +117,23 @@ public class XMLSchemaExtensionHandler implements XMLSchemaParser<Mapping, TypeA
             super.setContentHandler(schemaHandler);
         }
     }
+
+    private Schema<Mapping, TypeAndAnnotation> xmlschema;
+
+    private class XMLSchema implements Schema<Mapping, TypeAndAnnotation>{
+
+        public QName getName() {
+            return new QName("http://www.w3.org/2001/XMLSchema", "schema");
+        }
+
+        public Mapping resolveElement(QName elementName) {
+            return model.get(elementName);
+        }
+
+        public TypeAndAnnotation resolveType(QName typeName) {
+            return model.getJavaType(typeName);
+        }
+    }
+
 
 }

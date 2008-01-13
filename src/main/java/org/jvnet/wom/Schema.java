@@ -34,7 +34,7 @@
  * holder.
  */
 
-package org.jvnet.wom.api.binding.soap11;
+package org.jvnet.wom;
 
 import org.jvnet.wom.api.WSDLExtension;
 
@@ -43,8 +43,7 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public interface SOAPOperation extends WSDLExtension {
-    public static final QName SOAPOPERATION_NAME = new QName(SOAPBinding.SOAP_NS, "operation");
-    public String getSoapAction();
-    public SOAPBinding.Style getStyle();
+public interface Schema<E, T> extends WSDLExtension {
+    E resolveElement(QName elementName);
+    T resolveType(QName typeName);
 }

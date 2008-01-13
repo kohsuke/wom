@@ -36,27 +36,29 @@
 
 package org.jvnet.wom.api.binding.soap11;
 
+import org.jvnet.wom.api.WSDLExtension;
+
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public final class SOAPHeader extends HeaderAttributes{
-    private final List<SOAPHeaderFault> headerFaults = new ArrayList<SOAPHeaderFault>();
-
+public interface SOAPHeader extends WSDLExtension {
     public static final QName SOAPHEADER_NAME = new QName(SOAPBinding.SOAP_NS, "header");
 
-    public QName getName() {
-        return SOAPHEADER_NAME;
-    }
+    /**
+     * Gives iterator over header faults with this soap:header element
+     */
+    public Iterable<SOAPHeaderFault> getHeaderFaults();
 
-    public void addHeaderFault(SOAPHeaderFault headerFault) {
-        headerFaults.add(headerFault);
-    }
+    public QName getMessage();
 
-    public Iterable<SOAPHeaderFault> getHeaderFaults() {
-        return headerFaults;
-    }
+    public String getPart();
+
+    public SOAPBody.Use getUse();
+
+    public String[] getEncodingStyle();
+
+    public String getNamespace();
+
 }

@@ -42,31 +42,23 @@ import javax.xml.namespace.QName;
 /**
  * @author Vivek Pandey
  */
-public final class SOAPBinding extends WSDLExtension {
+public interface SOAPBinding extends WSDLExtension {    
     public static final String SOAP_NS = "http://schemas.xmlsoap.org/wsdl/soap/";
     public static final QName SOAPBinding_NAME = new QName(SOAP_NS, "binding");
-    private String transport;
-    private Style style;
 
-    public QName getName() {
-        return SOAPBinding_NAME;
-    }
+    /**
+     * &lt;soap:binding@style value. This tells whether the binding
+     * is Document or Literal style.
+     *
+     * @return may be null
+     */
+    public Style getStyle();
 
-    public Style getStyle() {
-        return style;
-    }
-
-    public String getTransport() {
-        return transport;
-    }
-
-    public void setTransport(String transport) {
-        this.transport = transport;
-    }
-
-    public void setStyle(Style style) {
-        this.style = style;
-    }
+    /**
+     * &lt;soap:binding@transport value
+     * @return may be null
+     */
+    public String getTransport();
 
     public enum Style {
         Document, Rpc

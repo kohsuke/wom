@@ -34,24 +34,32 @@
  * holder.
  */
 
-package org.jvnet.wom.impl;
+package org.jvnet.wom.impl.extension.soap11;
 
-import org.jvnet.wom.api.WSDLEntity;
-import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.binding.soap11.SOAPHeader;
+import org.jvnet.wom.api.binding.soap11.SOAPHeaderFault;
+
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
  * @author Vivek Pandey
  */
-public abstract class AbstractWSDLExtension extends WSDLExtension {
-    private WSDLEntity owner;
+public class SOAPHeaderImpl  extends HeaderAttributes implements SOAPHeader{
+    private final List<SOAPHeaderFault> headerFaults = new ArrayList<SOAPHeaderFault>();
 
-    public void setOwner(WSDLEntity owner) {
-        this.owner = owner;
+
+    public QName getName() {
+        return SOAPHEADER_NAME;
     }
 
-    public WSDLEntity getOwner() {
-        return owner;
+    public void addHeaderFault(SOAPHeaderFault headerFault) {
+        headerFaults.add(headerFault);
     }
-    
+
+    public Iterable<SOAPHeaderFault> getHeaderFaults() {
+        return headerFaults;
+    }
+
 }
