@@ -35,6 +35,8 @@
  */
 package org.jvnet.wom.api;
 
+import java.util.Collection;
+
 /**
  * Interface that represents WSDL concepts that
  * can have extensions.
@@ -45,7 +47,7 @@ package org.jvnet.wom.api;
 public interface WSDLExtensible {
     /**
      * Gets all the {@link WSDLExtension}s
-     * added through {@link #addExtension(WSDLExtension)}.
+     * added through {@link #addExtension(Collection<WSDLExtension>)}.
      *
      * @return never null.
      */
@@ -73,5 +75,5 @@ public interface WSDLExtensible {
      *
      * @param extension must not be null.
      */
-    void addExtension(WSDLExtension extension);
+    void addExtension(Collection<WSDLExtension> extension);
 }

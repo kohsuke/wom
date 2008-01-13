@@ -40,6 +40,7 @@ import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -119,11 +120,8 @@ public abstract class WSDLEntity implements WSDLExtensible {
         return null;
     }
 
-    public void addExtension(WSDLExtension extension) {
-        if (extension == null)
-            throw new IllegalArgumentException();
-        extension.owner = this;
-        extensions.add(extension);
+    public void addExtension(Collection<WSDLExtension> extensions) {
+        this.extensions.addAll(extensions);
     }
 
     protected void setOwnerWSDLDocument(WSDLDocumentImpl wsdlDocument) {

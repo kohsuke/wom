@@ -36,12 +36,13 @@
 package org.jvnet.wom.impl.parser.handler;
 
 import org.jvnet.wom.api.WSDLEntity;
-import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
-import org.jvnet.wom.impl.parser.WSDLDocumentParser;
 import org.jvnet.wom.api.parser.WSDLEventReceiver;
 import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.jvnet.wom.api.parser.WSDLExtensionHandler;
+import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.parser.WSDLDocumentParser;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -52,6 +53,7 @@ import java.util.List;
 
 public abstract class AbstractHandler implements WSDLEventReceiver {
     protected static final String WSDL_NS = "http://schemas.xmlsoap.org/wsdl/";
+
 
     protected AbstractHandler(WSDLEventSource source, AbstractHandler parent, int parentCookie) {
 
@@ -208,20 +210,36 @@ public abstract class AbstractHandler implements WSDLEventReceiver {
     private WSDLDocumentParser docParser;
 
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
+        boolean noCh = true;
         if (WSDL_NS.equals(uri) && localName.equals("documentation")) {
             getRuntime().onEnterElementConsumed(uri, localName, qname, atts);
             docParser = new WSDLDocumentParser();
             getRuntime().redirectSubtree(docParser, uri, localName, qname);
         } else { //extensibility elements
-            WSDLExtensionHandler handler = getRuntime().parser.getWSDLExtensionHandler(uri, localName);
-            if (handler != null) {
-                handlers.add(handler);
-                getRuntime().onEnterElementConsumed(uri, localName, qname, atts);
-                getRuntime().redirectSubtree(handler.getContentHandler(), uri, localName, qname);
-            } else {
-                getRuntime().getErrorHandler().warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ELEMENT, new QName(uri, localName)), getRuntime().getLocator()));
+            getRuntime().onEnterElementConsumed(uri, localName, qname, atts);            
+            for(WSDLExtensionHandler extensionHandler:getRuntime().parser.getWSDLExtensionHandlers()){
+                ContentHandler ch = extensionHandler.getContentHandlerFor(uri, localName);
+                if(ch == null)
+                    continue;
+                getRuntime().redirectSubtree(ch, uri, localName, qname);
+                noCh = false;
+                handlers.add(extensionHandler);
             }
+            if(noCh)
+                getRuntime().getErrorHandler().warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ELEMENT, new QName(uri, localName)), getRuntime().getLocator()));
         }
+
+
+
+//            WSDLExtensionHandler handler = getRuntime().parser.getWSDLExtensionHandler(uri, localName);
+//            if (handler != null) {
+//                handlers.add(handler);
+//                getRuntime().onEnterElementConsumed(uri, localName, qname, atts);
+//                getRuntime().redirectSubtree(handler.getContentHandler(), uri, localName, qname);
+//            } else {
+//                getRuntime().getErrorHandler().warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ELEMENT, new QName(uri, localName)), getRuntime().getLocator()));
+//            }
+//        }
     }
 
     protected String getWSDLDocumentation() {
@@ -248,16 +266,16 @@ public abstract class AbstractHandler implements WSDLEventReceiver {
 
     private List<WSDLExtensionHandler> handlers = new ArrayList<WSDLExtensionHandler>();
 
-    void startProcessingExtentionElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
-        WSDLExtensionHandler handler = getRuntime().parser.getWSDLExtensionHandler(uri, localName);
-        if (handler != null) {
-            handlers.add(handler);
-            getRuntime().onEnterElementConsumed(uri, localName, qname, atts);
-            getRuntime().redirectSubtree(handler.getContentHandler(), uri, localName, qname);
-        } else {
-            getRuntime().getErrorHandler().warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ELEMENT, new QName(uri, localName)), getRuntime().getLocator()));
-        }
-    }
+//    void startProcessingExtentionElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
+//        WSDLExtensionHandler handler = getRuntime().parser.getWSDLExtensionHandler(uri, localName);
+//        if (handler != null) {
+//            handlers.add(handler);
+//            getRuntime().onEnterElementConsumed(uri, localName, qname, atts);
+//            getRuntime().redirectSubtree(handler.getContentHandler(), uri, localName, qname);
+//        } else {
+//            getRuntime().getErrorHandler().warning(new SAXParseException(Messages.format(Messages.UNKNOWN_ELEMENT, new QName(uri, localName)), getRuntime().getLocator()));
+//        }
+//    }
 
     void endProcessingExtentionElement(WSDLEntity entity) {
         for (WSDLExtensionHandler handler : handlers) {
@@ -287,7 +305,6 @@ public abstract class AbstractHandler implements WSDLEventReceiver {
     public void unexpectedLeaveAttribute(String qname) throws SAXException {
         getRuntime().unexpectedX("/@" + qname);
     }
-
 }
 
 

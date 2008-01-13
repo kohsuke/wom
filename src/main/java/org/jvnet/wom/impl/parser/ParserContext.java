@@ -36,6 +36,9 @@
 package org.jvnet.wom.impl.parser;
 
 import org.jvnet.wom.api.WSDLSet;
+import org.jvnet.wom.api.parser.WOMParser;
+import org.jvnet.wom.api.parser.WSDLExtensionHandler;
+import org.jvnet.wom.api.parser.XMLParser;
 import org.jvnet.wom.impl.extension.SOAPAddressExtensionHandler;
 import org.jvnet.wom.impl.extension.SOAPBindingExtensionHandler;
 import org.jvnet.wom.impl.extension.SOAPBodyExtensionHandler;
@@ -43,10 +46,6 @@ import org.jvnet.wom.impl.extension.SOAPFaultExtensionHandler;
 import org.jvnet.wom.impl.extension.SOAPHeaderExtensionHandler;
 import org.jvnet.wom.impl.extension.SOAPHeaderFaultExtensionHandler;
 import org.jvnet.wom.impl.extension.SOAPOperationExtensionHandler;
-import org.jvnet.wom.impl.util.QNameMap;
-import org.jvnet.wom.api.parser.WOMParser;
-import org.jvnet.wom.api.parser.WSDLExtensionHandler;
-import org.jvnet.wom.api.parser.XMLParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -57,7 +56,9 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -82,11 +83,12 @@ public class ParserContext {
 
     final XMLParser parser;
 
-    private final QNameMap<WSDLExtensionHandler> extensionMap = new QNameMap<WSDLExtensionHandler>();
+    private final Set<WSDLExtensionHandler> extensionMap = new HashSet<WSDLExtensionHandler>();
 
     private void addKnownWSDLExtensionHandler(WSDLExtensionHandler... extensionHandlers){
         for(WSDLExtensionHandler extensionHandler:extensionHandlers){
-            extensionMap.put(extensionHandler.extensibilityName(), extensionHandler);
+            extensionMap.add(extensionHandler);
+            //extensionMap.put(extensionHandler.extensibilityName(), extensionHandler);
         }
     }
     
@@ -246,10 +248,16 @@ public class ParserContext {
     };
 
     public void addWSDLExtensionHandler(WSDLExtensionHandler extension) {
-        extensionMap.put(extension.extensibilityName(), extension);
+//        extensionMap.put(extension.extensibilityName(), extension);
+        extensionMap.add(extension);
     }
 
-    public WSDLExtensionHandler getWSDLExtensionHandler(String uri, String localName){
-        return extensionMap.get(uri, localName);
+
+//    public WSDLExtensionHandler getWSDLExtensionHandler(String uri, String localName){
+//        return extensionMap.get(uri, localName);
+//    }
+
+    public Set<WSDLExtensionHandler> getWSDLExtensionHandlers(){
+        return extensionMap;
     }
 }

@@ -39,21 +39,28 @@ package parsing;
 import com.sun.tools.xjc.api.S2JJAXBModel;
 import com.sun.tools.xjc.api.SchemaCompiler;
 import com.sun.tools.xjc.api.XJC;
+import com.sun.tools.xjc.api.Mapping;
+import com.sun.tools.xjc.api.TypeAndAnnotation;
 import org.jvnet.wom.api.WSDLExtension;
-import org.jvnet.wom.api.parser.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.api.parser.XMLSchemaParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Vivek Pandey
  */
-public class XMLSchemaExtensionHandler extends AbstractWSDLExtensionHandler {
+public class XMLSchemaExtensionHandler implements XMLSchemaParser<Mapping, TypeAndAnnotation> {
+    private final ErrorHandler errorHandler;
+    private final EntityResolver entityResolver;
+
     private XMLSchema schema = new XMLSchema();
 
     private final ContentHandler delegatingHandler = new XMLSchemaCH();
@@ -66,79 +73,48 @@ public class XMLSchemaExtensionHandler extends AbstractWSDLExtensionHandler {
     private final SchemaCompiler schemaCompiler = XJC.createSchemaCompiler();
 
     public XMLSchemaExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
-        super(errorHandler, entityResolver);
+        this.errorHandler = errorHandler;
+        this.entityResolver = entityResolver;
     }
 
-    public WSDLExtension getExtension() {
-        return schema;
+    public Collection<WSDLExtension> getExtension() {
+        return Collections.<WSDLExtension>singleton(schema);
     }
 
-    public S2JJAXBModel bind(){
-        return schemaCompiler.bind();
-    }
-    public QName extensibilityName() {
-        return XMLSchema.XMLSCHEMA_NAME;
+    public Collection<WSDLExtension> parseAttribute(Attributes atts) {
+        return null;
     }
 
-    public ContentHandler getContentHandler() {
-        return delegatingHandler;
+    public ContentHandler getContentHandlerFor(String nsUri, String localName) {
+        return (XMLSchema.XMLSCHEMA_NAME.getNamespaceURI().equals(nsUri) &&
+        XMLSchema.XMLSCHEMA_NAME.getLocalPart().equals(localName))?delegatingHandler:null;
     }
 
-    public ContentHandler getContentHandler(String systemId) {
-        return schemaCompiler.getParserHandler(systemId);
+    private S2JJAXBModel model;
+
+    public Mapping resolveElement(QName elementName) {
+        return model.get(elementName);
     }
 
-    private class XMLSchemaCH implements ContentHandler{
+    public TypeAndAnnotation resolveType(QName typeName) {
+        return model.getJavaType(typeName);
+    }
+
+    public void freez() {
+        model = schemaCompiler.bind();
+    }
+    private class XMLSchemaCH extends XMLFilterImpl {
         private int counter=0;
 
         /** This method must be called first by WOM parser otherwise there is no way to get ContentHandler from
          *  SchemaCompiler
          */
+        @Override
         public void setDocumentLocator(Locator locator) {
             schemaHandler = schemaCompiler.getParserHandler(locator.getSystemId()+"#types?schema"+counter++);
             schemaHandler.setDocumentLocator(locator);
+            super.setContentHandler(schemaHandler);
         }
-
-        public void startDocument() throws SAXException {
-            schemaHandler.startDocument();
-        }
-
-        public void endDocument() throws SAXException {
-            schemaHandler.endDocument();
-        }
-
-        public void startPrefixMapping(String prefix, String uri) throws SAXException {
-            schemaHandler.startPrefixMapping(prefix, uri);
-        }
-
-        public void endPrefixMapping(String prefix) throws SAXException {
-            schemaHandler.endPrefixMapping(prefix);
-        }
-
-        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            schemaHandler.startElement(uri, localName, qName, atts);
-        }
-
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-            schemaHandler.endElement(uri, localName, qName);
-        }
-
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            schemaHandler.characters(ch, start, length);
-        }
-
-        public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-            schemaHandler.ignorableWhitespace(ch, start, length);
-        }
-
-        public void processingInstruction(String target, String data) throws SAXException {
-            schemaHandler.processingInstruction(target, data);
-        }
-
-        public void skippedEntity(String name) throws SAXException {
-            schemaHandler.skippedEntity(name);
-        }
-
     }
 
 }

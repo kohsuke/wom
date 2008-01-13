@@ -176,10 +176,10 @@ public class WSDLParsingTest extends TestCase {
         WSDLSet wsdls = parser.parse(is);
         assertTrue(wsdls.getWSDLs().iterator().hasNext());
         WSDLDefinitions def = wsdls.getWSDLs().iterator().next();
-        S2JJAXBModel jaxbModel = handler.bind();
+        handler.freez();
         WSDLPortType pt = def.getPortTypes().iterator().next();
         WSDLOperation operation = pt.getOperations().iterator().next();
         WSDLPart part = operation.getInput().getMessage().parts().iterator().next();
-        assertEquals(jaxbModel.get(part.getDescriptor().name()).getType().getTypeClass().fullName(), "com.example.types.EchoType");
+        assertEquals(handler.resolveElement(part.getDescriptor().name()).getType().getTypeClass().fullName(), "com.example.types.EchoType");
     }
 }

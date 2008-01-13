@@ -39,7 +39,6 @@ package org.jvnet.wom.impl.extension;
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.binding.soap11.SOAPBody;
 import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.api.parser.AbstractWSDLExtensionHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -48,35 +47,34 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Vivek Pandey
  */
-public class SOAPBodyExtensionHandler extends AbstractWSDLExtensionHandler {
+public class SOAPBodyExtensionHandler extends AbstractWSDLExtensionHandler{
     private final ContentHandler contentHandler = new SOAPBodyCH();
+
     private SOAPBody body;
 
     public SOAPBodyExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
         super(errorHandler, entityResolver);
     }
 
-    public WSDLExtension getExtension() {
-        return body;
+    public Collection<WSDLExtension> getExtension() {
+        return Collections.<WSDLExtension>singleton(body);
     }
 
-    public QName extensibilityName() {
+    protected QName getExtensionName() {
         return SOAPBody.SOAPBODY_NAME;
     }
 
-    public ContentHandler getContentHandler() {
+    protected ContentHandler getContentHandler() {
         return contentHandler;
     }
 
-    public ContentHandler getContentHandler(String systemId) {
-        return contentHandler;
-    }
-
-    private class SOAPBodyCH extends WSDLExtensibilityContentHandler{
+    private class SOAPBodyCH extends WSDLExtensibilityContentHandler {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
             if(!uri.equals(SOAPBody.SOAPBODY_NAME.getNamespaceURI()) ||

@@ -67,10 +67,6 @@ public class WSDLPortTypeImpl extends WSDLPortType {
         return operations.values();
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.portType(this);
-    }
-
     public void setDocumentation(String doc) {
         this.doc = doc;
     }

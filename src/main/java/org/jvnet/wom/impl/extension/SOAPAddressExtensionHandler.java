@@ -38,7 +38,6 @@ package org.jvnet.wom.impl.extension;
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.binding.soap11.SOAPAddress;
 import org.jvnet.wom.api.binding.soap11.SOAPBinding;
-import org.jvnet.wom.api.parser.AbstractWSDLExtensionHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -47,35 +46,39 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Vivek Pandey
  */
-public class SOAPAddressExtensionHandler extends AbstractWSDLExtensionHandler {
-    private final ContentHandler contentHandler = new SOAPAddressCH();
+public class SOAPAddressExtensionHandler extends  AbstractWSDLExtensionHandler {
+
     private SOAPAddress address;
+    private final ContentHandler contentHandler = new SOAPAddressCH();
+
 
     public SOAPAddressExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
         super(errorHandler, entityResolver);
     }
 
-    public WSDLExtension getExtension() {
-        return address;
+    public Collection<WSDLExtension> getExtension() {
+        return Collections.<WSDLExtension>singleton(address);
     }
 
-    public QName extensibilityName() {
+    public Collection<WSDLExtension> parseAttribute(Attributes atts) {
+        return null;
+    }
+
+    protected QName getExtensionName() {
         return SOAPAddress.SOAPADDRESS_NAME;
     }
 
-    public ContentHandler getContentHandler() {
+    protected ContentHandler getContentHandler() {
         return contentHandler;
     }
 
-    public ContentHandler getContentHandler(String systemId) {
-        return contentHandler;
-    }
-
-    private class SOAPAddressCH extends WSDLExtensibilityContentHandler{
+    private class SOAPAddressCH extends WSDLExtensibilityContentHandler {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
             if(uri.equals(SOAPBinding.SOAP_NS) && localName.equals("address")){

@@ -36,10 +36,9 @@
 package org.jvnet.wom.api.parser;
 
 import org.jvnet.wom.api.WSDLExtension;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 
-import javax.xml.namespace.QName;
 import java.util.Collection;
 
 /**
@@ -55,17 +54,19 @@ public interface WSDLExtensionHandler {
      *
      * @return Immutable collection of  {@link WSDLExtension}
      */
-    public WSDLExtension getExtension();
+    public Collection<WSDLExtension> getExtension();
 
-    /**
-     * Gives the qualified name of wsdl extensibility element or attribute
-     */
-    public boolean extensibilityName(QName name);
+//    public void addExtensions(ExtensionReceiver receiver);
+//
+//    /**
+//     * Gives the qualified name of wsdl extensibility element or attribute
+//     */
+//    public boolean extensibilityName(QName name);
 
     /**
      * Gives the {@link ContentHandler} which will receive SAX events for the extensibility element
      */
-    public ContentHandler getContentHandler();
+//    public ContentHandler getContentHandler();
 
     /**
      * With this the extension handlers get a chance to process the extensibility attributes.
@@ -82,5 +83,4 @@ public interface WSDLExtensionHandler {
      * @param localName localName of the extensibility element, always non-null
      */
     public ContentHandler getContentHandlerFor(String nsUri, String localName);
-
 }

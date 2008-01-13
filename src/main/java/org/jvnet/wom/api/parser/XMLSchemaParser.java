@@ -43,4 +43,5 @@ import javax.xml.namespace.QName;
 public interface XMLSchemaParser<E,T> extends WSDLExtensionHandler {
     E resolveElement(QName elementName);
     T resolveType(QName typeName);
+    void freez();
 }

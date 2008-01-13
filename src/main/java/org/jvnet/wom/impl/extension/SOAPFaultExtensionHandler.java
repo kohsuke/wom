@@ -40,7 +40,6 @@ import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.binding.soap11.SOAPBody;
 import org.jvnet.wom.api.binding.soap11.SOAPFault;
 import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.api.parser.AbstractWSDLExtensionHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -49,6 +48,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Vivek Pandey
@@ -61,19 +62,19 @@ public class SOAPFaultExtensionHandler extends AbstractWSDLExtensionHandler {
         super(errorHandler, entityResolver);
     }
 
-    public WSDLExtension getExtension() {
-        return fault;
+    public Collection<WSDLExtension> getExtension() {
+        return Collections.<WSDLExtension>singleton(fault);
     }
 
-    public QName extensibilityName() {
+    public Collection<WSDLExtension> parseAttribute(Attributes atts) {
+        return null;
+    }
+
+    protected QName getExtensionName() {
         return SOAPFault.SOAPFAULT_NAME;
     }
 
-    public ContentHandler getContentHandler() {
-        return contentHandler;
-    }
-
-    public ContentHandler getContentHandler(String systemId) {
+    protected ContentHandler getContentHandler() {
         return contentHandler;
     }
 

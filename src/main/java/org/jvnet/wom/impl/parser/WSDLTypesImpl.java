@@ -51,7 +51,7 @@ public class WSDLTypesImpl extends WSDLTypes {
         setOwnerWSDLDocument(document);
     }
 
-    public void visit(WSDLVisitor visitor) {
-        visitor.types(this);
+    public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
+        return visitor.types(this, param);
     }
 }

@@ -36,10 +36,10 @@
 package org.jvnet.wom.impl.parser.handler;
 
 import org.jvnet.wom.api.WSDLPart;
+import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.jvnet.wom.impl.WSDLPartImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -155,17 +155,5 @@ public class Part extends AbstractHandler {
                 }
                 break;
         }
-    }
-
-    public void text(String value) throws SAXException {
-
-    }
-
-    public void enterAttribute(String uri, String localName, String qname) throws SAXException {
-
-    }
-
-    public void leaveAttribute(String uri, String localName, String qname) throws SAXException {
-
     }
 }

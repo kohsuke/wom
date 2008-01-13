@@ -35,8 +35,8 @@
  */
 package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.impl.WSDLDefinitionsImpl;
 import org.jvnet.wom.api.parser.WSDLDocument;
+import org.jvnet.wom.impl.WSDLDefinitionsImpl;
 
 import java.util.HashSet;
 import java.util.Set;

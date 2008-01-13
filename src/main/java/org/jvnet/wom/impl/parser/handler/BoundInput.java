@@ -36,10 +36,10 @@
 
 package org.jvnet.wom.impl.parser.handler;
 
+import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.jvnet.wom.impl.WSDLBoundInputImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

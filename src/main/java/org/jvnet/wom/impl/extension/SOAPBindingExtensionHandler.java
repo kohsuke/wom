@@ -38,7 +38,6 @@ package org.jvnet.wom.impl.extension;
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.binding.soap11.SOAPBinding;
 import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.api.parser.AbstractWSDLExtensionHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -47,11 +46,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Vivek Pandey
  */
-public class SOAPBindingExtensionHandler extends AbstractWSDLExtensionHandler {
+public class SOAPBindingExtensionHandler extends  AbstractWSDLExtensionHandler  {
 
     private final ContentHandler soapBindingCH = new SOAPBindingCH();
     private SOAPBinding binding;
@@ -60,23 +61,19 @@ public class SOAPBindingExtensionHandler extends AbstractWSDLExtensionHandler {
         super(errorHandler, entityResolver);
     }
 
-    public WSDLExtension getExtension() {
-        return binding;
+    public Collection<WSDLExtension> getExtension() {
+        return Collections.<WSDLExtension>singleton(binding);
     }
 
-    public QName extensibilityName() {
+    protected QName getExtensionName() {
         return SOAPBinding.SOAPBinding_NAME;
     }
 
-    public ContentHandler getContentHandler() {
+    protected ContentHandler getContentHandler() {
         return soapBindingCH;
     }
 
-    public ContentHandler getContentHandler(String systemId) {
-        return soapBindingCH;
-    }
-
-    private class SOAPBindingCH extends WSDLExtensibilityContentHandler{
+    private class SOAPBindingCH extends WSDLExtensibilityContentHandler {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
             if (uri.equals(SOAPBinding.SOAP_NS) && "binding".equals(localName)) {

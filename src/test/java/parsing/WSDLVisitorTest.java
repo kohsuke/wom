@@ -53,70 +53,70 @@ public class WSDLVisitorTest extends TestCase {
 
     }
 
-    private class TestVisitor implements WSDLVisitor{
+    private class TestVisitor implements WSDLVisitor<String, String>{
 
-        public void definitions(WSDLDefinitions definitions) {
-
+        public String definitions(WSDLDefinitions definitions, String param) {
+            return null;
         }
 
-        public void types(WSDLTypes types) {
-
+        public String types(WSDLTypes types, String param) {
+            return null;
         }
 
-        public void messages(WSDLMessage message) {
-
+        public String messages(WSDLMessage message, String param) {
+            return null;
         }
 
-        public void part(WSDLPart part) {
-
+        public String part(WSDLPart part, String param) {
+            return null;
         }
 
-        public void portType(WSDLPortType portType) {
-
+        public String portType(WSDLPortType portType, String param) {
+            return null;
         }
 
-        public void operation(WSDLOperation operation) {
-
+        public String operation(WSDLOperation operation, String param) {
+            return null;
         }
 
-        public void input(WSDLInput input) {
-
+        public String input(WSDLInput input, String param) {
+            return null;
         }
 
-        public void output(WSDLOutput output) {
-
+        public String output(WSDLOutput output, String param) {
+            return null;
         }
 
-        public void fault(WSDLFault fault) {
-
+        public String fault(WSDLFault fault, String param) {
+            return null;
         }
 
-        public void binding(WSDLBoundPortType binding) {
-
+        public String binding(WSDLBoundPortType binding, String param) {
+            return null;
         }
 
-        public void bindingOperation(WSDLBoundOperation boundOperation) {
-
+        public String bindingOperation(WSDLBoundOperation boundOperation, String param) {
+            return null;
         }
 
-        public void boundInput(WSDLBoundInput boundInput) {
-
+        public String boundInput(WSDLBoundInput boundInput, String param) {
+            return null;
         }
 
-        public void boundOutput(WSDLBoundOutput boundOutput) {
-
+        public String boundOutput(WSDLBoundOutput boundOutput, String param) {
+            return null;
         }
 
-        public void bindingFault(WSDLBoundFault fault) {
-
+        public String bindingFault(WSDLBoundFault fault, String param) {
+            return null;
         }
 
-        public void service(WSDLService service) {
-
+        public String service(WSDLService service, String param) {
+            return null;
         }
 
-        public void port(WSDLPort port) {
-
+        public String port(WSDLPort port, String param) {
+            return null;
         }
     }
 }

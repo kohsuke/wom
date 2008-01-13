@@ -35,7 +35,7 @@
  */
 package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.api.parser.WSDLParser;
+import org.jvnet.wom.api.parser.XMLParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -51,7 +51,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.net.URL;
 
-public class WSDLParserImpl implements WSDLParser {
+public class WSDLParserImpl implements XMLParser {
 
     private final SAXParserFactory factory;
 

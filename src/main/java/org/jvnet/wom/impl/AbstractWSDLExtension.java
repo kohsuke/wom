@@ -36,8 +36,8 @@
 
 package org.jvnet.wom.impl;
 
-import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.WSDLEntity;
+import org.jvnet.wom.api.WSDLExtension;
 
 /**
  *

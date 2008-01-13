@@ -40,7 +40,6 @@ import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.binding.soap11.SOAPBody;
 import org.jvnet.wom.api.binding.soap11.SOAPHeader;
 import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.api.parser.AbstractWSDLExtensionHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -49,6 +48,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Vivek Pandey
@@ -60,19 +61,15 @@ public class SOAPHeaderExtensionHandler extends AbstractWSDLExtensionHandler {
         super(errorHandler, entityResolver);
     }
 
-    public WSDLExtension getExtension() {
-        return header;
-    }
-
-    public QName extensibilityName() {
+    protected QName getExtensionName() {
         return SOAPHeader.SOAPHEADER_NAME;
     }
 
-    public ContentHandler getContentHandler() {
-        return contentHandler;
+    public Collection<WSDLExtension> getExtension() {
+        return Collections.<WSDLExtension>singleton(header);
     }
 
-    public ContentHandler getContentHandler(String systemId) {
+    public ContentHandler getContentHandler() {
         return contentHandler;
     }
 
