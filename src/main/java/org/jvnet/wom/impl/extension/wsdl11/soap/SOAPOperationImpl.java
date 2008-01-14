@@ -34,32 +34,52 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.extension.soap11;
+package org.jvnet.wom.impl.extension.wsdl11.soap;
 
-import org.jvnet.wom.api.binding.soap11.SOAPHeader;
-import org.jvnet.wom.api.binding.soap11.SOAPHeaderFault;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBinding;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPOperation;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public class SOAPHeaderImpl  extends HeaderAttributes implements SOAPHeader{
-    private final List<SOAPHeaderFault> headerFaults = new ArrayList<SOAPHeaderFault>();
+public class SOAPOperationImpl implements SOAPOperation {
+    private String soapAction;
+    private SOAPBinding.Style style;
+    private boolean isSOAPActionRequired = false;
+    private final QName name;
 
+    public SOAPOperationImpl(QName name) {
+        this.name = name;
+    }
+
+    public void setSoapAction(String soapAction) {
+        this.soapAction = soapAction;
+    }
+
+    public void setStyle(SOAPBinding.Style style) {
+        this.style = style;
+    }
+
+    public String getSoapAction() {
+        return soapAction;
+    }
+
+    public boolean isSOAPActionRequired() {
+        return isSOAPActionRequired;
+    }
+
+    public void setSOAPActionRequired(boolean required){
+        this.isSOAPActionRequired = required;
+    }
+
+    public SOAPBinding.Style getStyle() {
+        return style;
+    }
 
     public QName getName() {
-        return SOAPHEADER_NAME;
-    }
-
-    public void addHeaderFault(SOAPHeaderFault headerFault) {
-        headerFaults.add(headerFault);
-    }
-
-    public Iterable<SOAPHeaderFault> getHeaderFaults() {
-        return headerFaults;
+        return name;
     }
 
 }

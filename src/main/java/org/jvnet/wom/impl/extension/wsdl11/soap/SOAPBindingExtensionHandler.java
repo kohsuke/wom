@@ -33,13 +33,15 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl.extension.soap11;
+package org.jvnet.wom.impl.extension.wsdl11.soap;
 
 import org.jvnet.wom.api.WSDLExtension;
-import org.jvnet.wom.api.binding.soap11.SOAPBinding;
-import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.impl.extension.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAP11Constants;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAP12Constants;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBinding;
 import org.jvnet.wom.impl.extension.Messages;
+import org.jvnet.wom.impl.extension.wsdl11.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.impl.util.XmlUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -56,29 +58,32 @@ import java.util.Collections;
  */
 public class SOAPBindingExtensionHandler extends AbstractWSDLExtensionHandler {
 
-    private final ContentHandler soapBindingCH = new SOAPBindingCH();
+    private final ContentHandler contentHandler = new SOAPBindingCH();
     private SOAPBindingImpl binding;
+    private final QName names[] = new QName[]{SOAP11Constants.SOAPBinding_NAME, SOAP12Constants.SOAPBinding_NAME};
 
     public SOAPBindingExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
         super(errorHandler, entityResolver);
     }
 
-    public Collection<WSDLExtension> getExtension() {
+    protected QName[] getExtensionNames() {
+        return names;
+    }
+
+    public Collection<WSDLExtension> getExtensions() {
         return Collections.<WSDLExtension>singleton(binding);
     }
 
-    protected QName getExtensionName() {
-        return SOAPBinding.SOAPBinding_NAME;
-    }
-
-    protected ContentHandler getContentHandler() {
-        return soapBindingCH;
+    public ContentHandler getContentHandlerFor(String nsUri, String localName) {
+        if(canHandle(nsUri, localName))
+            return contentHandler;
+        return null;
     }
 
     private class SOAPBindingCH extends WSDLExtensibilityContentHandler {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            if (uri.equals(SOAPBinding.SOAP_NS) && "binding".equals(localName)) {
+            if (canHandle(uri, localName)) {
                 String transport = atts.getValue("transport");
 
                 if (transport == null) {
@@ -100,7 +105,7 @@ public class SOAPBindingExtensionHandler extends AbstractWSDLExtensionHandler {
                 } else if (styleattr.length() > 0) {
                     errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "style", styleattr, "document or rpc"), locator));
                 }
-                binding = new SOAPBindingImpl();
+                binding = new SOAPBindingImpl(new QName(uri, localName));
                 binding.setTransport(transport);
                 binding.setStyle(style);
             }

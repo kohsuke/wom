@@ -34,38 +34,59 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.extension.soap11;
+package org.jvnet.wom.impl.extension.wsdl11.soap;
 
-import org.jvnet.wom.api.binding.soap11.SOAPBinding;
-import org.jvnet.wom.api.WSDLEntity;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBody;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public class SOAPBindingImpl implements SOAPBinding {
-    private String transport;
-    private Style style;
-    private WSDLEntity owner;
+abstract class HeaderAttributes{
+    QName message;
+    String part;
+    SOAPBody.Use use;
+    String[] encodingStyle;
+    String namespace;
 
-    public QName getName() {
-        return SOAPBinding_NAME;
+    public QName getMessage() {
+        return message;
     }
 
-    public Style getStyle() {
-        return style;
+    public void setMessage(QName message) {
+        this.message = message;
     }
 
-    public String getTransport() {
-        return transport;
+    public String getPart() {
+        return part;
     }
 
-    public void setTransport(String transport) {
-        this.transport = transport;
+    public void setPart(String part) {
+        this.part = part;
     }
 
-    public void setStyle(Style style) {
-        this.style = style;
+    public SOAPBody.Use getUse() {
+        return use;
+    }
+
+    public void setUse(SOAPBody.Use use) {
+        this.use = use;
+    }
+
+    public String[] getEncodingStyle() {
+        return encodingStyle;
+    }
+
+    public void setEncodingStyle(String[] encodingStyle) {
+        this.encodingStyle = encodingStyle;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 }

@@ -34,14 +34,15 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.extension.soap11;
+package org.jvnet.wom.impl.extension.wsdl11.soap;
 
 import org.jvnet.wom.api.WSDLExtension;
-import org.jvnet.wom.api.binding.soap11.SOAPBody;
-import org.jvnet.wom.api.binding.soap11.SOAPFault;
-import org.jvnet.wom.impl.util.XmlUtil;
-import org.jvnet.wom.impl.extension.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAP11Constants;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAP12Constants;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBinding;
 import org.jvnet.wom.impl.extension.Messages;
+import org.jvnet.wom.impl.extension.wsdl11.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.impl.util.XmlUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -56,61 +57,60 @@ import java.util.Collections;
 /**
  * @author Vivek Pandey
  */
-public class SOAPFaultExtensionHandler extends AbstractWSDLExtensionHandler {
-    private final ContentHandler contentHandler = new SOAPFaultCH();
-    private SOAPFaultImpl fault;
-
-    public SOAPFaultExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
+public class SOAPOperationExtensionHandler extends AbstractWSDLExtensionHandler {
+    private final QName names[] = new QName[]{SOAP11Constants.SOAPOPERATION_NAME, SOAP12Constants.SOAPOPERATION_NAME};
+    private SOAPOperationImpl operation;
+    public SOAPOperationExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
         super(errorHandler, entityResolver);
     }
 
-    public Collection<WSDLExtension> getExtension() {
-        return Collections.<WSDLExtension>singleton(fault);
+    protected QName[] getExtensionNames() {
+        return names;
     }
 
-    public Collection<WSDLExtension> parseAttribute(Attributes atts) {
+    private final ContentHandler contentHandler = new SOAPOperationCH();
+
+    public Collection<WSDLExtension> getExtensions() {
+        return Collections.<WSDLExtension>singleton(operation);
+    }
+
+    public ContentHandler getContentHandlerFor(String nsUri, String localName) {
+        if(canHandle(nsUri, localName))
+            return contentHandler;
         return null;
     }
 
-    protected QName getExtensionName() {
-        return SOAPFault.SOAPFAULT_NAME;
-    }
-
-    protected ContentHandler getContentHandler() {
-        return contentHandler;
-    }
-
-    private class SOAPFaultCH extends WSDLExtensibilityContentHandler{
+    private class SOAPOperationCH extends WSDLExtensibilityContentHandler{
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            if(!uri.equals(SOAPFault.SOAPFAULT_NAME.getNamespaceURI()) ||
-                    !localName.equals(SOAPFault.SOAPFAULT_NAME.getLocalPart()))
+            if (!canHandle(uri, localName))
                 return;
 
-            String encodingStyleAtt = atts.getValue("encodingStyle");
-            String[] encodingStyle = null;
-            if(encodingStyleAtt != null){
-                encodingStyle = encodingStyleAtt.split("\\s");
+            String soapAction = atts.getValue("soapAction");
+
+            soapAction = XmlUtil.fixNull(soapAction);
+
+            String soapActionRequiredAtt = XmlUtil.fixNull(atts.getValue("soapActionRequired"));
+            boolean soapActionRequired = (soapActionRequiredAtt.equals("true") ||
+                    soapActionRequiredAtt.equals("1"));
+
+            soapAction = XmlUtil.fixNull(soapAction);
+
+            String styleattr = XmlUtil.fixNull(atts.getValue("style"));
+            SOAPBinding.Style style = null;
+
+            if (styleattr.equals("rpc")) {
+                style = SOAPBinding.Style.Rpc;
+            } else if (styleattr.equals("document")) {
+                style = SOAPBinding.Style.Document;
+            } else if (styleattr.length() > 0) {
+                errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "style", styleattr, "document or rpc"), locator));
             }
 
-            String namespace = atts.getValue("namespace");
-            String useatt = XmlUtil.fixNull(atts.getValue("use")).trim();
-            SOAPBody.Use use = SOAPBody.Use.literal;
-            if(useatt.equals("encoded")){
-                use = SOAPBody.Use.encoded;
-            }else if(!useatt.equals("literal")){
-                errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "use", useatt, "literal or encoded"), locator));
-            }
-
-            String name = atts.getValue("name");
-            if(name == null){
-                errorHandler.error(new SAXParseException(Messages.format(Messages.MISSING_ATTR, "name", "soap:fault"), locator));
-            }
-            fault = new SOAPFaultImpl();
-            fault.setEncodingStyle(encodingStyle);
-            fault.setNamespace(namespace);
-            fault.setName(name);
-            fault.setUse(use);
+            operation = new SOAPOperationImpl(new QName(uri, localName));
+            operation.setSoapAction(soapAction);
+            operation.setStyle(style);
+            operation.setSOAPActionRequired(soapActionRequired);
         }
-    }
+    }   
 }

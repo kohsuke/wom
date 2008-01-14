@@ -34,60 +34,61 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.extension.soap11;
+package org.jvnet.wom.impl.extension.wsdl11.soap;
 
-import org.jvnet.wom.api.WSDLExtension;
-import org.jvnet.wom.api.binding.soap11.SOAPBody;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBody;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPFault;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-abstract class HeaderAttributes{
-    QName message;
-    String part;
-    SOAPBody.Use use;
-    String[] encodingStyle;
-    String namespace;
+public class SOAPFaultImpl implements SOAPFault {
+    private String[] encodingStyle;
+    private String namespace;
+    private SOAPBody.Use use;
+    private String name;
+    private final QName extName;
 
-    public QName getMessage() {
-        return message;
-    }
-
-    public void setMessage(QName message) {
-        this.message = message;
-    }
-
-    public String getPart() {
-        return part;
-    }
-
-    public void setPart(String part) {
-        this.part = part;
-    }
-
-    public SOAPBody.Use getUse() {
-        return use;
-    }
-
-    public void setUse(SOAPBody.Use use) {
-        this.use = use;
-    }
-
-    public String[] getEncodingStyle() {
-        return encodingStyle;
+    public SOAPFaultImpl(QName extName) {
+        this.extName = extName;
     }
 
     public void setEncodingStyle(String[] encodingStyle) {
         this.encodingStyle = encodingStyle;
     }
 
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
+    public void setUse(SOAPBody.Use use) {
+        this.use = (use == null) ? SOAPBody.Use.literal : null;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String[] getEncodingStyle() {
+        return encodingStyle;
+    }
+
     public String getNamespace() {
         return namespace;
     }
 
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+    public SOAPBody.Use getUse() {
+        return use;
     }
+
+    public String getFaultName() {
+        return name;
+    }
+
+    public QName getName() {
+        return extName;
+    }
+
 }

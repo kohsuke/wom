@@ -33,7 +33,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl.extension;
+package org.jvnet.wom.impl.extension.wsdl11;
 
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.parser.WSDLExtensionHandler;
@@ -65,18 +65,38 @@ public abstract class AbstractWSDLExtensionHandler implements WSDLExtensionHandl
         this.entityResolver = entityResolver;
     }
 
+//    protected Set<WSDLExtension> extensions = new HashSet<WSDLExtension>();
     private final Set<WSDLExtension> EMPTY_SET = new HashSet<WSDLExtension>();
     public Collection<WSDLExtension> parseAttribute(Attributes atts) {
         return EMPTY_SET;
     }
 
-    public ContentHandler getContentHandlerFor(String nsUri, String localName) {
-        return (getExtensionName().getLocalPart().equals(localName) &&
-        getExtensionName().getNamespaceURI().equals(nsUri))?getContentHandler():null;
+//    public Collection<WSDLExtension> getExtensions() {
+//        return Collections.unmodifiableSet(extensions);
+//    }
+
+
+//    public ContentHandler getContentHandlerFor(String nsUri, String localName) {
+//        return (getExtensionName().getLocalPart().equals(localName) &&
+//        getExtensionName().getNamespaceURI().equals(nsUri))?getContentHandler():null;
+//    }
+//
+//    /* The WSDL extensibility name, such as soap:body */
+//    protected abstract QName getExtensionName();
+//    protected abstract ContentHandler getContentHandler();
+
+    /* WSDL extensibility elements supported by this extension handler */
+    protected abstract QName[] getExtensionNames();
+
+    protected boolean canHandle(String uri, String localName){
+        for(QName name: getExtensionNames()){
+            if(name.getNamespaceURI().equals(uri) &&
+                    name.getLocalPart().equals(localName))
+                return true;
+        }
+        return false;
     }
 
-    protected abstract QName getExtensionName();
-    protected abstract ContentHandler getContentHandler();
 
     protected abstract class WSDLExtensibilityContentHandler implements ContentHandler {
         protected Locator locator;

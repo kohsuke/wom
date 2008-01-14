@@ -34,29 +34,24 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.extension.soap11;
+package org.jvnet.wom.impl.extension.wsdl11.soap;
 
-import org.jvnet.wom.api.binding.soap11.SOAPAddress;
-import org.jvnet.wom.api.binding.soap11.SOAPBinding;
-import org.jvnet.wom.api.WSDLEntity;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPHeaderFault;
 
 import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey
  */
-public class SOAPAddressImpl implements SOAPAddress {
-    private  String location;
-    
-    public String getLocation() {
-        return location;
+public class SOAPHeaderFaultImpl extends HeaderAttributes implements SOAPHeaderFault {
+
+    private final QName name;
+
+    public SOAPHeaderFaultImpl(QName name) {
+        this.name = name;
     }
 
     public QName getName() {
-        return SOAPADDRESS_NAME;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
+        return name;
     }
 }

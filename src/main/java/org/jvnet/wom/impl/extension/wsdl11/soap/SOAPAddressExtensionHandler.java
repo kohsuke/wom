@@ -33,13 +33,13 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.impl.extension.soap11;
+package org.jvnet.wom.impl.extension.wsdl11.soap;
 
 import org.jvnet.wom.api.WSDLExtension;
-import org.jvnet.wom.api.binding.soap11.SOAPAddress;
-import org.jvnet.wom.api.binding.soap11.SOAPBinding;
-import org.jvnet.wom.impl.extension.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAP11Constants;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAP12Constants;
 import org.jvnet.wom.impl.extension.Messages;
+import org.jvnet.wom.impl.extension.wsdl11.AbstractWSDLExtensionHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -56,39 +56,37 @@ import java.util.Collections;
  */
 public class SOAPAddressExtensionHandler extends AbstractWSDLExtensionHandler {
 
-    private SOAPAddressImpl address;
     private final ContentHandler contentHandler = new SOAPAddressCH();
-
+    private SOAPAddressImpl address;
+    private final QName names[] = new QName[]{SOAP11Constants.SOAPADDRESS_NAME, SOAP12Constants.SOAPADDRESS_NAME};
 
     public SOAPAddressExtensionHandler(ErrorHandler errorHandler, EntityResolver entityResolver) {
         super(errorHandler, entityResolver);
     }
 
-    public Collection<WSDLExtension> getExtension() {
+    public Collection<WSDLExtension> getExtensions() {
         return Collections.<WSDLExtension>singleton(address);
     }
 
-    public Collection<WSDLExtension> parseAttribute(Attributes atts) {
+    protected QName[] getExtensionNames() {
+        return names;
+    }
+
+    public ContentHandler getContentHandlerFor(String nsUri, String localName) {
+        if(canHandle(nsUri, localName))
+            return contentHandler;
         return null;
-    }
-
-    protected QName getExtensionName() {
-        return SOAPAddress.SOAPADDRESS_NAME;
-    }
-
-    protected ContentHandler getContentHandler() {
-        return contentHandler;
     }
 
     private class SOAPAddressCH extends WSDLExtensibilityContentHandler {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            if(uri.equals(SOAPBinding.SOAP_NS) && localName.equals("address")){
+            if(canHandle(uri, localName)){
                 String location = atts.getValue("location");
                 if(location == null){
                     errorHandler.error(new SAXParseException(Messages.format(Messages.MISSING_ATTR, "location", "soap:address"), locator));
                 }
-                address = new SOAPAddressImpl();
+                address = new SOAPAddressImpl(new QName(uri, localName));
                 address.setLocation(location);
             }
         }

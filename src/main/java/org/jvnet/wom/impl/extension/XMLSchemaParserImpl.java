@@ -36,29 +36,22 @@
 
 package org.jvnet.wom.impl.extension;
 
-import org.jvnet.wom.api.parser.XMLSchemaParser;
-import org.jvnet.wom.api.WSDLExtension;
+import com.sun.xml.xsom.XSElementDecl;
+import com.sun.xml.xsom.XSSchemaSet;
+import com.sun.xml.xsom.XSType;
+import com.sun.xml.xsom.parser.XSOMParser;
 import org.jvnet.wom.Schema;
+import org.jvnet.wom.api.WSDLExtension;
+import org.jvnet.wom.api.parser.XMLSchemaParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.XMLFilterImpl;
 
 import javax.xml.namespace.QName;
 import java.util.Collection;
 import java.util.Collections;
-import java.io.IOException;
-
-import com.sun.xml.xsom.parser.XSOMParser;
-import com.sun.xml.xsom.parser.XMLParser;
-import com.sun.xml.xsom.XSElementDecl;
-import com.sun.xml.xsom.XSType;
-import com.sun.xml.xsom.XSSchemaSet;
 
 /**
  * @author Vivek Pandey
@@ -104,7 +97,7 @@ public class XMLSchemaParserImpl implements XMLSchemaParser {
         schemaExtension = new XMLSchema();
     }
 
-    public Collection<WSDLExtension> getExtension() {
+    public Collection<WSDLExtension> getExtensions() {
         return Collections.<WSDLExtension>singleton(schemaExtension);
     }
 

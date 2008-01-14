@@ -279,7 +279,7 @@ public abstract class AbstractHandler implements WSDLEventReceiver {
 
     void endProcessingExtentionElement(WSDLEntity entity) {
         for (WSDLExtensionHandler handler : handlers) {
-            entity.addExtension(handler.getExtension());
+            entity.addExtension(handler.getExtensions());
         }
     }
 

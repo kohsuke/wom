@@ -34,18 +34,36 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.extension.soap11;
+package org.jvnet.wom.impl.extension.wsdl11.soap;
 
-import org.jvnet.wom.api.binding.soap11.SOAPHeaderFault;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPHeader;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPHeaderFault;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Vivek Pandey
  */
-public class SOAPHeaderFaultImpl extends HeaderAttributes implements SOAPHeaderFault {
+public class SOAPHeaderImpl  extends HeaderAttributes implements SOAPHeader{
+    private final List<SOAPHeaderFault> headerFaults = new ArrayList<SOAPHeaderFault>();
+    private final QName name;
+
+    public SOAPHeaderImpl(QName name) {
+        this.name = name;
+    }
 
     public QName getName() {
-        return SOAPHEADERFAULT_NAME;
+        return name;
     }
+
+    public void addHeaderFault(SOAPHeaderFault headerFault) {
+        headerFaults.add(headerFault);
+    }
+
+    public Iterable<SOAPHeaderFault> getHeaderFaults() {
+        return headerFaults;
+    }
+
 }

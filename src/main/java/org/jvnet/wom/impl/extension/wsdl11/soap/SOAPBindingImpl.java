@@ -34,81 +34,45 @@
  * holder.
  */
 
-package org.jvnet.wom.impl.extension.soap11;
+package org.jvnet.wom.impl.extension.wsdl11.soap;
 
-import org.jvnet.wom.api.binding.soap11.SOAPBody;
-import org.jvnet.wom.api.binding.soap11.SOAPBinding;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBinding;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPVersion;
 
 import javax.xml.namespace.QName;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * @author Vivek Pandey
  */
-public class SOAPBodyImpl implements SOAPBody {
-    private String[] encodingStyle;
-    private String namespace;
-    private Use use;
-    private List<String> parts;
+public class SOAPBindingImpl implements SOAPBinding {
+    private String transport;
+    private Style style;
+    private final QName name;
 
-
-    public void setEncodingStyle(String[] encodingStyle) {
-        this.encodingStyle = encodingStyle;
-    }
-
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
-
-    public void setUse(Use use) {
-        this.use = (use == null) ? Use.literal : use;
-    }
-
-    public void setParts(String[] parts) {
-        // The soap:body parts attribute could be an empty string, which means no part is
-        // bound to body. Otherwise if present would represent space delimited parts (NMTOKENS)
-        if (parts != null) {
-            List<String> tmpList = new ArrayList<String>();
-            for (String part : parts) {
-                tmpList.add(part);
-            }
-            this.parts = Collections.unmodifiableList(tmpList);
-        } else {
-            this.parts = null;
-        }
-    }
-
-    /**
-     * Maybe null. It is supposed to be non-null only for the encoded case.
-     */
-    public String[] getEncodingStyle() {
-        return encodingStyle;
-    }
-
-    /**
-     * null when {@link SOAPBinding.Style} is Document, otherwise will be non-null.
-     */
-    public String getNamespace() {
-        return namespace;
-    }
-
-    /**
-     * If not specified on &lt;soap:body> the default value is literal.
-     */
-    public Use getUse() {
-        return use;
+    public SOAPBindingImpl(QName name) {
+        this.name = name;
     }
 
     public QName getName() {
-        return SOAPBODY_NAME;
+        return name;
     }
 
-    /**
-     * null if parts attribute is not defined on &lt;soap:body> element, otherwise non-null.
-     */
-    public List<String> getParts() {
-        return parts;
+    public Style getStyle() {
+        return style;
+    }
+
+    public String getTransport() {
+        return transport;
+    }
+
+    public SOAPVersion getSOAPVersion() {
+        return SOAPVersion.getSOAPVersion(name.getNamespaceURI());
+    }
+    public void setTransport(String transport) {
+        this.transport = transport;
+    }
+
+    public void setStyle(Style style) {
+        this.style = style;
     }
 }
