@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
  * such as soap:body, soap:binding etc are captured.
  * <p>
  * The binding extensibility elements are:
- * {@link org.jvnet.wom.api.binding.soap11.SOAPBody}
+ * {@link org.jvnet.wom.api.binding.wsdl11.soap.SOAPBody}
  * @{@link
  * @author Vivek Pandey
  */

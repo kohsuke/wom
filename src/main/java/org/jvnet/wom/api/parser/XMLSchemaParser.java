@@ -35,11 +35,8 @@
  */
 package org.jvnet.wom.api.parser;
 
-import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.Schema;
 import org.xml.sax.SAXException;
-
-import javax.xml.namespace.QName;
 
 /**
  * @author Vivek Pandey

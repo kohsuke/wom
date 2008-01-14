@@ -54,7 +54,7 @@ public interface WSDLExtensionHandler {
      *
      * @return Immutable collection of  {@link WSDLExtension}
      */
-    public Collection<WSDLExtension> getExtension();
+    public Collection<WSDLExtension> getExtensions();
 
 //    public void addExtensions(ExtensionReceiver receiver);
 //

@@ -61,7 +61,7 @@ public interface WSDLExtension {
      * For example, <br> <code>&lt;wsdl:Operation name="echo"><br>
      *                  &lt;soap:operation action="http://tempuri.org"></code>
      * <p>
-     * Here for the soap:operation, the WSDLExtention is {@link org.jvnet.wom.api.binding.soap11.SOAPOperation}
+     * Here for the soap:operation, the WSDLExtention is {@link org.jvnet.wom.api.binding.wsdl.soap.SOAPOperation}
      * and the owner will be {@link WSDLBoundOperation}
      *
      */
