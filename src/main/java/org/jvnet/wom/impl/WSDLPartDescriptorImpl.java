@@ -1,8 +1,8 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- *
+ * 
  * Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
- *
+ * 
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
  * and Distribution License("CDDL") (collectively, the "License").  You
@@ -10,7 +10,7 @@
  * a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
  * or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
  * language governing permissions and limitations under the License.
- *
+ * 
  * When distributing the software, include this License Header Notice in each
  * file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
  * Sun designates this particular file as subject to the "Classpath" exception
@@ -19,9 +19,9 @@
  * Header, with the fields enclosed by brackets [] replaced by your own
  * identifying information: "Portions Copyrighted [year]
  * [name of copyright owner]"
- *
+ * 
  * Contributor(s):
- *
+ * 
  * If you wish your version of this file to be governed by only the CDDL or
  * only the GPL Version 2, indicate your decision by adding "[Contributor]
  * elects to include this software in this distribution under the [CDDL or GPL
@@ -33,49 +33,31 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.jvnet.wom.api;
+
+package org.jvnet.wom.impl;
+
+import org.jvnet.wom.api.WSDLPart;
+import org.jvnet.wom.api.WSDLSet;
+import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 
 import javax.xml.namespace.QName;
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
- * Provides set of WSDL documents parsed.
+ * @author Vivek Pandey
  */
-public interface WSDLSet {
-    /**
-     * WSDLDefinitions for a given targetNamespace.
-     *
-     * @param targetNamespace non-null targetNamespace
-     * @return {@link org.jvnet.wom.api.WSDLDefinitions}, may be null
-     */
-    WSDLDefinitions getWSDL(String targetNamespace);
+public class WSDLPartDescriptorImpl extends WSDLPart.WSDLPartDescriptor {
+    private WSDLSet root;
+    public WSDLPartDescriptorImpl(QName name, Kind kind, WSDLDocumentImpl document) {
+        super(name, kind);
+        this.root = document.getWSDLModel().getRoot();
+    }
 
-    /**
-     * Gives an immutable collection of WSDLDefinitions.
-     */
-    Iterator<WSDLDefinitions> getWSDLs();
 
-    Iterator<WSDLService> services();
-
-    Iterator<WSDLBoundPortType> boundPortTypes();
-
-    Iterator<WSDLPortType> portTypes();
-
-    Iterator<WSDLMessage> messages();
-
-    Iterator<WSDLTypes> types();
-
-    WSDLService service(QName serviceName);
-
-    WSDLPortType portType(QName portTypeName);
-
-    WSDLBoundPortType boundPortType(QName portType);
-
-    WSDLMessage message(QName message);
-
-    WSDLTypes types(String targetNamespace);
-
-    Object resolveType(QName type);
-    Object resolveElement(QName type);
+    @Override
+    public Object getSchemaObject() {
+        if(type() == Kind.ELEMENT)
+            return root.resolveElement(name());
+        else
+            return root.resolveType(name());
+    }
 }

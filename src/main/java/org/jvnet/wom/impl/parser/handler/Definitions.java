@@ -86,7 +86,7 @@ public class Definitions extends AbstractHandler {
                 runtime.currentWSDL.addService((WSDLServiceImpl) result);
                 break;
             case 90:
-                runtime.currentWSDL.setTypes((WSDLTypesImpl) result);
+                runtime.currentWSDL.setWSDLTypes((WSDLTypesImpl) result);
                 break;
         }
     }

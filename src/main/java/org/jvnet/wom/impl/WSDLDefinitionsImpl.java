@@ -40,6 +40,10 @@ import org.jvnet.wom.api.WSDLDefinitions;
 import org.jvnet.wom.api.WSDLMessage;
 import org.jvnet.wom.api.WSDLService;
 import org.jvnet.wom.api.WSDLVisitor;
+import org.jvnet.wom.api.WSDLTypes;
+import org.jvnet.wom.api.WSDLPortType;
+import org.jvnet.wom.api.WSDLPort;
+import org.jvnet.wom.api.WSDLSet;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.jvnet.wom.impl.parser.WSDLSetImpl;
 import org.jvnet.wom.impl.parser.WSDLTypesImpl;
@@ -53,10 +57,10 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
     private final WSDLSetImpl parent;
 
     private String documentation = "";
-    private final QNameMap<WSDLMessageImpl> messages = new QNameMap<WSDLMessageImpl>();
-    private final QNameMap<WSDLPortTypeImpl> portTypes = new QNameMap<WSDLPortTypeImpl>();
-    private final QNameMap<WSDLBoundPortTypeImpl> bindings = new QNameMap<WSDLBoundPortTypeImpl>();
-    private final QNameMap<WSDLServiceImpl> services = new QNameMap<WSDLServiceImpl>();
+    private final QNameMap<WSDLMessage> messages = new QNameMap<WSDLMessage>();
+    private final QNameMap<WSDLPortType> portTypes = new QNameMap<WSDLPortType>();
+    private final QNameMap<WSDLBoundPortType> bindings = new QNameMap<WSDLBoundPortType>();
+    private final QNameMap<WSDLService> services = new QNameMap<WSDLService>();
     private WSDLTypesImpl types;
 
 
@@ -69,7 +73,7 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
         return getName().getNamespaceURI();
     }
 
-    public WSDLPortTypeImpl getPortType(QName name) {
+    public WSDLPortType getPortType(QName name) {
         return portTypes.get(name);
     }
 
@@ -86,10 +90,10 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
     }
 
     public WSDLBoundPortType getBinding(QName serviceName, QName portName) {
-        WSDLServiceImpl service = services.get(serviceName);
+        WSDLService service = services.get(serviceName);
         if (service == null)
             return null;
-        WSDLPortImpl port = service.get(portName);
+        WSDLPort port = service.get(portName);
         return port.getBinding();
     }
 
@@ -101,24 +105,28 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
         return services.get(name);
     }
 
-    public WSDLMessageImpl getMessage(QName name) {
+    public WSDLMessage getMessage(QName name) {
         return messages.get(name);
     }
 
-    public Iterable<? extends WSDLMessage> getMessages() {
+    public Iterable<WSDLMessage> getMessages() {
         return messages.values();
     }
 
-    public Iterable<WSDLPortTypeImpl> getPortTypes() {
+    public Iterable<WSDLPortType> getPortTypes() {
         return portTypes.values();
     }
 
-    public Iterable<WSDLBoundPortTypeImpl> getBindings() {
+    public Iterable<WSDLBoundPortType> getBindings() {
         return bindings.values();
     }
 
-    public Iterable<WSDLServiceImpl> getServices() {
+    public Iterable<WSDLService> getServices() {
         return services.values();
+    }
+
+    public WSDLTypes getWSDLTypes() {
+        return types;
     }
 
     public String getDocumentation() {
@@ -141,7 +149,11 @@ public class WSDLDefinitionsImpl extends WSDLDefinitions {
         return visitor.definitions(this, param);
     }
 
-    public void setTypes(WSDLTypesImpl wsdlTypes) {
-        this.types = types;
+    public void setWSDLTypes(WSDLTypesImpl wsdlTypes) {
+        this.types = wsdlTypes;
+    }
+
+    public WSDLSet getRoot() {
+        return parent;
     }
 }

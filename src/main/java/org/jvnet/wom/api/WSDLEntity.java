@@ -37,6 +37,7 @@ package org.jvnet.wom.api;
 
 import org.jvnet.wom.api.parser.WSDLDocument;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
+import org.jvnet.wom.impl.parser.WSDLSetImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -52,7 +53,7 @@ import java.util.Set;
  */
 public abstract class WSDLEntity implements WSDLExtensible {
     private WSDLDocumentImpl ownerDoc;
-
+    
     private final Set<WSDLExtension> extensions = new HashSet<WSDLExtension>();
     private final Locator locator;
     private final QName name;

@@ -38,6 +38,7 @@ package org.jvnet.wom.impl.parser.handler;
 
 import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.jvnet.wom.api.parser.WSDLExtensionHandler;
+import org.jvnet.wom.api.parser.XMLSchemaParser;
 import org.jvnet.wom.impl.extension.XMLSchemaParserImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.impl.parser.WSDLTypesImpl;
@@ -46,6 +47,8 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 import javax.xml.namespace.QName;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * @author Vivek Pandey
@@ -72,6 +75,7 @@ public class Types extends AbstractHandler{
 
     }
 
+    private Set<XMLSchemaParser> schemaParsers = new HashSet<XMLSchemaParser>();
     @Override
     public void enterElement(String uri, String localName, String qname, Attributes atts) throws SAXException {
         if (uri.equals(WSDL_NS) && localName.equals("types")) {
@@ -96,7 +100,7 @@ public class Types extends AbstractHandler{
                 ContentHandler ch = xsomParser.getContentHandlerFor(uri, localName);
                 assert ch != null;
                 getRuntime().redirectSubtree(xsomParser.getContentHandlerFor(uri, localName), uri, localName, qname);
-                handlers.add(xsomParser);
+                schemaParsers.add(xsomParser);
             }
         }
     }
@@ -104,7 +108,15 @@ public class Types extends AbstractHandler{
     @Override
     public void leaveElement(String uri, String localName, String qname) throws SAXException {
         if (uri.equals(WSDL_NS) && localName.equals("types")) {
-            endProcessingExtentionElement(types);
+            if(schemaParsers.size() == 0){
+                endProcessingExtentionElement(types);
+            }else{
+                for(XMLSchemaParser parser:schemaParsers){
+                    parser.freeze();
+                    types.addExtension(parser.getExtensions());
+                }                                
+            }
+
             revertToParentFromLeaveElement(types, _cookie, uri, localName, qname);
         }
     }

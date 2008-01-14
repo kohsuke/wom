@@ -104,26 +104,36 @@ public abstract class WSDLDefinitions extends WSDLEntity {
      *
      * @return empty iterator if the wsdl document has no wsdl:message. Always non-null.
      */
-    public abstract Iterable<? extends WSDLMessage> getMessages();
+    public abstract Iterable<WSDLMessage> getMessages();
 
     /**
      * Gives a Iterator of all {@link WSDLPortType}
      *
      * @return empty iterator if the wsdl document has no wsdl:portType. Always non-null.
      */
-    public abstract Iterable<? extends WSDLPortType> getPortTypes();
+    public abstract Iterable<WSDLPortType> getPortTypes();
 
     /**
      * Gives a Iterator of all {@link WSDLBoundPortType}
      *
      * @return empty iterator if the wsdl document has no wsdl:binding. Always non-null.
      */
-    public abstract Iterable<? extends WSDLBoundPortType> getBindings();
+    public abstract Iterable<WSDLBoundPortType> getBindings();
 
     /**
      * Gives a Iterator of all {@link WSDLService}
      *
      * @return empty iterator if the wsdl document has no wsdl:service. Always non-null.
      */
-    public abstract Iterable<? extends WSDLService> getServices();
+    public abstract Iterable<WSDLService> getServices();
+
+    /**
+     * Gives wsdl:types model. Always non-null 
+     */
+    public abstract WSDLTypes getWSDLTypes();
+
+    /**
+     * Gives the owning {@link WSDLSet}
+     */
+    public abstract WSDLSet getRoot();
 }

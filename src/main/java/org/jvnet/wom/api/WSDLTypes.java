@@ -36,6 +36,7 @@
 package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
+import org.jvnet.wom.Schema;
 
 import javax.xml.namespace.QName;
 
@@ -50,6 +51,13 @@ public abstract class WSDLTypes extends WSDLEntity {
     public WSDLTypes(Locator locator, QName name) {
         super(locator, name);
     }
+
+    /**
+     * Gives the {@link Schema} associated with wsdl:type
+     * 
+     * @return never null
+     */
+    public abstract Schema getSchema();
 
     
 }

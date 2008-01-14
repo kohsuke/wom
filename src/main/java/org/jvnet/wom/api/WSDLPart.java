@@ -36,6 +36,7 @@
 package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
+import org.jvnet.wom.Schema;
 
 import javax.xml.namespace.QName;
 
@@ -71,7 +72,7 @@ public abstract class WSDLPart extends WSDLEntity {
      *
      * @author Vivek Pandey
      */
-    public static final class WSDLPartDescriptor {
+    public abstract static class WSDLPartDescriptor {
         private final QName name;
         private final Kind type;
 
@@ -96,7 +97,7 @@ public abstract class WSDLPart extends WSDLEntity {
             return type;
         }
 
-        public Object getSchemaObject(){return null;};
+        public abstract Object getSchemaObject();
 
 
         /**

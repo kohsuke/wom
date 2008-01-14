@@ -38,6 +38,7 @@ package org.jvnet.wom.impl.parser;
 
 import org.jvnet.wom.api.WSDLTypes;
 import org.jvnet.wom.api.WSDLVisitor;
+import org.jvnet.wom.Schema;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -53,5 +54,9 @@ public class WSDLTypesImpl extends WSDLTypes {
 
     public <V, P> V visit(WSDLVisitor<V, P> visitor, P param) {
         return visitor.types(this, param);
+    }
+
+    public Schema getSchema() {
+        return getExtension(Schema.class);
     }
 }

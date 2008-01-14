@@ -38,6 +38,7 @@ package org.jvnet.wom.impl.parser.handler;
 import org.jvnet.wom.api.WSDLPart;
 import org.jvnet.wom.api.parser.WSDLEventSource;
 import org.jvnet.wom.impl.WSDLPartImpl;
+import org.jvnet.wom.impl.WSDLPartDescriptorImpl;
 import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
 import org.jvnet.wom.impl.util.XmlUtil;
 import org.xml.sax.Attributes;
@@ -140,7 +141,7 @@ public class Part extends AbstractHandler {
             throw new SAXParseException(Messages.format(Messages.MISSING_ELEMENT_OR_TYPE, name), runtime.getLocator());
         }
 
-        WSDLPart.WSDLPartDescriptor descriptor = new WSDLPart.WSDLPartDescriptor(descName, k);
+        WSDLPart.WSDLPartDescriptor descriptor = new WSDLPartDescriptorImpl(descName, k, runtime.document);
         part = new WSDLPartImpl(runtime.getLocator(), new QName(runtime.currentWSDL.getName().getNamespaceURI(), name), descriptor, runtime.document);
         validateAttribute(runtime.getErrorHandler(), test, validattrs);
     }

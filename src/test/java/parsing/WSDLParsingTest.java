@@ -68,8 +68,8 @@ public class WSDLParsingTest extends TestCase {
         InputStream is = getClass().getResourceAsStream("../simple.wsdl");
         WOMParser parser = new WOMParser();
         WSDLSet wsdls = parser.parse(is);
-        assertTrue(wsdls.getWSDLs().iterator().hasNext());
-        WSDLDefinitions def = wsdls.getWSDLs().iterator().next();
+        assertTrue(wsdls.getWSDLs().hasNext());
+        WSDLDefinitions def = wsdls.getWSDLs().next();
         assertEquals(def.getName(), new QName("http://example.com/wsdl", "Simple"));
 
         //test wsdl:messages
@@ -162,23 +162,36 @@ public class WSDLParsingTest extends TestCase {
     public void testCyclicWsdl() throws IOException, SAXException {
         WOMParser parser = new WOMParser();
         WSDLSet wsdls = parser.parse(new InputSource("http://131.107.72.15/Security_WsSecurity_Service_Indigo/WsSecurity10.svc?wsdl"));
-        assertTrue(wsdls.getWSDLs().iterator().hasNext());
-        WSDLDefinitions def = wsdls.getWSDLs().iterator().next();
+        assertTrue(wsdls.getWSDLs().hasNext());
+        WSDLDefinitions def = wsdls.getWSDLs().next();
         assertNotNull(def);
     }
 
-    public void testSchema() throws SAXException {
+    public void testDefaultXSOMSchema() throws SAXException {
+        InputStream is = getClass().getResourceAsStream("../simple.wsdl");
+        WOMParser parser = new WOMParser();
+        WSDLSet wsdls = parser.parse(is);
+        assertTrue(wsdls.getWSDLs().hasNext());
+        WSDLDefinitions def = wsdls.getWSDLs().next();
+        WSDLPortType pt = def.getPortTypes().iterator().next();
+        WSDLOperation operation = pt.getOperations().iterator().next();
+        WSDLPart part = operation.getInput().getMessage().parts().iterator().next();
+        assertNotNull(part.getDescriptor().getSchemaObject());
+    }
+
+    public void testJAXBSchema() throws SAXException {
         InputStream is = getClass().getResourceAsStream("../simple.wsdl");
         WOMParser parser = new WOMParser();
         XMLSchemaExtensionHandler handler = new XMLSchemaExtensionHandler(parser.getErrorHandler(), parser.getEntityResolver());
         parser.addWSDLExtensionHandler(handler);
         WSDLSet wsdls = parser.parse(is);
-        assertTrue(wsdls.getWSDLs().iterator().hasNext());
-        WSDLDefinitions def = wsdls.getWSDLs().iterator().next();
+        assertTrue(wsdls.getWSDLs().hasNext());
+        WSDLDefinitions def = wsdls.getWSDLs().next();
         handler.freeze();
         WSDLPortType pt = def.getPortTypes().iterator().next();
         WSDLOperation operation = pt.getOperations().iterator().next();
         WSDLPart part = operation.getInput().getMessage().parts().iterator().next();
+        assertNotNull(part.getDescriptor().getSchemaObject());
         assertEquals(handler.getSchema().resolveElement(part.getDescriptor().name()).getType().getTypeClass().fullName(), "com.example.types.EchoType");
     }
 }

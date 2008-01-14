@@ -37,30 +37,39 @@ package org.jvnet.wom.impl.parser;
 
 import org.jvnet.wom.api.WSDLDefinitions;
 import org.jvnet.wom.api.WSDLSet;
+import org.jvnet.wom.api.WSDLService;
+import org.jvnet.wom.api.WSDLBoundPortType;
+import org.jvnet.wom.api.WSDLPortType;
+import org.jvnet.wom.api.WSDLMessage;
+import org.jvnet.wom.api.WSDLTypes;
 import org.jvnet.wom.impl.WSDLDefinitionsImpl;
+import org.jvnet.wom.impl.util.Iterators;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 
 public class WSDLSetImpl implements WSDLSet {
 
     private final Map<String, WSDLDefinitionsImpl> wsdlMap = new HashMap<String, WSDLDefinitionsImpl>();
-
+    private final List<WSDLDefinitionsImpl> wsdls = new ArrayList<WSDLDefinitionsImpl>();
     /**
      * Gets a reference to the existing schema or creates a new one
      * if none exists yet.
      */
     public WSDLDefinitionsImpl createWSDLDefinitions(String name, String targetNamespace, Locator location) {
-        WSDLDefinitionsImpl obj = wsdlMap.get(targetNamespace);
-        if (obj == null) {
-            obj = new WSDLDefinitionsImpl(this, location, new QName(targetNamespace, name));
-            wsdlMap.put(targetNamespace, obj);
+        WSDLDefinitionsImpl wsdl = wsdlMap.get(targetNamespace);
+        if (wsdl == null) {
+            wsdl = new WSDLDefinitionsImpl(this, location, new QName(targetNamespace, name));
+            wsdlMap.put(targetNamespace, wsdl);
+            wsdls.add(wsdl);
         }
-        return obj;
+        return wsdl;
     }
 
     void add(WSDLDefinitionsImpl wsdl) {
@@ -71,8 +80,99 @@ public class WSDLSetImpl implements WSDLSet {
         return wsdlMap.get(targetNamespace);
     }
 
-    public Collection<WSDLDefinitions> getWSDLs() {
-        return Collections.<WSDLDefinitions>unmodifiableCollection(wsdlMap.values());
+    public Iterator<WSDLDefinitions> getWSDLs() {
+        return Collections.<WSDLDefinitions>unmodifiableCollection(wsdlMap.values()).iterator();
     }
 
+    public Iterator<WSDLService> services() {
+        return new Iterators.Map<WSDLService,WSDLDefinitions>(getWSDLs()) {
+            protected Iterator<WSDLService> apply(WSDLDefinitions u) {
+                return u.getServices().iterator();
+            }
+        };
+    }
+
+    public Iterator<WSDLBoundPortType> boundPortTypes() {
+        return new Iterators.Map<WSDLBoundPortType,WSDLDefinitions>(getWSDLs()) {
+            protected Iterator<WSDLBoundPortType> apply(WSDLDefinitions u) {
+                return u.getBindings().iterator();
+            }
+        };
+    }
+
+    public Iterator<WSDLPortType> portTypes() {
+        return new Iterators.Map<WSDLPortType,WSDLDefinitions>(getWSDLs()) {
+            protected Iterator<WSDLPortType> apply(WSDLDefinitions u) {
+                return u.getPortTypes().iterator();
+            }
+        };
+
+    }
+
+    public Iterator<WSDLMessage> messages() {
+        return new Iterators.Map<WSDLMessage,WSDLDefinitions>(getWSDLs()) {
+            protected Iterator<WSDLMessage> apply(WSDLDefinitions u) {
+                return u.getMessages().iterator();
+            }
+        };
+
+    }
+
+    private List<WSDLTypes> types = new ArrayList<WSDLTypes>();
+    boolean alreadyComputed = false;
+    public Iterator<WSDLTypes> types() {
+        if(alreadyComputed)
+            return types.iterator();
+
+        for(WSDLDefinitions def:wsdls){
+            types.add(def.getWSDLTypes());
+        }
+        alreadyComputed = true;
+        return types.iterator();
+    }
+
+    public WSDLService service(QName serviceName) {
+        WSDLDefinitions def = wsdlMap.get(serviceName.getNamespaceURI());
+        return def.getService(serviceName);
+    }
+
+    public WSDLPortType portType(QName portTypeName) {
+        WSDLDefinitions def = wsdlMap.get(portTypeName.getNamespaceURI());
+        return def.getPortType(portTypeName);
+    }
+
+    public WSDLBoundPortType boundPortType(QName portType) {
+        WSDLDefinitions def = wsdlMap.get(portType.getNamespaceURI());
+        return def.getBinding(portType);
+    }
+
+    public WSDLMessage message(QName message) {
+        WSDLDefinitions def = wsdlMap.get(message.getNamespaceURI());
+        return def.getMessage(message);
+    }
+
+    public WSDLTypes types(String targetNamespace) {
+        WSDLDefinitions def = wsdlMap.get(targetNamespace);
+        return def.getWSDLTypes();
+    }
+
+    public Object resolveType(QName type) {
+        for(WSDLTypes wsdlType : types){
+            Object obj = wsdlType.getSchema().resolveType(type);
+            if(obj != null)
+                return obj;
+        }
+        return null;
+    }
+
+    public Object resolveElement(QName type) {
+        while(types().hasNext()){
+            WSDLTypes wsdlType = types().next();
+            Object obj = wsdlType.getSchema().resolveElement(type);
+            if(obj != null)
+                return obj;
+
+        }
+        return null;
+    }
 }

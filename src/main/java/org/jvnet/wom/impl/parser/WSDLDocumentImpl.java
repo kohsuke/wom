@@ -45,7 +45,6 @@ public class WSDLDocumentImpl implements WSDLDocument {
     private final WSDLDefinitionsImpl wsdl;
     private final String systemId;
 
-
     /**
      * WSDLs that are referenced from this document
      */
