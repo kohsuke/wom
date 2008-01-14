@@ -36,16 +36,14 @@
 
 package parsing;
 
+import com.sun.tools.xjc.api.Mapping;
 import com.sun.tools.xjc.api.S2JJAXBModel;
 import com.sun.tools.xjc.api.SchemaCompiler;
-import com.sun.tools.xjc.api.XJC;
-import com.sun.tools.xjc.api.Mapping;
 import com.sun.tools.xjc.api.TypeAndAnnotation;
-import com.sun.xml.xsom.XSElementDecl;
-import com.sun.xml.xsom.XSType;
+import com.sun.tools.xjc.api.XJC;
+import org.jvnet.wom.Schema;
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.parser.XMLSchemaParser;
-import org.jvnet.wom.Schema;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -80,7 +78,7 @@ public class XMLSchemaExtensionHandler implements XMLSchemaParser{
         this.entityResolver = entityResolver;
     }
 
-    public Collection<WSDLExtension> getExtension() {
+    public Collection<WSDLExtension> getExtensions() {
         return Collections.<WSDLExtension>singleton(schema);
     }
 
