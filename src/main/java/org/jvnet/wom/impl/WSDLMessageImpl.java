@@ -46,13 +46,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
 
 /**
  * @author Vivek Pandey
  */
 public class WSDLMessageImpl extends WSDLMessage {
-    private final List<WSDLPartImpl> parts = new ArrayList<WSDLPartImpl>();
-    private final Map<String, WSDLPartImpl> partsMap = new HashMap<String, WSDLPartImpl>();
+    private final List<WSDLPart> parts = new ArrayList<WSDLPart>();
+    private final Map<String, WSDLPart> partsMap = new HashMap<String, WSDLPart>();
 
 
     private String doc = "";
@@ -62,7 +63,7 @@ public class WSDLMessageImpl extends WSDLMessage {
         setOwnerWSDLDocument(document);
     }
 
-    public Iterable<WSDLPartImpl> parts() {
+    public Collection<WSDLPart> parts() {
         return parts;
     }
 

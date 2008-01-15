@@ -53,4 +53,14 @@ public abstract class WSDLBoundInput extends WSDLEntity{
     public WSDLBoundInput(Locator locator, QName name) {
         super(locator, name);
     }
+
+    /**
+     * Gives the {@link org.jvnet.wom.api.WSDLPart.Binding} this part is associated with. The default value is Binding.Body.
+     */
+    public abstract WSDLPart.Binding getPartBinding(String partName);
+
+    /**
+     *  Gives the abstract wsdl:input
+     */
+    public abstract WSDLInput getInput();
 }

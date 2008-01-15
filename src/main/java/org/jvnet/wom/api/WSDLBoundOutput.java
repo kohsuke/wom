@@ -48,4 +48,19 @@ public abstract class WSDLBoundOutput extends WSDLEntity{
     public WSDLBoundOutput(Locator locator, QName name) {
         super(locator, name);
     }
+
+    /**
+     * Gives the {@link org.jvnet.wom.api.WSDLPart.Binding} this part is associated with.
+     * The default value is Binding.Body.
+     *
+     * Once you know the binding of a part type, use {@link org.jvnet.wom.api.binding.wsdl11.mime.MimePart#getMimeContentParts()}
+     * to get the associated content type(s).
+     */
+    public abstract WSDLPart.Binding getPartBinding(String partName);
+
+    /**
+     *  Gives the abstract wsdl:output
+     */
+    public abstract WSDLOutput getOutput();
+
 }

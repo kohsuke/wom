@@ -38,10 +38,19 @@ package org.jvnet.wom.impl;
 
 import org.jvnet.wom.api.WSDLBoundInput;
 import org.jvnet.wom.api.WSDLVisitor;
+import org.jvnet.wom.api.WSDLInput;
+import org.jvnet.wom.api.WSDLPart;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPHeader;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBody;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBinding;
+import org.jvnet.wom.api.binding.wsdl11.mime.MimeMultipart;
+import org.jvnet.wom.api.binding.wsdl11.mime.MimePart;
+import org.jvnet.wom.api.binding.wsdl11.mime.MimeContent;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
 
 /**
  * @author Vivek Pandey
@@ -70,5 +79,57 @@ public class WSDLBoundInputImpl extends WSDLBoundInput {
 
     public void setDocumentation(String doc) {
         this.doc = doc;
+    }
+
+    public WSDLPart.Binding getPartBinding(String partName) {
+        int numOfParts = parent.getOperation().getInput().getMessage().parts().size();
+        Collection<SOAPHeader> headers = getExtension(SOAPHeader.class);
+        if(headers != null && headers.size() > 0){
+            for(SOAPHeader header:headers){
+                if(header.getPart().equals(partName))
+                    return WSDLPart.Binding.Header;
+
+            }
+        }
+        Collection<SOAPBody> soapBodies = getExtension(SOAPBody.class);
+        if(soapBodies != null){
+            for(SOAPBody body: soapBodies){
+                if(body.getParts().size() > 0){
+                    if(body.getParts().contains(partName))
+                        return WSDLPart.Binding.Body;
+                    else
+                        return WSDLPart.Binding.None;
+                }
+            }
+
+        }
+
+        Collection<MimeMultipart> mimeMultiparts = getExtension(MimeMultipart.class);
+        if(mimeMultiparts != null){
+            for(MimeMultipart multipart: mimeMultiparts){
+                for(MimePart mimepart:multipart.getMimeParts()){
+                    for(MimeContent content:mimepart.getMimeContentParts()){
+                        if(content.getPartName().equals(partName))
+                            return WSDLPart.Binding.Mime;
+                        else if((content.getPartName() == null || content.getPartName().equals("")) && numOfParts==1)
+                            return WSDLPart.Binding.Mime;
+                    }
+                    WSDLPart wsdlPart = mimepart.getBodyPart();
+                    Collection<SOAPBody> binding = wsdlPart.getExtension(SOAPBody.class);
+                    if(binding.iterator().hasNext()){
+                        SOAPBody body = binding.iterator().next();
+                        if(body.getParts() == null){
+                            return WSDLPart.Binding.Body;
+                        }
+                    }
+                }
+            }
+        }
+
+        return WSDLPart.Binding.None;
+    }
+
+    public WSDLInput getInput(){
+        return parent.getOperation().getInput();
     }
 }

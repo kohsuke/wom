@@ -37,6 +37,8 @@ package org.jvnet.wom.impl;
 
 import org.jvnet.wom.api.WSDLPart;
 import org.jvnet.wom.api.WSDLVisitor;
+import org.jvnet.wom.api.WSDLInput;
+import org.jvnet.wom.api.WSDLOutput;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
@@ -49,6 +51,7 @@ public class WSDLPartImpl extends WSDLPart {
     private final WSDLPartDescriptor descriptor;
     private int index;
     private String doc;
+            
 
     public WSDLPartImpl(Locator locator, QName name, WSDLPartDescriptor descriptor, WSDLDocumentImpl document) {
         super(locator, name);

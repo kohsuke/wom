@@ -38,6 +38,7 @@ package org.jvnet.wom.api;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
 
 /**
  * Abstraction of wsdl:message.
@@ -52,7 +53,7 @@ public abstract class WSDLMessage extends WSDLEntity {
     /**
      * Gets all the parts.
      */
-    public abstract Iterable<? extends WSDLPart> parts();
+    public abstract Collection<WSDLPart> parts();
 
     /**
      * Get a part of specific name

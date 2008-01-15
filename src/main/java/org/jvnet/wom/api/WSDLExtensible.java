@@ -67,7 +67,7 @@ public interface WSDLExtensible {
      *
      * @return null if the extension was not found.
      */
-    <T extends WSDLExtension> T getExtension(Class<T> type);
+    <T extends WSDLExtension> Collection<T> getExtension(Class<T> type);
 
     /**
      * Adds a new {@link WSDLExtension}

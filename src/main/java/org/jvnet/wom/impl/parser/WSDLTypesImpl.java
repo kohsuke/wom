@@ -42,6 +42,7 @@ import org.jvnet.wom.Schema;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
 
 /**
  * @author Vivek Pandey
@@ -56,7 +57,7 @@ public class WSDLTypesImpl extends WSDLTypes {
         return visitor.types(this, param);
     }
 
-    public Schema getSchema() {
+    public Collection<Schema> getSchema() {
         return getExtension(Schema.class);
     }
 }

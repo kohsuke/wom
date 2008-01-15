@@ -128,4 +128,13 @@ public abstract class WSDLPart extends WSDLEntity {
             TYPE
         }
     }
+
+    /**
+     * Tells different kind of known bindings a wsdl:part can be associated with
+     *
+     * @author Vivek Pandey
+     */
+    public enum Binding {
+        Body, Header, Mime, None;
+    }
 }

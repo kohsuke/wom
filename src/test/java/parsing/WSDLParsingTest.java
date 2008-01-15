@@ -61,6 +61,7 @@ import org.xml.sax.SAXException;
 import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 
 public class WSDLParsingTest extends TestCase {
 
@@ -114,7 +115,9 @@ public class WSDLParsingTest extends TestCase {
         assertEquals(binding.getPortType(), portType);
 
         //test soap:binding
-        SOAPBinding sb = binding.getExtension(SOAPBinding.class);
+        Collection<SOAPBinding> sbs = binding.getExtension(SOAPBinding.class);
+        assertTrue(!sbs.isEmpty());
+        SOAPBinding sb = sbs.iterator().next();
         assertEquals(sb.getStyle(), SOAPBinding.Style.Document);
         assertEquals(sb.getTransport(), "http://schemas.xmlsoap.org/soap/http");
 
@@ -123,7 +126,10 @@ public class WSDLParsingTest extends TestCase {
         assertEquals(boundOp.getOperation(), operation);
 
         //soap:operation
-        SOAPOperation soapOp = boundOp.getExtension(SOAPOperation.class);
+        Collection<SOAPOperation> soapOps = boundOp.getExtension(SOAPOperation.class);
+        assertTrue(!soapOps.isEmpty());
+
+        SOAPOperation soapOp = soapOps.iterator().next();
         assertNotNull(soapOp);
         assertEquals(soapOp.getSoapAction(), "http://example.com/wsdl/echo");
         assertNull(soapOp.getStyle());
@@ -132,7 +138,9 @@ public class WSDLParsingTest extends TestCase {
         assertNotNull(boundInput);
 
         //soap:body
-        SOAPBody body = boundInput.getExtension(SOAPBody.class);
+        Collection<SOAPBody> bodies = boundInput.getExtension(SOAPBody.class);
+        assertTrue(!bodies.isEmpty());
+        SOAPBody body = bodies.iterator().next();
         assertNotNull(body);
         assertEquals(body.getUse(), SOAPBody.Use.literal);
         assertEquals(body.getParts().iterator().next(), "reqBody");
@@ -141,7 +149,9 @@ public class WSDLParsingTest extends TestCase {
         assertNotNull(boundOutput);
 
         //soap:body
-        body = boundOutput.getExtension(SOAPBody.class);
+        bodies = boundOutput.getExtension(SOAPBody.class);
+        assertTrue(!bodies.isEmpty());
+        body = bodies.iterator().next();
         assertNotNull(body);
         assertEquals(body.getUse(), SOAPBody.Use.literal);
         assertEquals(body.getParts().iterator().next(), "respBody");
@@ -154,18 +164,20 @@ public class WSDLParsingTest extends TestCase {
         assertEquals(port.getDocumentation(), "A SOAP 1.1 port");
         assertEquals(port.getBinding(), binding);
 
-        SOAPAddress soapAdd = port.getExtension(SOAPAddress.class);
+        Collection<SOAPAddress> soapAdds = port.getExtension(SOAPAddress.class);
+        assertTrue(!soapAdds.isEmpty());
+        SOAPAddress soapAdd = soapAdds.iterator().next();
         assertNotNull(soapAdd);
         assertEquals(soapAdd.getLocation(), "http://localhost/HelloService");
     }
 
-    public void testCyclicWsdl() throws IOException, SAXException {
-        WOMParser parser = new WOMParser();
-        WSDLSet wsdls = parser.parse(new InputSource("http://131.107.72.15/Security_WsSecurity_Service_Indigo/WsSecurity10.svc?wsdl"));
-        assertTrue(wsdls.getWSDLs().hasNext());
-        WSDLDefinitions def = wsdls.getWSDLs().next();
-        assertNotNull(def);
-    }
+//    public void testCyclicWsdl() throws IOException, SAXException {
+//        WOMParser parser = new WOMParser();
+//        WSDLSet wsdls = parser.parse(new InputSource("http://131.107.72.15/Security_WsSecurity_Service_Indigo/WsSecurity10.svc?wsdl"));
+//        assertTrue(wsdls.getWSDLs().hasNext());
+//        WSDLDefinitions def = wsdls.getWSDLs().next();
+//        assertNotNull(def);
+//    }
 
     public void testDefaultXSOMSchema() throws SAXException {
         InputStream is = getClass().getResourceAsStream("../simple.wsdl");

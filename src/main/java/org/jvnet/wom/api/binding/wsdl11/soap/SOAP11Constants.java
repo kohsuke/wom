@@ -50,4 +50,7 @@ public final class SOAP11Constants {
     public static final QName SOAPHEADER_NAME = new QName(SOAP_NS, "header");
     public static final QName SOAPHEADERFAULT_NAME = new QName(SOAP_NS, "headerfault");
     public static final QName SOAPOPERATION_NAME = new QName(SOAP_NS, "operation");
+
+    //mime constnats
+    public static final String MIME_NS="http://schemas.xmlsoap.org/wsdl/mime/";
 }

@@ -60,6 +60,7 @@ public abstract class WSDLInput extends WSDLEntity {
      */
     public abstract WSDLMessage getMessage();
 
+    
     /**
      * Gives the Action Message Addressing Property value for
      * {@link this} message.

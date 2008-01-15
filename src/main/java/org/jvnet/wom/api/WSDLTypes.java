@@ -39,6 +39,7 @@ import org.xml.sax.Locator;
 import org.jvnet.wom.Schema;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
 
 /**
  * Abstraction for wsdl:types. wsdl:types do not have name attribute, since it extends from {@WSDLEntity}
@@ -57,7 +58,7 @@ public abstract class WSDLTypes extends WSDLEntity {
      * 
      * @return never null
      */
-    public abstract Schema getSchema();
+    public abstract Collection<Schema> getSchema();
 
     
 }

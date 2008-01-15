@@ -37,12 +37,15 @@ package org.jvnet.wom.api;
 
 import org.jvnet.wom.api.parser.WSDLDocument;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
-import org.jvnet.wom.impl.parser.WSDLSetImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -57,6 +60,7 @@ public abstract class WSDLEntity implements WSDLExtensible {
     private final Set<WSDLExtension> extensions = new HashSet<WSDLExtension>();
     private final Locator locator;
     private final QName name;
+    private Map<Class<? extends WSDLExtension>, List<WSDLExtension>> extensionMap = new HashMap<Class <? extends WSDLExtension>, List<WSDLExtension>>();
 
     protected WSDLEntity(Locator locator, QName name) {
         this.locator = locator;
@@ -113,16 +117,17 @@ public abstract class WSDLEntity implements WSDLExtensible {
         return extensions;
     }
 
-    public <T extends WSDLExtension> T getExtension(Class<T> type) {
-        for (WSDLExtension ex : extensions) {
-            if (type.isInstance(ex))
-                return type.cast(ex);
+    public <T extends WSDLExtension> Collection<T> getExtension(Class<T> type) {
+        List<WSDLExtension> exts = new ArrayList<WSDLExtension>();
+        for(WSDLExtension ext:extensions){
+            if(type.isInstance(ext))
+                exts.add(ext);
         }
-        return null;
+        return (Collection<T>) exts;
     }
 
-    public void addExtension(Collection<WSDLExtension> extensions) {
-        this.extensions.addAll(extensions);
+    public  void addExtension(Collection<WSDLExtension> extension) {
+        this.extensions.addAll(extension);
     }
 
     protected void setOwnerWSDLDocument(WSDLDocumentImpl wsdlDocument) {

@@ -44,6 +44,7 @@ import org.jvnet.wom.api.WSDLMessage;
 import org.jvnet.wom.api.WSDLTypes;
 import org.jvnet.wom.impl.WSDLDefinitionsImpl;
 import org.jvnet.wom.impl.util.Iterators;
+import org.jvnet.wom.Schema;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -158,9 +159,11 @@ public class WSDLSetImpl implements WSDLSet {
 
     public Object resolveType(QName type) {
         for(WSDLTypes wsdlType : types){
-            Object obj = wsdlType.getSchema().resolveType(type);
-            if(obj != null)
-                return obj;
+            for(Schema schema:wsdlType.getSchema()){
+                Object obj = schema.resolveType(type);
+                if(obj != null)
+                    return obj;
+            }
         }
         return null;
     }
@@ -168,9 +171,11 @@ public class WSDLSetImpl implements WSDLSet {
     public Object resolveElement(QName type) {
         while(types().hasNext()){
             WSDLTypes wsdlType = types().next();
-            Object obj = wsdlType.getSchema().resolveElement(type);
-            if(obj != null)
-                return obj;
+            for(Schema schema:wsdlType.getSchema()){
+                Object obj = schema.resolveElement(type);
+                if(obj != null)
+                    return obj;
+            }
 
         }
         return null;
