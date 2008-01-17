@@ -35,16 +35,12 @@
  */
 package org.jvnet.wom.impl.extension.wsdl11.mime;
 
-import org.jvnet.wom.api.WSDLPart;
 import org.jvnet.wom.api.binding.wsdl11.mime.MimeContent;
 import org.jvnet.wom.api.binding.wsdl11.mime.MimePart;
+import org.jvnet.wom.impl.extension.wsdl11.soap.SOAPBodyImpl;
 import org.xml.sax.Locator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Vivek Pandey
@@ -54,7 +50,7 @@ public class MimePartImpl implements MimePart {
     private final String partName;
     private final List<MimeContent> contents = new ArrayList<MimeContent>();
     private final Map<String, List<String>> contentMap = new HashMap<String, List<String>>();
-    private  WSDLPart bodyPart;
+    private SOAPBodyImpl bodyPart;
 
     public MimePartImpl(String partName, Locator locator) {
         this.partName = partName;
@@ -65,11 +61,11 @@ public class MimePartImpl implements MimePart {
         return partName;
     }
 
-    public void setBodyPart(WSDLPart part){
+    public void setBodyPart(SOAPBodyImpl part){
         this.bodyPart = part;
     }
 
-    public WSDLPart getBodyPart() {
+    public SOAPBodyImpl getBodyPart() {
         return bodyPart;
     }
 
@@ -85,6 +81,7 @@ public class MimePartImpl implements MimePart {
         }else{
             contentMap.get(mimeContent.getPartName()).add(mimeContent.getType());
         }
+        contents.add(mimeContent);
     }
 
     public Collection<String> getMimeContentType(String mimePart) {

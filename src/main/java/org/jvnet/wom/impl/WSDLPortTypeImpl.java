@@ -35,6 +35,7 @@
  */
 package org.jvnet.wom.impl;
 
+import org.jvnet.wom.api.WSDLOperation;
 import org.jvnet.wom.api.WSDLPortType;
 import org.jvnet.wom.api.WSDLVisitor;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
@@ -47,7 +48,7 @@ import javax.xml.namespace.QName;
  * @author Vivek Pandey
  */
 public class WSDLPortTypeImpl extends WSDLPortType {
-    private QNameMap<WSDLOperationImpl> operations = new QNameMap<WSDLOperationImpl>();
+    private QNameMap<WSDLOperation> operations = new QNameMap<WSDLOperation>();
     private String doc;
 
     public WSDLPortTypeImpl(Locator locator, QName name, WSDLDocumentImpl document) {
@@ -55,7 +56,7 @@ public class WSDLPortTypeImpl extends WSDLPortType {
         setOwnerWSDLDocument(document);
     }
 
-    public WSDLOperationImpl get(QName operationName) {
+    public WSDLOperation get(QName operationName) {
         return operations.get(operationName);
     }
 
@@ -63,7 +64,7 @@ public class WSDLPortTypeImpl extends WSDLPortType {
         operations.put(op.getName(), op);
     }
 
-    public Iterable<WSDLOperationImpl> getOperations() {
+    public Iterable<WSDLOperation> getOperations() {
         return operations.values();
     }
 

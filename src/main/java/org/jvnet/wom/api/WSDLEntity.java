@@ -40,13 +40,7 @@ import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Base class for the wsdl model. It represents WSDL entities such as wsdl:definitions,
@@ -127,7 +121,8 @@ public abstract class WSDLEntity implements WSDLExtensible {
     }
 
     public  void addExtension(Collection<WSDLExtension> extension) {
-        this.extensions.addAll(extension);
+        if(extension != null)
+            this.extensions.addAll(extension);
     }
 
     protected void setOwnerWSDLDocument(WSDLDocumentImpl wsdlDocument) {

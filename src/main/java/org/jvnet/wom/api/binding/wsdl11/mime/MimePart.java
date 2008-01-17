@@ -35,19 +35,26 @@
  */
 package org.jvnet.wom.api.binding.wsdl11.mime;
 
-import org.jvnet.wom.api.WSDLExtension;
-import org.jvnet.wom.api.WSDLPart;
-import org.jvnet.wom.api.WSDLBoundInput;
-import org.jvnet.wom.api.WSDLBoundOutput;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBody;
 
 import java.util.Collection;
 
 /**
+ * Abstraction of WSDL mime:part.
+ * @see MimeMultipart
  * @author Vivek Pandey
  */
 public interface MimePart{
     String getPartName();
-    WSDLPart getBodyPart();
+
+    /**
+     * Returns {@link SOAPBody} if present, otherwise null
+     */
+    SOAPBody getBodyPart();
+
+    /**
+     * Gives all the {@link MimeContent}
+     */
     Collection<MimeContent> getMimeContentParts();
 
     /**

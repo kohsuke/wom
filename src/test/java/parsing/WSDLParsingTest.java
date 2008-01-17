@@ -36,32 +36,20 @@
 package parsing;
 
 import junit.framework.TestCase;
-import org.jvnet.wom.api.WSDLBoundInput;
-import org.jvnet.wom.api.WSDLBoundOperation;
-import org.jvnet.wom.api.WSDLBoundOutput;
-import org.jvnet.wom.api.WSDLBoundPortType;
-import org.jvnet.wom.api.WSDLDefinitions;
-import org.jvnet.wom.api.WSDLInput;
-import org.jvnet.wom.api.WSDLMessage;
-import org.jvnet.wom.api.WSDLOperation;
-import org.jvnet.wom.api.WSDLOutput;
-import org.jvnet.wom.api.WSDLPart;
-import org.jvnet.wom.api.WSDLPort;
-import org.jvnet.wom.api.WSDLPortType;
-import org.jvnet.wom.api.WSDLService;
-import org.jvnet.wom.api.WSDLSet;
+import org.jvnet.wom.api.*;
+import org.jvnet.wom.api.binding.wsdl11.mime.MimeMultipart;
+import org.jvnet.wom.api.binding.wsdl11.mime.MimePart;
 import org.jvnet.wom.api.binding.wsdl11.soap.SOAPAddress;
 import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBinding;
 import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBody;
 import org.jvnet.wom.api.binding.wsdl11.soap.SOAPOperation;
 import org.jvnet.wom.api.parser.WOMParser;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.namespace.QName;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Iterator;
 
 public class WSDLParsingTest extends TestCase {
 
@@ -205,5 +193,61 @@ public class WSDLParsingTest extends TestCase {
         WSDLPart part = operation.getInput().getMessage().parts().iterator().next();
         assertNotNull(part.getDescriptor().getSchemaObject());
         assertEquals(handler.getSchema().resolveElement(part.getDescriptor().name()).getType().getTypeClass().fullName(), "com.example.types.EchoType");
+    }
+
+    public void testMimeWSDL() throws SAXException {
+        InputStream is = getClass().getResourceAsStream("../mime.wsdl");
+        WOMParser parser = new WOMParser();
+        WSDLSet wsdls = parser.parse(is);
+        assertTrue(wsdls.getWSDLs().hasNext());
+        WSDLDefinitions def = wsdls.getWSDLs().next();
+        assertEquals(def.getName(), new QName("http://example.org/mime", "Mime"));
+
+        WSDLBoundPortType binding = def.getBinding(new QName("http://example.org/mime", "HelloBinding"));
+        WSDLPortType portType = binding.getPortType();
+        assertNotNull(portType);
+        WSDLOperation op = portType.get(new QName("http://example.org/mime","echoData"));
+        assertNotNull(op);
+
+        WSDLBoundInput bi = binding.get(op.getName()).getInput();
+        assertTrue(bi.getPartBinding("body").isBody());
+        assertTrue(bi.getPartBinding("data").isMime());
+
+        Collection<MimeMultipart> multiparts = bi.getExtension(MimeMultipart.class);
+        assertTrue(multiparts.size() == 1);
+        Collection<MimePart> mimeparts = multiparts.iterator().next().getMimeParts();
+        assertEquals(mimeparts.size(), 2);
+        Iterator<MimePart> iter = mimeparts.iterator();
+        MimePart part = iter.next();
+        SOAPBody body = part.getBodyPart();
+        assertNotNull(body);
+        assertEquals(body.getUse(), SOAPBody.Use.literal);
+        assertTrue((body.getParts().size() == 1));
+        assertEquals(body.getParts().iterator().next(), "body");
+        part = iter.next();
+        Collection<String> cts = part.getMimeContentType("data");
+        assertTrue(cts.size() == 1);
+        assertEquals(cts.iterator().next(), "image/jpeg");
+
+
+        WSDLBoundOutput bo = binding.get(op.getName()).getOutput();
+        assertTrue(bi.getPartBinding("body").isBody());
+        assertTrue(bo.getPartBinding("data").isMime());
+
+        multiparts = bo.getExtension(MimeMultipart.class);
+        assertTrue(multiparts.size() == 1);
+        mimeparts = multiparts.iterator().next().getMimeParts();
+        assertEquals(mimeparts.size(), 2);
+        iter = mimeparts.iterator();
+        part = iter.next();
+        body = part.getBodyPart();
+        assertNotNull(body);
+        assertEquals(body.getUse(), SOAPBody.Use.literal);
+        assertTrue((body.getParts().size() == 1));
+        assertTrue(body.getParts().iterator().next().length() == 0);
+        part = iter.next();
+        cts = part.getMimeContentType("data");
+        assertTrue(cts.size() == 1);
+        assertEquals(cts.iterator().next(), "image/jpeg");
     }
 }

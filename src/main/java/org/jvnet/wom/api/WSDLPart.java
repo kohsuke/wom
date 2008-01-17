@@ -36,7 +36,6 @@
 package org.jvnet.wom.api;
 
 import org.xml.sax.Locator;
-import org.jvnet.wom.Schema;
 
 import javax.xml.namespace.QName;
 
@@ -135,6 +134,18 @@ public abstract class WSDLPart extends WSDLEntity {
      * @author Vivek Pandey
      */
     public enum Binding {
-        Body, Header, Mime, None;
+        Body(1), Header(2), Mime(3), None(4);
+
+        private Binding(int value) {
+            this.value = value;
+        }
+        private final int value;
+        public boolean isBody(){
+            return value == 1;
+        }
+
+        public boolean isHeader(){return value == 2;}
+        public boolean isMime(){return value ==3;}
+        public boolean isUnknown(){return value==4;}
     }
 }

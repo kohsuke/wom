@@ -83,4 +83,8 @@ public class MimeMultipartImpl implements MimeMultipart {
             input.getPartBinding(partName):output.getPartBinding(partName);
     }
 
+    void addMimePart(MimePartImpl mimePart){
+        parts.add(mimePart);
+    }
+
 }

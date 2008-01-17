@@ -39,26 +39,11 @@ import org.jvnet.wom.api.WSDLSet;
 import org.jvnet.wom.api.parser.WOMParser;
 import org.jvnet.wom.api.parser.WSDLExtensionHandler;
 import org.jvnet.wom.api.parser.XMLParser;
-import org.jvnet.wom.impl.extension.wsdl11.soap.SOAPAddressExtensionHandler;
-import org.jvnet.wom.impl.extension.wsdl11.soap.SOAPBindingExtensionHandler;
-import org.jvnet.wom.impl.extension.wsdl11.soap.SOAPBodyExtensionHandler;
-import org.jvnet.wom.impl.extension.wsdl11.soap.SOAPFaultExtensionHandler;
-import org.jvnet.wom.impl.extension.wsdl11.soap.SOAPHeaderExtensionHandler;
-import org.jvnet.wom.impl.extension.wsdl11.soap.SOAPHeaderFaultExtensionHandler;
-import org.jvnet.wom.impl.extension.wsdl11.soap.SOAPOperationExtensionHandler;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import org.jvnet.wom.impl.extension.wsdl11.mime.MimeMultipartParser;
+import org.jvnet.wom.impl.extension.wsdl11.soap.*;
+import org.xml.sax.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Provides context information to be used by {@link WSDLContentHandlerEx}s.
@@ -123,7 +108,8 @@ public class ParserContext {
                 new SOAPFaultExtensionHandler(errorHandler, owner.getEntityResolver()),
                 new SOAPHeaderExtensionHandler(errorHandler, owner.getEntityResolver()),
                 new SOAPHeaderFaultExtensionHandler(errorHandler, owner.getEntityResolver()),
-                new SOAPOperationExtensionHandler(errorHandler, owner.getEntityResolver()));
+                new SOAPOperationExtensionHandler(errorHandler, owner.getEntityResolver()),
+                new MimeMultipartParser(errorHandler, owner.getEntityResolver()));
 
     }
 

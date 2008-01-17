@@ -54,6 +54,12 @@ public class SOAPBodyImpl implements SOAPBody {
     private List<String> parts;
     private final QName name;
 
+    /**
+     * SOAP 1.1 and SOAP 1.2 WSDL 1.1 binding
+     * share the same properties except for the namespace. The name here is used to distinguish the SOAP1.1 from SOAP 1.2.
+     *
+     * @param name The name here is to set the soap:body or soap:12:body. Must be non-null.
+     */
     public SOAPBodyImpl(QName name) {
         this.name = name;
     }

@@ -61,6 +61,6 @@ public abstract class WSDLPortType extends WSDLEntity {
     /**
      * Gets {@link Iterable}<{$link WSDLOperation}>
      */
-    public abstract Iterable<? extends WSDLOperation> getOperations();
+    public abstract Iterable<WSDLOperation> getOperations();
 
 }

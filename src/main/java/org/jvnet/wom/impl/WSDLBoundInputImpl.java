@@ -37,15 +37,14 @@
 package org.jvnet.wom.impl;
 
 import org.jvnet.wom.api.WSDLBoundInput;
-import org.jvnet.wom.api.WSDLVisitor;
 import org.jvnet.wom.api.WSDLInput;
 import org.jvnet.wom.api.WSDLPart;
-import org.jvnet.wom.api.binding.wsdl11.soap.SOAPHeader;
-import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBody;
-import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBinding;
+import org.jvnet.wom.api.WSDLVisitor;
+import org.jvnet.wom.api.binding.wsdl11.mime.MimeContent;
 import org.jvnet.wom.api.binding.wsdl11.mime.MimeMultipart;
 import org.jvnet.wom.api.binding.wsdl11.mime.MimePart;
-import org.jvnet.wom.api.binding.wsdl11.mime.MimeContent;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBody;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPHeader;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
@@ -114,11 +113,9 @@ public class WSDLBoundInputImpl extends WSDLBoundInput {
                         else if((content.getPartName() == null || content.getPartName().equals("")) && numOfParts==1)
                             return WSDLPart.Binding.Mime;
                     }
-                    WSDLPart wsdlPart = mimepart.getBodyPart();
-                    Collection<SOAPBody> binding = wsdlPart.getExtension(SOAPBody.class);
-                    if(binding.iterator().hasNext()){
-                        SOAPBody body = binding.iterator().next();
-                        if(body.getParts() == null){
+                    SOAPBody body = mimepart.getBodyPart();
+                    if(body != null){
+                        if(body.getParts() == null || body.getParts().contains(partName)){
                             return WSDLPart.Binding.Body;
                         }
                     }

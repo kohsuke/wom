@@ -35,26 +35,26 @@
  */
 package org.jvnet.wom.impl.extension.wsdl11.mime;
 
-import org.jvnet.wom.impl.extension.wsdl11.AbstractWSDLExtensionHandler;
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.binding.wsdl11.soap.SOAP11Constants;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+import org.jvnet.wom.api.binding.wsdl11.soap.SOAPBody;
+import org.jvnet.wom.impl.extension.Messages;
+import org.jvnet.wom.impl.extension.wsdl11.AbstractWSDLExtensionHandler;
+import org.jvnet.wom.impl.extension.wsdl11.soap.SOAPBodyImpl;
+import org.jvnet.wom.impl.util.XmlUtil;
+import org.xml.sax.*;
 
 import javax.xml.namespace.QName;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Vivek Pandey
  */
 public class MimeMultipartParser extends AbstractWSDLExtensionHandler {
     private final QName[] names = new QName[]{new QName(SOAP11Constants.MIME_NS, "multipartRelatedType")};
-
-    private final ContentHandler contentHandler = new MimeContentHandler();
-
+    private final ContentHandler contentHandler = new MimeMultipartContentHandler();
+    private MimeMultipartImpl multipartImpl;
     public MimeMultipartParser(ErrorHandler errorHandler, EntityResolver entityResolver) {
         super(errorHandler, entityResolver);
     }
@@ -64,17 +64,119 @@ public class MimeMultipartParser extends AbstractWSDLExtensionHandler {
     }
 
     public Collection<WSDLExtension> getExtensions() {
-        return null;
+        return Collections.<WSDLExtension>singleton(multipartImpl);
     }
 
     public ContentHandler getContentHandlerFor(String nsUri, String localName) {
-        return contentHandler;
+        if(SOAP11Constants.MIME_NS.equals(nsUri) && localName.equals("multipartRelated"))
+            return contentHandler;
+        return null;
     }
 
-    private class MimeContentHandler extends WSDLExtensibilityContentHandler{
+    private class MimeMultipartContentHandler extends WSDLExtensibilityContentHandler{
+        int mimePartState=0;
+
+        MimePartContentHandler mimePartContentHandler = new MimePartContentHandler();
+        MimePartImpl mimePart = null;
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+            if(SOAP11Constants.MIME_NS.equals(uri) && localName.equals("multipartRelated")){
+                multipartImpl = new MimeMultipartImpl();
+            }else if(SOAP11Constants.MIME_NS.equals(uri) && localName.equals("part")){
+                mimePart = new MimePartImpl(XmlUtil.fixNull(atts.getValue("name")), locator);
+                multipartImpl.addMimePart(mimePart);
+//                mimePartContentHandler.startElement(uri, localName, qName, atts);
+            }else if(SOAP11Constants.MIME_NS.equals(uri) && localName.equals("content")){
+                String part = XmlUtil.fixNull(atts.getValue("part"));
+                String type =  atts.getValue("type");
+                if(type != null && mimePart != null){
+                    mimePart.addMimeContent(new MimeContentImpl(part, type, locator));
+                }
+            }else if(SOAP11Constants.SOAP_NS.equals(uri) && localName.equals("body")){
+                String encodingStyleAtt = atts.getValue("encodingStyle");
+                String[] encodingStyle = null;
+                if(encodingStyleAtt != null){
+                    encodingStyle = encodingStyleAtt.split("\\s");
+                }
 
+                String namespace = atts.getValue("namespace");
+                String useatt = XmlUtil.fixNull(atts.getValue("use")).trim();
+                SOAPBody.Use use = SOAPBody.Use.literal;
+                if(useatt.equals("encoded")){
+                    use = SOAPBody.Use.encoded;
+                }else if(!useatt.equals("literal")){
+                    errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "use", useatt, "literal or encoded"), locator));
+                }
+
+                String partsAtt = atts.getValue("parts");
+                String[] parts = null;
+                if(partsAtt != null){
+                    parts = partsAtt.split("\\s");
+                }
+                SOAPBodyImpl body = new SOAPBodyImpl(SOAP11Constants.SOAPBODY_NAME);
+                body = new SOAPBodyImpl(new QName(uri, localName));
+                body.setParts(parts);
+                body.setEncodingStyle(encodingStyle);
+                body.setNamespace(namespace);
+                body.setUse(use);
+                if(mimePart != null){
+                    mimePart.setBodyPart(body);
+                }
+            }
         }
     }
+
+    private class MimePartContentHandler extends WSDLExtensibilityContentHandler{
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+            MimePartImpl mimePart = null;
+            if(SOAP11Constants.MIME_NS.equals(uri) && localName.equals("part")){
+                mimePart = new MimePartImpl(XmlUtil.fixNull(atts.getValue("name")), locator);
+            }else if(SOAP11Constants.MIME_NS.equals(uri) && localName.equals("content")){
+                String part = XmlUtil.fixNull(atts.getValue("part"));
+                String type =  atts.getValue("type");
+                if(type != null && mimePart != null){
+                    mimePart.addMimeContent(new MimeContentImpl(part, type, locator));
+                }
+            }else if(SOAP11Constants.SOAP_NS.equals(uri) && localName.equals("body")){
+                if(!canHandle(uri, localName))
+                    return;
+
+                String encodingStyleAtt = atts.getValue("encodingStyle");
+                String[] encodingStyle = null;
+                if(encodingStyleAtt != null){
+                    encodingStyle = encodingStyleAtt.split("\\s");
+                }
+
+                String namespace = atts.getValue("namespace");
+                String useatt = XmlUtil.fixNull(atts.getValue("use")).trim();
+                SOAPBody.Use use = SOAPBody.Use.literal;
+                if(useatt.equals("encoded")){
+                    use = SOAPBody.Use.encoded;
+                }else if(!useatt.equals("literal")){
+                    errorHandler.error(new SAXParseException(Messages.format(Messages.INVALID_ATTR, "use", useatt, "literal or encoded"), locator));
+                }
+
+                String partsAtt = atts.getValue("parts");
+                String[] parts = null;
+                if(partsAtt != null){
+                    parts = partsAtt.split("\\s");
+                }
+                SOAPBodyImpl body = new SOAPBodyImpl(SOAP11Constants.SOAPBODY_NAME);
+                body = new SOAPBodyImpl(new QName(uri, localName));
+                body.setParts(parts);
+                body.setEncodingStyle(encodingStyle);
+                body.setNamespace(namespace);
+                body.setUse(use);
+                if(mimePart != null){
+                    mimePart.setBodyPart(body);
+                }
+            }
+        }
+
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+            super.endElement(uri, localName, qName);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+    }
+
 }
