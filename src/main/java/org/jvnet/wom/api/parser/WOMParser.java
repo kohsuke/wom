@@ -38,6 +38,8 @@ package org.jvnet.wom.api.parser;
 import org.jvnet.wom.api.WSDLSet;
 import org.jvnet.wom.impl.parser.ParserContext;
 import org.jvnet.wom.impl.parser.XMLParserImpl;
+import org.jvnet.wom.impl.parser.WSDLContentHandlerEx;
+import org.jvnet.wom.impl.parser.handler.Definitions;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -231,4 +233,26 @@ public final class WOMParser {
     public XMLParser getDefaultXMLParserInstance(){
         return parser==null?new XMLParserImpl():parser;
     }
+
+    /**
+     * Gets the parser implemented as a ContentHandler.
+     *
+     * One can feed WSDL or XML Schema as SAX events to this interface to
+     * parse a WSDL. To parse multiple WSDL files, feed multiple
+     * sets of events.
+     *
+     * <p>
+     * If you don't send a complete event sequence from a startDocument
+     * event to an endDocument event, the state of WOMParser can become
+     * unstable. This sometimes happen when you encounter an error while
+     * generating SAX events. Don't call the getResult method in that case.
+     *
+     */
+    public ContentHandler getParserHandler() {
+        WSDLContentHandlerEx ch = context.createWSDLContentHandler();
+        Definitions rootHandler = new Definitions(ch, null);
+        ch.setRootHandler(rootHandler);
+        return ch;
+    }
+
 }
