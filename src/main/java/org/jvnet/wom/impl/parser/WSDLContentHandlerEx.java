@@ -256,7 +256,7 @@ public class WSDLContentHandlerEx extends WSDLContentHandler {
 
             try {
                 parser.parser.parse(source, this,
-                        parser.getEntityResolver(), getErrorHandler());
+                        getErrorHandler(), parser.getEntityResolver());
             } catch (IOException e) {
                 SAXParseException se = new SAXParseException(
                         e.toString(), importLocation, e);

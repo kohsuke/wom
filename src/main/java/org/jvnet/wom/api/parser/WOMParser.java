@@ -51,6 +51,8 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
 
+import com.sun.xml.xsom.parser.XMLParser;
+
 /**
  * Parses a WSDL and provides a model - {@link WSDLSet}. The interfaces provided by {@link WOMParser} are largely based
  * on XSOM.
@@ -177,6 +179,13 @@ public final class WOMParser {
         return context.getResult();
     }
 
+    /**
+     * Gets the parsed wsdl as {@link WSDLSet}. Call this method only after the parsing is done.
+     */
+    public WSDLSet getResult() throws SAXException {
+        return context.getResult();
+    }
+
 
     public EntityResolver getEntityResolver() {
         return entityResolver;
@@ -213,5 +222,13 @@ public final class WOMParser {
 
     public void addWSDLExtensionHandler(WSDLExtensionHandler extension){
         context.addWSDLExtensionHandler(extension);
+    }
+
+    /**
+     * Gives the default XMLParser instance. This can be used when a custom XMLParser wants to use the default
+     * as a fallback parser.
+     */
+    public XMLParser getDefaultXMLParserInstance(){
+        return parser==null?new XMLParserImpl():parser;
     }
 }

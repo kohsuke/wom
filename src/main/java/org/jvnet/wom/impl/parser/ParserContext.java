@@ -38,12 +38,13 @@ package org.jvnet.wom.impl.parser;
 import org.jvnet.wom.api.WSDLSet;
 import org.jvnet.wom.api.parser.WOMParser;
 import org.jvnet.wom.api.parser.WSDLExtensionHandler;
-import org.jvnet.wom.api.parser.XMLParser;
 import org.jvnet.wom.impl.extension.wsdl11.mime.MimeMultipartParser;
 import org.jvnet.wom.impl.extension.wsdl11.soap.*;
 import org.xml.sax.*;
 
 import java.util.*;
+
+import com.sun.xml.xsom.parser.XMLParser;
 
 /**
  * Provides context information to be used by {@link WSDLContentHandlerEx}s.

@@ -35,7 +35,6 @@
  */
 package org.jvnet.wom.impl.parser;
 
-import org.jvnet.wom.api.parser.XMLParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -51,6 +50,8 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.net.URL;
 
+import com.sun.xml.xsom.parser.XMLParser;
+
 public class XMLParserImpl implements XMLParser {
 
     private final SAXParserFactory factory;
@@ -65,7 +66,7 @@ public class XMLParserImpl implements XMLParser {
     }
 
 
-    public void parse(InputSource source, ContentHandler handler, EntityResolver entityResolver, ErrorHandler errorHandler) throws SAXException, IOException {
+    public void parse(InputSource source, ContentHandler handler, ErrorHandler errorHandler, EntityResolver entityResolver) throws SAXException, IOException {
         try {
             XMLReader reader = factory.newSAXParser().getXMLReader();
             reader = new XMLReaderEx(reader);
