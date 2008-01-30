@@ -120,6 +120,19 @@ public abstract class WSDLEntity implements WSDLExtensible {
         return (Collection<T>) exts;
     }
 
+    /**
+     * Returns the first extension
+     * @param type always non-null
+     * @return may be null if the type does not match
+     */
+    public <T extends WSDLExtension> T getFirstExtension(Class<T> type){
+        for(WSDLExtension ext:extensions){
+            if(type.isInstance(ext))
+                return (T) ext;
+        }
+        return null;
+    }
+
     public  void addExtension(Collection<WSDLExtension> extension) {
         if(extension != null)
             this.extensions.addAll(extension);
