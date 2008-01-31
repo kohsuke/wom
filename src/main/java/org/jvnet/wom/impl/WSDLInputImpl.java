@@ -38,10 +38,13 @@ package org.jvnet.wom.impl;
 import org.jvnet.wom.api.WSDLInput;
 import org.jvnet.wom.api.WSDLMessage;
 import org.jvnet.wom.api.WSDLVisitor;
+import org.jvnet.wom.api.WSDLPart;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Vivek Pandey
@@ -50,7 +53,6 @@ public class WSDLInputImpl extends WSDLInput {
     private QName messageName;
     private WSDLOperationImpl parent;
 
-    private String action = "";
     private String doc;
 
     public WSDLInputImpl(Locator locator, QName name, WSDLDocumentImpl document) {
@@ -60,6 +62,14 @@ public class WSDLInputImpl extends WSDLInput {
 
     public WSDLMessage getMessage() {
         return getOwnerWSDLModel().getMessage(messageName);
+    }
+
+    public Collection<WSDLPart> getParts() {
+        WSDLMessage message = getOwnerWSDLModel().getMessage(messageName);
+        if(message != null){
+            return message.parts();
+        }
+        return Collections.emptyList();
     }
 
     public void setMessage(QName name) {

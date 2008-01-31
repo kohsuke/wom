@@ -38,6 +38,7 @@ package org.jvnet.wom.api;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
 
 /**
  * Abstraction of wsdl:portType/wsdl:operation/wsdl:output
@@ -59,6 +60,12 @@ public abstract class WSDLOutput extends WSDLEntity {
      * @return Always returns null when called from inside WSDL extensions.
      */
     public abstract WSDLMessage getMessage();
+
+    /**
+     *  Gives all the wsdl:part(s) inside the wsdl:output/wsdl:message
+     * @return never null. Maybe empty when there is no output parts.     *
+     */
+    public abstract Collection<WSDLPart> getParts();
 
     /**
      * Gives the Action Message Addressing Property value for

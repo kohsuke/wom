@@ -38,10 +38,13 @@ package org.jvnet.wom.impl;
 import org.jvnet.wom.api.WSDLMessage;
 import org.jvnet.wom.api.WSDLOutput;
 import org.jvnet.wom.api.WSDLVisitor;
+import org.jvnet.wom.api.WSDLPart;
 import org.jvnet.wom.impl.parser.WSDLDocumentImpl;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Vivek Pandey
@@ -61,6 +64,13 @@ public class WSDLOutputImpl extends WSDLOutput {
 
     public WSDLMessage getMessage() {
         return getOwnerWSDLModel().getMessage(messageName);
+    }
+    public Collection<WSDLPart> getParts() {
+        WSDLMessage message = getOwnerWSDLModel().getMessage(messageName);
+        if(message != null){
+            return message.parts();
+        }
+        return Collections.emptyList();
     }
 
     public void setParent(WSDLOperationImpl parent) {

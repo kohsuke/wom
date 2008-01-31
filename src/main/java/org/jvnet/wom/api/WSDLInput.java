@@ -38,6 +38,7 @@ package org.jvnet.wom.api;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
+import java.util.Collection;
 
 /**
  * Abstraction of wsdl:portType/wsdl:operation/wsdl:input
@@ -56,9 +57,16 @@ public abstract class WSDLInput extends WSDLEntity {
      * all the references are resolve in a post processing phase. IOW, the WSDL extensions should
      * not call this method.
      *
-     * @return Always returns null when called from inside WSDL extensions.
+     * @return may be null
      */
     public abstract WSDLMessage getMessage();
+
+
+    /**
+     *  Gives all the wsdl:part(s) inside the wsdl:input/wsdl:message
+     * @return never null. Maybe empty when there is no input parts.     *
+     */
+    public abstract Collection<WSDLPart> getParts();
 
     
     /**
