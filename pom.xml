@@ -7,13 +7,51 @@
     <packaging>jar</packaging>
 
     <name>WSDL Object Model</name>
+    <description>
+        Provides a WSDL Object Model API in Java.
+  </description>
+  <organization>
+        <name>Sun Microsystems, Inc</name>
+        <url>http://www.sun.com/</url>
+  </organization>
+  <scm>
+    <connection>scm:svn:https://wom.dev.java.net/svn/wom/trunk</connection>
+    <developerConnection>scm:svn:https://wom.dev.java.net/svn/wom/trunk</developerConnection>
+    <url>https://wom.dev.java.net/source/browse/wom/trunk</url>
+  </scm>
 
-    <!--scm>
-      <connection>scm:svn:https://svn.dev.java.net/svn/mimepull/trunk</connection>
-      <developerConnection>scm:svn:https://svn.dev.java.net/svn/mimepull/trunk</developerConnection>
-      <url>https://jax-ws-commons.dev.java.net/source/browse/mimepull/trunk</url>
-    </scm-->
-
+   <issueManagement>
+    <system>issueZilla</system>
+    <url>https://wom.dev.java.net/servlets/ProjectIssues</url>
+  </issueManagement>
+  <mailingLists>
+    <mailingList>
+      <name>wom Users List</name>
+      <post>users@wom.dev.java.net</post>
+      <archive>https://wom.dev.java.net/servlets/SummarizeList?listName=users</archive>
+    </mailingList>
+    <mailingList>
+      <name>wom Dev List</name>
+      <post>dev@wom.dev.java.net</post>
+      <archive>https://wom.dev.java.net/servlets/SummarizeList?listName=dev</archive>
+    </mailingList>
+  </mailingLists>
+  <licenses>
+        <license>
+            <name>
+                COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+            </name>
+            <url>http://www.opensource.org/licenses/cddl1.php</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>
+                GPLv2 with classpath exception
+            </name>
+            <url>http://www.gnu.org/software/classpath/license.html</url>
+            <distribution>repo</distribution>
+        </license>
+  </licenses>
     <repositories>
         <repository>
             <id>java.net</id>
