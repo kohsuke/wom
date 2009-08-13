@@ -9,49 +9,53 @@
     <name>WSDL Object Model</name>
     <description>
         Provides a WSDL Object Model API in Java.
-  </description>
-  <organization>
+    </description>
+    <organization>
         <name>Sun Microsystems, Inc</name>
         <url>http://www.sun.com/</url>
-  </organization>
-  <scm>
-    <connection>scm:svn:https://wom.dev.java.net/svn/wom/trunk</connection>
-    <developerConnection>scm:svn:https://wom.dev.java.net/svn/wom/trunk</developerConnection>
-    <url>https://wom.dev.java.net/source/browse/wom/trunk</url>
-  </scm>
+    </organization>
+    <scm>
+        <connection>scm:svn:https://wom.dev.java.net/svn/wom/trunk</connection>
+        <developerConnection>scm:svn:https://wom.dev.java.net/svn/wom/trunk</developerConnection>
+        <url>https://wom.dev.java.net/source/browse/wom/trunk</url>
+    </scm>
 
-   <issueManagement>
-    <system>issueZilla</system>
-    <url>https://wom.dev.java.net/servlets/ProjectIssues</url>
-  </issueManagement>
-  <mailingLists>
-    <mailingList>
-      <name>wom Users List</name>
-      <post>users@wom.dev.java.net</post>
-      <archive>https://wom.dev.java.net/servlets/SummarizeList?listName=users</archive>
-    </mailingList>
-    <mailingList>
-      <name>wom Dev List</name>
-      <post>dev@wom.dev.java.net</post>
-      <archive>https://wom.dev.java.net/servlets/SummarizeList?listName=dev</archive>
-    </mailingList>
-  </mailingLists>
-  <licenses>
+    <issueManagement>
+        <system>issueZilla</system>
+        <url>https://wom.dev.java.net/servlets/ProjectIssues</url>
+    </issueManagement>
+    <mailingLists>
+        <mailingList>
+            <name>wom Users List</name>
+            <post>users@wom.dev.java.net</post>
+            <archive>https://wom.dev.java.net/servlets/SummarizeList?listName=users</archive>
+        </mailingList>
+        <mailingList>
+            <name>wom Dev List</name>
+            <post>dev@wom.dev.java.net</post>
+            <archive>https://wom.dev.java.net/servlets/SummarizeList?listName=dev</archive>
+        </mailingList>
+    </mailingLists>
+    <licenses>
         <license>
-            <name>
-                COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
-            </name>
-            <url>http://www.opensource.org/licenses/cddl1.php</url>
             <distribution>repo</distribution>
+            <name>CDDL and GPLv2 w/ classpath execption dual license</name>
+            <url>https://glassfish.dev.java.net/public/CDDL+GPL.html</url>
         </license>
-        <license>
-            <name>
-                GPLv2 with classpath exception
-            </name>
-            <url>http://www.gnu.org/software/classpath/license.html</url>
-            <distribution>repo</distribution>
-        </license>
-  </licenses>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>vivekp</id>
+            <name>Vivek Pandey</name>
+            <url>http://weblogs.java.net/blog/vivekp/</url>
+            <organization>Sun Microsystems, Inc.</organization>
+            <roles>
+                <role>lead</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
     <repositories>
         <repository>
             <id>java.net</id>
@@ -93,14 +97,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-idea-plugin</artifactId>
-                <configuration>
-                    <jdkName>JDK1.5</jdkName>
-                    <downloadSources>true</downloadSources>
-                </configuration>
-            </plugin>
-            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <descriptorRefs>
@@ -125,7 +121,7 @@
         <dependency>
             <groupId>com.sun.xsom</groupId>
             <artifactId>xsom</artifactId>
-            <version>20070515</version>
+            <version>20081112</version>
         </dependency>
 
         <dependency>
@@ -138,10 +134,10 @@
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-xjc</artifactId>
-            <version>2.1.6</version>
-            <scope>test</scope>            
+            <version>2.1.12</version>
+            <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
 
 </project>
