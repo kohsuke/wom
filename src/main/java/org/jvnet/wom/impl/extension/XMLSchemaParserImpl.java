@@ -43,15 +43,13 @@ import com.sun.xml.xsom.parser.XSOMParser;
 import org.jvnet.wom.Schema;
 import org.jvnet.wom.api.WSDLExtension;
 import org.jvnet.wom.api.parser.XMLSchemaParser;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
+import org.xml.sax.*;
 
 import javax.xml.namespace.QName;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * @author Vivek Pandey
@@ -79,14 +77,19 @@ public class XMLSchemaParserImpl implements XMLSchemaParser {
         }
     }
 
-    public XMLSchemaParserImpl(ErrorHandler errorHandler, EntityResolver entityResolver) throws SAXException {
+    private final Set<ContentHandler> contentHandlers = new HashSet<ContentHandler>();
+
+    public XMLSchemaParserImpl(ErrorHandler errorHandler, EntityResolver entityResolver, ContentHandler ch) throws SAXException {
         this.errorHandler = errorHandler;
         this.parser = new XSOMParser();
+        if(ch != null){
+            this.contentHandlers.add(ch);
+        }
+        contentHandlers.add(parser.getParserHandler());
         parser.setErrorHandler(errorHandler);
         parser.setEntityResolver(entityResolver);
-        xsomParser = parser.getParserHandler();
+        this.xsomParser = new ContentHandlerExt();
     }
-   
 
     public Schema getSchema() {
         return schemaExtension;
@@ -107,5 +110,74 @@ public class XMLSchemaParserImpl implements XMLSchemaParser {
 
     public ContentHandler getContentHandlerFor(String nsUri, String localName) {
         return xsomParser;
+    }
+
+    private class ContentHandlerExt implements ContentHandler{
+
+        public void setDocumentLocator(Locator locator) {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.setDocumentLocator(locator);
+            }
+        }
+
+        public void startDocument() throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.startDocument();
+            }
+        }
+
+        public void endDocument() throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.endDocument();
+            }
+        }
+
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.startPrefixMapping(prefix, uri);
+            }
+        }
+
+        public void endPrefixMapping(String prefix) throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.endPrefixMapping(prefix);
+            }
+        }
+
+        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.startElement(uri, localName, qName, atts);
+            }
+        }
+
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.endElement(uri, localName, qName);
+            }
+        }
+
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.characters(ch, start, length);
+            }
+        }
+
+        public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.ignorableWhitespace(ch, start, length);
+            }
+        }
+
+        public void processingInstruction(String target, String data) throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.processingInstruction(target, data);
+            }
+        }
+
+        public void skippedEntity(String name) throws SAXException {
+            for(ContentHandler contentHandler:contentHandlers){
+                contentHandler.skippedEntity(name);
+            }
+        }
     }
 }

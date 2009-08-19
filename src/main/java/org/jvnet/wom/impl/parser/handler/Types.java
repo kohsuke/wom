@@ -96,7 +96,7 @@ public class Types extends AbstractHandler{
             if(noCh && uri.equals("http://www.w3.org/2001/XMLSchema") &&
                     localName.equals("schema")){
                 //let us try the default XSOM
-                XMLSchemaParserImpl xsomParser = new XMLSchemaParserImpl(runtime.getErrorHandler(), runtime.parser.getEntityResolver());
+                XMLSchemaParserImpl xsomParser = new XMLSchemaParserImpl(runtime.getErrorHandler(), runtime.parser.getEntityResolver(), runtime.parser.getSchemaContentHandler());
                 ContentHandler ch = xsomParser.getContentHandlerFor(uri, localName);
                 assert ch != null;
                 getRuntime().redirectSubtree(xsomParser.getContentHandlerFor(uri, localName), uri, localName, qname);

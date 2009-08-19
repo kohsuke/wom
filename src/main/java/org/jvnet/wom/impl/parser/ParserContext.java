@@ -60,7 +60,7 @@ import com.sun.xml.xsom.parser.XMLParser;
 public class ParserContext {
 
     /**
-     * SchemaSet to which a newly parsed schema is put in.
+     * WSDLSet to which a newly parsed schema is put in.
      */
     public final WSDLSetImpl wsdlSet = new WSDLSetImpl();
 

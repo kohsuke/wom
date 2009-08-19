@@ -51,6 +51,9 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.sun.xml.xsom.parser.XSOMParser;
+import com.sun.xml.xsom.XSElementDecl;
+
 public class WSDLParsingTest extends TestCase {
 
     public void testSimpleWSDL() throws SAXException {
@@ -193,6 +196,31 @@ public class WSDLParsingTest extends TestCase {
         WSDLPart part = operation.getInput().getMessage().parts().iterator().next();
         assertNotNull(part.getDescriptor().getSchemaObject());
         assertEquals(handler.getSchema().resolveElement(part.getDescriptor().name()).getType().getTypeClass().fullName(), "com.example.types.EchoType");
+    }
+
+    public void testXMLParserExtensibility() throws SAXException {
+        InputStream is = getClass().getResourceAsStream("../simple.wsdl");
+        WOMParser parser = new WOMParser();
+
+        //create my own XSOMParser
+        XSOMParser xsParser = new XSOMParser();
+        xsParser.setErrorHandler(parser.getErrorHandler());
+        xsParser.setEntityResolver(parser.getEntityResolver());
+
+        //set my XSOMParser to receive parsing events
+        parser.setSchemaContentHandler(xsParser.getParserHandler());
+
+        WSDLSet wsdls = parser.parse(is);
+        assertTrue(wsdls.getWSDLs().hasNext());
+        WSDLDefinitions def = wsdls.getWSDLs().next();
+        WSDLPortType pt = def.getPortTypes().iterator().next();
+        WSDLOperation operation = pt.getOperations().iterator().next();
+        WSDLPart part = operation.getInput().getMessage().parts().iterator().next();
+        assertNotNull(part.getDescriptor().getSchemaObject());
+
+        XSElementDecl elm = xsParser.getResult().getElementDecl("http://example.com/types", "echo");
+        assertEquals(elm.getName(), "echo");
+        assertEquals(elm.getTargetNamespace(), "http://example.com/types");
     }
 
     public void testMimeWSDL() throws SAXException {
