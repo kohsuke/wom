@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="WOM - WSDL Object Model">
+  <skin>
+    <groupId>org.jvnet.maven-javanet-skin</groupId>
+    <artifactId>maven-javanet-skin</artifactId>
+    <version>1.2</version>
+  </skin>
+
+  <body>
+    <menu name="WOM - WSDL Object Model">
+      <item name="Usage" href="index.html"/>
+      <item name="Downloads" href="http://maven.dyndns.org/2/org/jvnet/wom/"/>
+      <item name="Mailing lists" href="servlets/ProjectMailingListList"/>
+      <item name="Source code" href="source/browse/wom/trunk/wom/"/>
+      <item name="Issues" href="servlets/ProjectIssues"/>
+      <item name="License" href="https://glassfish.dev.java.net/public/CDDL+GPL.html"/>
+    </menu>
+    ${reports}
+  </body>
+</project>
+

@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jvnet</groupId>
     <artifactId>wom</artifactId>
@@ -57,28 +58,21 @@
     </developers>
     <repositories>
         <repository>
-            <id>java.net</id>
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
-            <layout>legacy</layout>
-        </repository>
-        <repository>
-            <id>java.net2</id>
-            <url>https://maven2-repository.dev.java.net/nonav/repository</url>
+            <id>m.g.o-public</id>
+            <url>http://maven.glassfish.org/content/groups/public/</url>
         </repository>
     </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>java.net2</id>
-            <url>https://maven2-repository.dev.java.net/nonav/repository</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <distributionManagement>
         <repository>
             <id>java.net-m2-repository</id>
             <url>java-net:/maven2-repository/trunk/repository/</url>
         </repository>
+        <site>
+            <id>wom-www</id>
+            <url>java-net:/wom/trunk/www/</url>
+        </site>
+
     </distributionManagement>
 
 
@@ -110,7 +104,7 @@
             <extension>
                 <groupId>org.jvnet.wagon-svn</groupId>
                 <artifactId>wagon-svn</artifactId>
-                <version>1.8</version>
+                <version>1.9</version>
             </extension>
         </extensions>
 
@@ -147,5 +141,13 @@
         </dependency>
 
     </dependencies>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

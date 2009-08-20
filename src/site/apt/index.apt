@@ -1,0 +1,43 @@
+What is WOM?
+
+    WOM stands for WSDL Object Model. WOM is a Java library to parse a WSDL document and navigate, inspect each of it's
+    element. WOM is based largely on {{{https://xsom.dev.java.net/}XSOM (XML Schema Object Model)}}.
+
+    The current WOM implementation supports WSDL 1.1.
+
+How to parse a WSDL document?
+
+    Following code shows how to use WOM to parse a WSDL.
+
+-----------------------------------------------
+WOMParser parser = new WOMParser();
+WSDLSet wsdls = parser.parse(new File("sample.wsdl"));
+WSDLDefinitions def = wsdls.getWSDLs().next();
+
+//Now refer to API doc on how to navigate the WSDL components
+------------------------------------------------
+
+How to parse a WSDL using your own XSOMParser?
+
+    Sometimes you need to have full control on schema object model. WOM allows to set your own ContentHandler so that it
+    can firex the SAX events while parsing XML Schema documents.
+
+------------------------------------
+WOMParser parser = new WOMParser();
+
+//create my own XSOMParser
+XSOMParser xsParser = new XSOMParser();
+xsParser.setErrorHandler(parser.getErrorHandler());
+xsParser.setEntityResolver(parser.getEntityResolver());
+
+//set my XSOMParser to receive parsing events
+parser.setSchemaContentHandler(xsParser.getParserHandler());
+
+WSDLSet wsdls = parser.parse(new File("sample.wsdl"));
+
+//now work on XSOM XSSchemaSet
+XSSchemaSet xsomSchemaSet = xsParser.getResult();
+------------------------------------
+
+{{{docs/0.9.0/index.html}API Docs}}
+
