@@ -39,4 +39,3 @@ WSDLSet wsdls = parser.parse(new File("sample.wsdl"));
 XSSchemaSet xsomSchemaSet = xsParser.getResult();
 ------------------------------------
 
-    WOM also provides a Visitor. See {{{https://wom.dev.java.net/nonav/xref-test/parsing/WSDLVisitorTest.html}Visitor Test}} for details.

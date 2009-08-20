@@ -9,11 +9,11 @@
   <body>
     <menu name="WOM - WSDL Object Model">
       <item name="Usage" href="index.html"/>
-      <item name="API Javadoc" href="nonav/xref"/>
-      <item name="Unit Tests" href="nonav/xref"/>
+      <item name="API Javadoc" href="nonav/apidocs"/>
+      <item name="Browse Sources" href="nonav/xref"/>
       <item name="Downloads" href="http://maven.dyndns.org/2/org/jvnet/wom/"/>
       <item name="Mailing lists" href="servlets/ProjectMailingListList"/>
-      <item name="Source code" href="source/browse/wom/trunk/wom/"/>
+      <item name="SVN" href="source-repository.html"/>
       <item name="Issues" href="servlets/ProjectIssues"/>
       <item name="License" href="https://glassfish.dev.java.net/public/CDDL+GPL.html"/>
     </menu>
