@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jvnet</groupId>
     <artifactId>wom</artifactId>
-    <version>0.9.1</version>
+    <version>0.9.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>WSDL Object Model</name>
@@ -14,9 +14,9 @@
         <url>http://www.sun.com/</url>
     </organization>
     <scm>
-        <connection>scm:svn:https://wom.dev.java.net/svn/wom/tags/wom-0.9.1</connection>
-        <developerConnection>scm:svn:https://wom.dev.java.net/svn/wom/tags/wom-0.9.1</developerConnection>
-        <url>https://wom.dev.java.net/source/browse/wom/tags/wom-0.9.1</url>
+        <connection>scm:svn:https://wom.dev.java.net/svn/wom/trunk</connection>
+        <developerConnection>scm:svn:https://wom.dev.java.net/svn/wom/trunk</developerConnection>
+        <url>https://wom.dev.java.net/source/browse/wom/trunk</url>
     </scm>
 
     <issueManagement>
