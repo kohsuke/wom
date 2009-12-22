@@ -55,7 +55,7 @@ public enum SOAPVersion {
     public static final SOAPVersion getSOAPVersion(String ns){
         if(SOAP11.namespace.equals(ns))
             return SOAP11;
-        else if(SOAP12.equals(ns))
+        else if(SOAP12.namespace.equals(ns))
             return SOAP12;
         throw null;
     }
